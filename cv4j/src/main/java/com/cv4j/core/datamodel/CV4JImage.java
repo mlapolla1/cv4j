@@ -63,14 +63,23 @@ public class CV4JImage implements ImageData, Serializable{
 
     public CV4JImage(byte[] bytes) {
         if (bytes == null) {
+            Log.i("CV4JImage","0000000000");
             throw new CV4JException("byte is null");
         }
-
+        Log.i("CV4JImage","1111111");
         Bitmap bitmap = null;
         try {
+            Log.i("CV4JImage","222222222");
             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         } catch (OutOfMemoryError e) {
+            Log.i("CV4JImage","333333333");
             return;
+        }
+        Log.i("CV4JImage","44444444");
+        if (bitmap==null) {
+            Log.i("CV4JImage","555555");
+        } else {
+            Log.i("CV4JImage","6666666");
         }
 
         width = bitmap.getWidth();
