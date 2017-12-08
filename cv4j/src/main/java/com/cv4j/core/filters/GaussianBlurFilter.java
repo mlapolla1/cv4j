@@ -68,7 +68,7 @@ public class GaussianBlurFilter extends BaseFilter {
             try {
                 service.take();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("InterruptedException in GaussianBlurFilter.doFilter() for service.take()");
             }
         }
 

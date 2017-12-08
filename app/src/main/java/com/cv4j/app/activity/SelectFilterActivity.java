@@ -101,14 +101,16 @@ public class SelectFilterActivity extends BaseActivity {
     private Object getFilter(String filterName) {
 
         Object object = null;
+        String className = filterName + "Filter";
+        
         try {
-            object = Class.forName("com.cv4j.core.filters."+filterName+"Filter").newInstance();
+            object = Class.forName("com.cv4j.core.filters." + className).newInstance();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Class " + filter + " not found");
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            System.out.println("Instantiation error for class " + className);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            System.out.println("Illegal acces error for class " + className);
         }
 
         return object;

@@ -85,9 +85,9 @@ public class Preconditions {
         return checkNotNull(arg, "Argument must not be null");
     }
 
-    public static <T> T checkNotNull(T arg, String message) {
+    public static <T> T checkNotNull(T arg, String message) throws Error {
         if (arg == null) {
-            throw new NullPointerException(message);
+            throw new Error(message);
         }
         return arg;
     }

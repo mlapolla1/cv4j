@@ -29,7 +29,7 @@ public class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("I/O exception in IOUtils.closeQuietly()");
             }
         }
     }

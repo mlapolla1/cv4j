@@ -104,7 +104,7 @@ public class ImageCodecs {
 
             ret = out.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException in ImageCodecs.getBytesFromFiles()");
         } finally {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);

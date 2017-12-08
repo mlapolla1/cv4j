@@ -181,6 +181,7 @@ public class CV4JImage implements ImageData, Serializable{
      */
     public void savePic(Bitmap bitmap, Bitmap.CompressFormat format, String path) {
         File file = new File(path);
+
         try {
             FileOutputStream out = new FileOutputStream(file);
             if (bitmap.compress(format, 100, out)) {
@@ -188,9 +189,9 @@ public class CV4JImage implements ImageData, Serializable{
                 out.close();
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("File not found in path \"" + path + "\"");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("I/O exception in CV4JImage.savePic()");
         }
     }
 

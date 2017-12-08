@@ -68,7 +68,7 @@ public class VarianceFilter extends BaseFilter {
 			try {
 				service.take();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+                System.out.println("InterruptedException in VarianceFilter.doFilter() for service.take()");
 			}
 		}
 
