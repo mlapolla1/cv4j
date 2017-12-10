@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import java.util.Arrays;
-
+/**
+ * The Skeleton class
+ */
 public class Skeleton {
 
 	public void process(ByteProcessor binary) {
@@ -54,7 +56,10 @@ public class Skeleton {
 
 		// extract skeleton from DT image
 		int dis = 0;
-		int p1=0, p2=0, p3=0, p4=0;
+		int p1=0;
+		int p2=0;
+		int p3=0;
+		int p4=0;
 		Arrays.fill(output, (byte)0);
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;
@@ -87,9 +92,15 @@ public class Skeleton {
 
 	private boolean dt(byte[] input, byte[] output, int[] distmap, int level, int width, int height) {
 		boolean stop = true;
-		int p1=0, p2=0, p3=0;
-		int p4=0, p5=0, p6=0;
-		int p7=0, p8=0, p9=0;
+		int p1=0;
+		int p2=0;
+		int p3=0;
+		int p4=0;
+		int p5=0; 
+		int p6=0;
+		int p7=0;
+		int p8=0;
+		int p9=0;
 		int offset = 0;
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;

@@ -20,8 +20,14 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The sharp filter.
+ */
 public class SharpFilter extends BaseFilter {
 
+    /*
+     *Kernel
+     */
 	public static int[] kernel=new int[]{-1,-1,-1, -1, 12, -1, -1,-1,-1};
 
 	@Override
@@ -31,13 +37,23 @@ public class SharpFilter extends BaseFilter {
 		byte[][] output = new byte[3][total];
 
 		int offset=0;
-		int k0=kernel[0], k1=kernel[1], k2=kernel[2];
-		int k3=kernel[3], k4=kernel[4], k5=kernel[5];
-		int k6=kernel[6], k7=kernel[7], k8=kernel[8];
+		int k0=kernel[0];
+		int k1=kernel[1];
+		int k2=kernel[2];
+		int k3=kernel[3];
+		int k4=kernel[4];
+		int k5=kernel[5];
+		int k6=kernel[6];
+		int k7=kernel[7];
+		int k8=kernel[8];
 		
 		int scale = k0+k1+k2+k3+k4+k5+k6+k7+k8;
-		int sr=0, sg=0, sb=0;
-		int r=0, g=0, b=0;
+		int sr=0;
+		int sg=0;
+		int sb=0;
+		int r=0;
+		int g=0;
+		int b=0;
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;
 			for(int col=1; col<width-1; col++) {

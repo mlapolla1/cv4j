@@ -17,6 +17,9 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The gamma filter.
+ */
 public class GammaFilter extends BaseFilter {
 
 	private int[] lut;
@@ -34,7 +37,9 @@ public class GammaFilter extends BaseFilter {
 		setupGammaLut();
 		int index = 0;
 		for (int row = 0; row < height; row++) {
-			int tr = 0, tg = 0, tb = 0;
+			int tr = 0;
+			int tg = 0;
+			int tb = 0;
 			for (int col = 0; col < width; col++) {
 				index = row * width + col;
 				tr = R[index] & 0xff;

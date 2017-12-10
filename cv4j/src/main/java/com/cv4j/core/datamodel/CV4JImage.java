@@ -28,7 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-
+/**
+ * The CV4JImage class of DataModel
+ */
 public class CV4JImage implements ImageData, Serializable{
 
     private static final long serialVersionUID = -8832812623741546452L;
@@ -120,7 +122,10 @@ public class CV4JImage implements ImageData, Serializable{
         if(processor instanceof ColorProcessor) {
 
             byte[] gray = new byte[width * height];
-            int tr=0, tg=0, tb=0, c=0;
+            int tr=0;
+            int tg=0;
+            int tb=0; 
+            int c=0;
             byte[] R = ((ColorProcessor) processor).getRed();
             byte[] G = ((ColorProcessor) processor).getGreen();
             byte[] B = ((ColorProcessor) processor).getBlue();

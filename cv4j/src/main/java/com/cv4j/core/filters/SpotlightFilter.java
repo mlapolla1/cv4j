@@ -17,6 +17,9 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The spotlight filter.
+ */
 public class SpotlightFilter extends BaseFilter {
 	// attenuation coefficient, default is 1 means line decrease...
 	private int factor;
@@ -35,7 +38,9 @@ public class SpotlightFilter extends BaseFilter {
         int centerX = width/2;
         int centerY = height/2;
         double maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
-		int tr = 0, tg = 0, tb = 0;
+		int tr = 0;
+		int tg = 0;
+		int tb = 0;
         for(int row=0; row<height; row++) {
         	offset = row * width;
         	for(int col=0; col<width; col++) {

@@ -20,6 +20,9 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.filters.GaussianBlurFilter;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The USM (unsharp masking) filter.
+ */
 public class USMFilter extends GaussianBlurFilter {
 
 	private double weight;

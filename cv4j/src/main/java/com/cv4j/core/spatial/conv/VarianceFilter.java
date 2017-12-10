@@ -26,6 +26,9 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * The variance filter.
+ */
 public class VarianceFilter extends BaseFilter {
 
 	private int radius;
@@ -82,7 +85,9 @@ public class VarianceFilter extends BaseFilter {
 	private void getNewPixels(byte[] output, byte[] input) {
 		int size = radius * 2 + 1;
 		int total = size * size;
-		int r = 0, g = 0, b = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 
@@ -106,7 +111,8 @@ public class VarianceFilter extends BaseFilter {
 	}
 
 	private int calculateVar(int[] data) {
-		int sum1=0, sum2=0;
+		int sum1=0;
+		int sum2=0;
 		for(int i=0; i<data.length; i++) {
 			sum1 += (data[i]*data[i]);
 			sum2 += data[i];

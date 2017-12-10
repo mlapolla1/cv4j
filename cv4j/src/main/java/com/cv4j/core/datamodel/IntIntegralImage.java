@@ -15,6 +15,9 @@
  */
 package com.cv4j.core.datamodel;
 
+/**
+ * The IntIntegralImage class of DataModel
+ */
 public class IntIntegralImage {
 	// sum index tables
 	private int[] sum;
@@ -33,7 +36,10 @@ public class IntIntegralImage {
 	}
 
 	public int getBlockSum2(int ney, int nex, int swy, int swx) {
-		int sum1, sum2, sum3, sum4;
+		int sum1;
+		int sum2;
+		int sum3;
+		int sum4;
 		sum1 = sum[ney*width+nex];
 		sum4 = sum[swy*width+swx];
 		sum2 = sum[swy*width+nex];
@@ -46,7 +52,10 @@ public class IntIntegralImage {
 		int swy = y + m/2;
 		int nex = x-n/2-1;
 		int ney = y-m/2-1;
-		int sum1, sum2, sum3, sum4;
+		int sum1;
+		int sum2;
+		int sum3;
+		int sum4;
 		if(swx >= width) {
 			swx = width - 1;
 		}
@@ -71,7 +80,10 @@ public class IntIntegralImage {
 		int swy = y + m/2;
 		int nex = x-n/2-1;
 		int ney = y-m/2-1;
-		float sum1, sum2, sum3, sum4;
+		float sum1;
+		float sum2;
+		float sum3;
+		float sum4;
 		if(swx >= width) {
 			swx = width - 1;
 		}
@@ -96,9 +108,16 @@ public class IntIntegralImage {
 		this.height = height;
 		sum = new int[width*height];
 		// rows
-		int p1=0, p2=0, p3=0, p4;
-		int offset = 0, uprow=0, leftcol=0;
-		float sp2=0, sp3=0, sp4=0;
+		int p1=0;
+		int p2=0;
+		int p3=0;
+		int p4;
+		int offset = 0;
+		int uprow=0;
+		int leftcol=0;
+		float sp2=0;
+		float sp3=0;
+		float sp4=0;
 		for(int row=0; row<height; row++ ) {
 			offset = row*width;
 			uprow = row-1;
@@ -121,9 +140,16 @@ public class IntIntegralImage {
 		sum = new int[width*height];
 		squaresum = new float[width*height];
 		// rows
-		int p1=0, p2=0, p3=0, p4;
-		int offset = 0, uprow=0, leftcol=0;
-		float sp2=0, sp3=0, sp4=0;
+		int p1=0;
+		int p2=0;
+		int p3=0;
+		int p4;
+		int offset = 0;
+		int uprow=0;
+		int leftcol=0;
+		float sp2=0;
+		float sp3=0;
+		float sp4=0;
 		for(int row=0; row<height; row++ ) {
 			offset = row*width;
 			uprow = row-1;

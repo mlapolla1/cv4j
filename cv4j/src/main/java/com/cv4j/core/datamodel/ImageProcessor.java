@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The ImageProcessor class of DataModel
+ */
 public interface ImageProcessor {
 
 	/** Returns the width of this image in pixels. */

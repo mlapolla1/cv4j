@@ -2,7 +2,6 @@ package com.cv4j.app.adapter;
 
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -44,7 +43,7 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
         } else {
 
             if (Preconditions.isNotBlank(filterName)) {
-                CommonFilter filter = (CommonFilter)getFilter(filterName);
+                CommonFilter filter = getFilter(filterName);
                 RxImageData.bitmap(mBitmap)
                         .addFilter(filter)
                         .into(holder.image);
@@ -55,12 +54,13 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
         holder.text.setText(filterName);
     }
 
-    private Object getFilter(String filterName) {
-        Object object = null;
+    private CommonFilter getFilter(String filterName) {
+        CommonFilter filter = null;
         String className = filterName + "Filter";
 
         try {
-            object = Class.forName("com.cv4j.core.filters." + className).newInstance();
+            Class fiterClass = Class.forName("com.cv4j.core.filters." + className);
+            filter = (CommonFilter) filterClass.newInstance();
         } catch (ClassNotFoundException e) {
             System.out.println("Class " + filter + " not found");
         } catch (InstantiationException e) {
@@ -69,14 +69,16 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
             System.out.println("Illegal acces error for class " + className);
         }
 
-        return object;
+        return filter;
     }
 
     @Override
     public int getItemCount() {
         return mList!=null?mList.size():0;
     }
-
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView. 
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;

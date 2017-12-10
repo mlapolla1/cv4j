@@ -2,7 +2,6 @@ package com.cv4j.app.adapter;
 
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -59,7 +58,7 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
         } else {
             String filterName = mList.get(position);
             if (Preconditions.isNotBlank(filterName)) {
-                CommonFilter filter = (CommonFilter)getFilter(filterName);
+                CommonFilter filter = getFilter(filterName);
                 RxImageData.bitmap(mBitmap)
 //                        .placeHolder(R.drawable.test_spital_conv)
                         .addFilter(filter)
@@ -70,12 +69,13 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
         holder.text.setText(map.get(position));
     }
 
-    private Object getFilter(String filterName) {
-        Object object = null;
+    private CommonFilter getFilter(String filterName) {
+        CommonFilter filter = null;
         String className = filterName + "Filter";
 
         try {
-            object = Class.forName("com.cv4j.core.spatial.conv." + className).newInstance();
+            Class filterClass = Class.forName("com.cv4j.core.spatial.conv." + className);
+            filter = (CommonFilter) filterClass.newInstance();
         } catch (ClassNotFoundException e) {
             System.out.println("Class " + filter + " not found");
         } catch (InstantiationException e) {
@@ -84,14 +84,16 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
             System.out.println("Illegal acces error for class " + className);
         }
 
-        return object;
+        return filter;
     }
 
     @Override
     public int getItemCount() {
         return mList!=null?mList.size():0;
     }
-
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView. 
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;

@@ -20,6 +20,11 @@ import com.cv4j.image.util.Preconditions;
 
 import java.util.Arrays;
 
+/**
+ * EqualHist.
+ * The purpose of the class is the equalization
+ * of histograms.
+ */
 public class EqualHist {
 
     public void equalize(ByteProcessor src) {

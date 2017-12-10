@@ -19,8 +19,18 @@ import com.cv4j.core.datamodel.ByteProcessor;
 
 import static android.R.attr.width;
 
+/**
+ * ProjectionHist.
+ * The histogram projection.
+ */
 public class ProjectionHist {
+    /*
+     *x direction
+     */
     public final static int X_DIRECTION = 1;
+    /*
+     *y direction
+     */
     public final static int Y_DIRECTION = 2;
 
     /***
@@ -105,7 +115,10 @@ public class ProjectionHist {
         }
 
         // 计算小数部分黑色像素权重加和
-        float w1=0, w2=0, w3=0, w4=0;
+        float w1=0;
+        float w2=0;
+        float w3=0;
+        float w4=0;
         // calculate w1
         if(fx > 0) {
             col = nx+1;

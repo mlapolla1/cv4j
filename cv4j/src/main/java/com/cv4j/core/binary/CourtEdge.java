@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
-
+/**
+ * The CourtEdge class
+ */
 public class CourtEdge {
 
 	public void process(ByteProcessor binary) {
@@ -33,7 +35,8 @@ public class CourtEdge {
 		byte[] output = new byte[input1.length];
 		System.arraycopy(input1, 0, output, 0, input1.length);
 
-		int p1=0, p2=0;
+		int p1=0;
+		int p2=0;
 		int offset = 0;
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;

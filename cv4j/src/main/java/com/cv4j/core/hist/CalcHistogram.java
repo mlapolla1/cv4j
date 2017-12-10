@@ -19,8 +19,19 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * CalcHistogram.
+ * The class is used to calculate various
+ * type of histograms.
+ */
 public class CalcHistogram {
+    /*
+     *Constant of color in rgb
+     */
     public final static int COLOR_RGB = 1;
+    /*
+     *Constant of color in hsv
+     */
     public final static int COLOR_HSV = 2;
 
     public static int[] calculateNormHist(ImageProcessor src, int bins) {
@@ -32,7 +43,9 @@ public class CalcHistogram {
         byte[] B = ((ColorProcessor)src).getBlue();
         int level = 256 / bins;
         int[] hist = new int[bins*bins*bins];
-        int r=0, g=0, b=0;
+        int r=0;
+        int g=0;
+        int b=0;
         int index = 0;
         for(int i=0; i<len; i++) {
             r = R[i]&0xff;
@@ -55,7 +68,8 @@ public class CalcHistogram {
         }
         if(!norm) return;
 
-        float min = 10000000, max = 0;
+        float min = 10000000;
+        float max = 0;
         float delta;
         for(int i=0; i<numChannels; i++) {
             for(int j=0; j<bins; j++) {
@@ -95,7 +109,8 @@ public class CalcHistogram {
         }
         if(!norm) return;
 
-        float min = 10000000, max = 0;
+        float min = 10000000;
+        float max = 0;
         float delta;
         for(int i=0; i<3; i++) {
             for(int j=0; j<bins; j++) {

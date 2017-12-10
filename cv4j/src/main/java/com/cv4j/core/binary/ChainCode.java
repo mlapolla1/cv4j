@@ -19,7 +19,9 @@ import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.exception.CV4JException;
 
 import java.util.Arrays;
-
+/**
+ * The ChainCode class
+ */
 public class ChainCode extends CourtEdge {
 
 	public void process(ByteProcessor binary, int[] codeMap) {

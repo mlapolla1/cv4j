@@ -17,6 +17,10 @@ package com.cv4j.core.hist;
 
 import com.cv4j.exception.CV4JException;
 
+/**
+ * CompareHist.
+ * The class is used to compare histograms.
+ */
 public class CompareHist {
 
     /**
@@ -34,7 +38,8 @@ public class CompareHist {
         // start to normalize the histogram data
         double[] hist1 = new double[len];
         double[] hist2 = new double[len];
-        double sum1=0, sum2=0;
+        double sum1=0;
+        double sum2=0;
         for (int i = 0; i < len; i++)
         {
             sum1 += source[i];
@@ -67,7 +72,8 @@ public class CompareHist {
         int len = source.length;
         double[] mixedData = new double[len];
         // start to normalize the histogram data
-        double sum1=0, sum2=0;
+        double sum1=0;
+        double sum2=0;
         for (int i = 0; i < len; i++)
         {
             sum1 += source[i];
@@ -104,7 +110,8 @@ public class CompareHist {
         int len = source.length;
         double[] mixedData = new double[len];
         // start to normalize the histogram data
-        double sum1=0, sum2=0;
+        double sum1=0;
+        double sum2=0;
         for (int i = 0; i < len; i++)
         {
             sum1 += source[i];

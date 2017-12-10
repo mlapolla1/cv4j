@@ -20,9 +20,17 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The lapas filter.
+ */
 public class LaplasFilter extends BaseFilter {
-
+    /*
+     *Constant of four
+     */
 	public static int[] FOUR = new int[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
+    /*
+     *Constant of eight
+     */
 	public static int[] EIGHT = new int[] { -1, -1, -1, -1, 8, -1, -1, -1, -1};
 	private boolean _4direction;
 
@@ -45,9 +53,15 @@ public class LaplasFilter extends BaseFilter {
 		byte[][] output = new byte[3][total];
 
 		int offset = 0;
-		int k0 = 0, k1 = 0, k2 = 0;
-		int k3 = 0, k4 = 0, k5 = 0;
-		int k6 = 0, k7 = 0, k8 = 0;
+		int k0 = 0;
+		int k1 = 0;
+		int k2 = 0;
+		int k3 = 0;
+		int k4 = 0;
+		int k5 = 0;
+		int k6 = 0;
+		int k7 = 0;
+		int k8 = 0;
 		if(_4direction) {
 			k0 = FOUR[0];
 			k1 = FOUR[1];
@@ -70,8 +84,12 @@ public class LaplasFilter extends BaseFilter {
 			k8 = EIGHT[8];
 		}
 
-		int sr = 0, sg = 0, sb = 0;
-		int r = 0, g = 0, b = 0;
+		int sr = 0;
+		int sg = 0;
+		int sb = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {

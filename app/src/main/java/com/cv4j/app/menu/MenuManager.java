@@ -35,18 +35,41 @@ public class MenuManager {
         TEMPLATE_MATCH("模版匹配",true),
         PIXEL_OPERATOR("模版匹配",true);
 
+		/**
+  		 * Menu's title
+   		 */
         public final String title;
+        
+		/**
+  		 * True if menu is removed, false otherwise
+   		 */
         public final boolean removed;
 
+		/**
+	     * Set menu's title
+	     *
+	     * @param menu's title, removed or not
+	     * @return the title
+	     */
         MenuType(String title, boolean removed) {
             this.title = title;
             this.removed = removed;
         }
 
+		/**
+	     * Return menu's title
+	     *
+	     * @return the title
+	     */
         public String getTitle() {
             return title;
         }
 
+	    /**
+	     * It is removed?
+	     *
+	     * @return 
+	     */
         public boolean isRemoved() {
             return removed;
         }
@@ -57,6 +80,12 @@ public class MenuManager {
         curType = MenuType.HOME;
     }
 
+    /**
+     * Return the instance
+     *
+     * @param fragment manager
+     * @return MenuManager
+     */
     public static MenuManager getInstance(FragmentManager fragmentManager) {
         if (instance == null) {
             instance = new MenuManager(fragmentManager);
@@ -65,12 +94,23 @@ public class MenuManager {
         return instance;
     }
 
+    /**
+     * Return menu type
+     *
+     * @param type
+     * @return MenuType
+     */
     public MenuType getCurType() {
 
         return curType;
     }
 
-
+    /**
+     * Show menu type
+     *
+     * @param type
+     * @return
+     */
     public boolean show(MenuType type) {
         if (curType.equals(type)) {
             return true;

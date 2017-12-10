@@ -18,14 +18,30 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The gradient filter.
+ */
 public class GradientFilter {
-	// sobel operator
+        /*
+         * Sobel operator x
+         */
 	public final static int[][] SOBEL_X = new int[][]{{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+        /*
+         * Sobel operator x
+         */
 	public final static int[][] SOBEL_Y = new int[][]{{-1, -2, -1}, {0,  0,  0}, {1,  2,  1}};
 	
-	// direction parameter
+        /*
+         * Direction parameter x
+         */
 	public final static int X_DIRECTION = 0;
+        /*
+         * Direction parameter y
+         */
 	public final static int Y_DIRECTION = 2;
+        /*
+         * Direction parameter xy
+         */
 	public final static int XY_DIRECTION = 4;
 	private int direction;
 	private boolean isSobel;
@@ -52,11 +68,18 @@ public class GradientFilter {
         int height = src.getHeight();
 
 		int[] outPixels = new int[width*height];
-        int index = 0, index2 = 0;
-        double xred = 0, xgreen = 0, xblue = 0;
-        double yred = 0, ygreen = 0, yblue = 0;
-        int newRow, newCol;
-        float min = 255, max = 0;
+        int index = 0;
+        int index2 = 0;
+        double xred = 0;
+        int xgreen = 0;
+        int xblue = 0;
+        double yred = 0;
+        int ygreen = 0;
+        int yblue = 0;
+        int newRow;
+        int newCol;
+        float min = 255;
+        float max = 0;
 		byte[] intput = src.getGray();
         for(int row=0; row<height; row++) {
         	int pv = 0;

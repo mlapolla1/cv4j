@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.IntIntegralImage;
-
+/**
+ * The Threshold class
+ */
 public class Threshold {
     /** binary image */
     public static final int METHOD_THRESH_BINARY = 0;
@@ -198,7 +200,10 @@ public class Threshold {
             histogram[c]++;
         }
 
-        int left_bound = 0, right_bound = 0, max_ind = 0, max = 0;
+        int left_bound = 0;
+        int right_bound = 0;
+        int max_ind = 0;
+        int max = 0;
         int temp;
         boolean isflipped = false;
         int i=0, j=0;
@@ -259,7 +264,10 @@ public class Threshold {
 
         // 计算求得阈值
         double thresh = left_bound;
-        double a, b, dist = 0, tempdist;
+        double a;
+        double b; 
+        double dist = 0;
+        double tempdist;
         a = max; b = left_bound-max_ind;
         for( i = left_bound+1; i <= max_ind; i++ )
         {
@@ -282,10 +290,14 @@ public class Threshold {
 
     private int shift(ByteProcessor gray) {
         // find threshold
-        int t = 127, nt = 0;
-        int m1=0, m2=0;
-        int sum1=0, sum2=0;
-        int count1=0, count2=0;
+        int t = 127;
+        int = 0;
+        int m1=0;
+        int m2=0;
+        int sum1=0;
+        int sum2=0;
+        int count1=0;
+        int count2=0;
 //        int count = 0 ;
         int[] data = gray.toInt(0);
         while(true) {

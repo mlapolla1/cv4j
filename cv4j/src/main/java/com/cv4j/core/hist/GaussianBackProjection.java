@@ -20,6 +20,10 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.exception.CV4JException;
 import com.cv4j.image.util.Tools;
 
+/**
+ * GaussianBackProjection.
+ * The gaussian back projection.
+ */
 public class GaussianBackProjection {
 
     public void backProjection(ImageProcessor src, ImageProcessor model, ByteProcessor dst) {
@@ -28,7 +32,9 @@ public class GaussianBackProjection {
         }
         float[] R = model.toFloat(0);
         float[] G = model.toFloat(1);
-        int r = 0, g = 0, b = 0;
+        int r = 0;
+        int g = 0;
+        int  b = 0;
         float sum = 0;
         int mw = model.getWidth();
         int mh = model.getHeight();
@@ -53,7 +59,8 @@ public class GaussianBackProjection {
         int height = src.getHeight();
 
         // 反向投影
-        float pr = 0, pg = 0;
+        float pr = 0;
+        float pg = 0;
         float[] result = new float[width*height];
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {

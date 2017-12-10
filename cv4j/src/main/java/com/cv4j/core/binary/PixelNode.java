@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 package com.cv4j.core.binary;
-
+/**
+ * The PixelNode class
+ */
 public class PixelNode implements Comparable<PixelNode> {
 
+    /**
+	 * Index number
+	 */	
 	public int index;
+	/**
+	 * Row number
+	 */	
 	public int row;
+	/**
+	 * Column number
+	 */	
 	public int col;
 	
 	@Override

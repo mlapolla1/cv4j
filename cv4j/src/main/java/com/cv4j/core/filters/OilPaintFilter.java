@@ -18,6 +18,9 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The oil paint filter.
+ */
 public class OilPaintFilter extends BaseFilter {
 
     private int radius = 15; // default value
@@ -68,7 +71,10 @@ public class OilPaintFilter extends BaseFilter {
         }
 
         for(int row=0; row<height; row++) {
-            int ta = 0, tr = 0, tg = 0, tb = 0;
+            int ta = 0;
+            int tr = 0;
+            int tg = 0;
+            int tb = 0;
             for(int col=0; col<width; col++) {
 
                 for(int subRow = -subradius; subRow <= subradius; subRow++)

@@ -26,7 +26,10 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class AutumnLUT {
-
+    
+    /*
+     * List of autumn lut
+     */
     public static int[][] AUTUMN_LUT = new int[][]{
             {254, 0, 0}, {255, 1, 1}, {255, 1, 0}, {255, 2, 0}, {255, 5, 0}, {255, 5, 0},
             {255, 7, 0}, {255, 7, 0}, {255, 8, 1}, {255, 9, 2}, {254, 10, 0}, {255, 11, 1},

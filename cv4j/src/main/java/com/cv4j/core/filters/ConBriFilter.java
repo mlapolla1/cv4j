@@ -33,9 +33,13 @@ public class ConBriFilter extends BaseFilter  {
         
         // calculate RED, GREEN, BLUE means of pixel
 		int[] rgbmeans = new int[3];
-		double redSum = 0, greenSum = 0, blueSum = 0;
+		double redSum = 0;
+		double greenSum = 0;
+		double blueSum = 0;
 		int total = height * width;
-		int r=0, g=0, b=0;
+		int r=0;
+		int g=0;
+		int b=0;
         for(int i=0; i<total; i++) {
 			r = R[i] & 0xff;
 			g = G[i] & 0xff;

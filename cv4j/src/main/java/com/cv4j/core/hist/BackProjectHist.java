@@ -19,6 +19,11 @@ import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * BackProjectHist.
+ * The back projection histogram class, used
+ * to calculate back projections.
+ */
 public class BackProjectHist {
 
     public void backProjection(ImageProcessor src, ByteProcessor backProjection, int[] mHist, int bins) {
@@ -43,7 +48,9 @@ public class BackProjectHist {
         // 根据像素值查找R，得到分布概率权重
         int index = 0;
         int bidx = 0;
-        int tr=0, tg=0, tb=0;
+        int tr=0;
+        int tg=0;
+        int tb=0;
         int level = 256 / bins;
         float[] rimage = new float[width*height];
         for(int row=0; row<height; row++) {

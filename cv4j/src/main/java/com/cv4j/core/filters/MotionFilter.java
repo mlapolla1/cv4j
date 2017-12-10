@@ -19,6 +19,9 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The motion filter.
+ */
 public class MotionFilter extends BaseFilter  {
 
 	private float distance = 10;// default;
@@ -62,13 +65,18 @@ public class MotionFilter extends BaseFilter  {
         
         int iteration = (int)maxDistance;
         for(int row=0; row<height; row++) {
-        	int ta = 0, tr = 0, tg = 0, tb = 0;
+        	int ta = 0;
+        	int tr = 0;
+        	int tg = 0;
+        	int tb = 0;
         	for(int col=0; col<width; col++) {
-        		int newX= col, count = 0;
+        		int newX= col;
+        		int count = 0;
         		int newY = row;
         		
         		// iterate the source pixels according to distance
-        		float m11 = 0.0f, m22 = 0.0f;
+        		float m11 = 0.0f;
+        		float m22 = 0.0f;
         		for(int i=0; i<iteration; i++) {
         			newX = col;
         			newY = row;

@@ -20,6 +20,9 @@ import com.cv4j.core.datamodel.ImageProcessor;
 
 import static com.cv4j.image.util.Tools.clamp;
 
+/**
+ * The stroke area filter.
+ */
 public class StrokeAreaFilter extends BaseFilter {
 
     // default value, optional value 30, 15, 10, 5, 2
@@ -110,7 +113,8 @@ public class StrokeAreaFilter extends BaseFilter {
 
     public static double colorDiff(int[] rgb1, int[] rgb2) {
         // (1-(d/d0)^2)^2
-        double d2, r2;
+        double d2;
+        double r2;
         d2 = colorDistance(rgb1, rgb2);
 
         if (d2 >= d02)
@@ -122,7 +126,9 @@ public class StrokeAreaFilter extends BaseFilter {
     }
 
     public static double colorDistance(int[] rgb1, int[] rgb2) {
-        int dr, dg, db;
+        int dr;
+        int dg;
+        int db;
         dr = rgb1[0] - rgb2[0];
         dg = rgb1[1] - rgb2[1];
         db = rgb1[2] - rgb2[2];

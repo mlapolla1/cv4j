@@ -17,7 +17,9 @@ package com.cv4j.core.datamodel;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-
+/**
+ * The MeasureData class of DataModel
+ */
 public class MeasureData {
 
     private Point cp; // center x of the contour and center y of the contour

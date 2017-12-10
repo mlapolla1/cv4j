@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * The HoughLinesP class
+ */
 public class HoughLinesP {
 	private double[] coslut;
 	private double[] sinlut;
@@ -171,7 +173,10 @@ public class HoughLinesP {
 
 	// 变换极坐标为平面坐标，并绘制
 	private Line drawPolarLine(int value, int r, int theta) {
-		int x1 = 100000, y1 = 0, x2 = 0, y2 = 0;
+		int x1 = 100000;
+		int y1 = 0;
+		int x2 = 0;
+		int y2 = 0;
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int temp = (int) (x * coslut[theta] + y * sinlut[theta]);

@@ -37,8 +37,13 @@ import com.cv4j.image.util.Tools;
  *
  */
 public class FloSteDitheringFilter implements CommonFilter {
-
+    /*
+     *Constant kernel data
+     */
 	public final static float[] kernelData = new float[]{0.1875f, 0.3125f, 0.0625f, 0.4375f};
+    /*
+     *Constant color palette
+     */
 	public final static int[] COLOR_PALETTE = new int[] {0, 255};
 
 	@Override

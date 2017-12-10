@@ -29,6 +29,10 @@ import com.cv4j.core.datamodel.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * QRCodeScanner.
+ * The implementation of a QR code scanner.
+ */
 public class QRCodeScanner {
 
     public Rect findQRCodeBounding(ImageProcessor image,int n1,int n2) {
@@ -177,7 +181,8 @@ public class QRCodeScanner {
             offset = 1;
         }
 
-        int v1=0, v2=0;
+        int v1=0;
+        int v2=0;
         float[] data = new float[cx *height];
         for(int row=0; row<height; row++) {
             for(int col=0; col<cx; col++) {

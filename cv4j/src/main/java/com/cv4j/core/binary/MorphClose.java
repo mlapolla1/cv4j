@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
-
+/**
+ * The MorphClose class
+ */
 public class MorphClose {
 
     /***

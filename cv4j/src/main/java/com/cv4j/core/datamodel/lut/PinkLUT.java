@@ -27,7 +27,9 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class PinkLUT {
-
+    /*
+     * List of pink lut
+     */
     public static int[][] PINK_LUT = new int[][]{
             {1, 0, 0}, {10, 6, 5}, {19, 14, 11}, {29, 19, 18}, {38, 26, 26},
             {44, 30, 30}, {49, 31, 31}, {52, 34, 34}, {57, 37, 36}, {59, 39, 38},

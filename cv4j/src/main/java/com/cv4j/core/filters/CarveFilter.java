@@ -18,7 +18,11 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
-
+/**
+ * The CarveFilter class.
+ * Emboss effect, support two types of relief, 
+ * according to boolean parameters to decide which one to use
+ */
 public class CarveFilter extends BaseFilter{
 	private boolean isCarve;
 	
@@ -38,7 +42,10 @@ public class CarveFilter extends BaseFilter{
 
         int index = 0;
         for(int row=1; row<height-1; row++) {
-        	int ta = 0, tr = 0, tg = 0, tb = 0;
+        	int ta = 0;
+        	int tr = 0;
+        	int tg = 0;
+        	int tb = 0;
         	for(int col=1; col<width-1; col++) {
         		// Index of the pixel in the array      
         		index = row * width + col;

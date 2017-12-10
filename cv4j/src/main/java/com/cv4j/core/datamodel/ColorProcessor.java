@@ -16,7 +16,9 @@
 package com.cv4j.core.datamodel;
 
 import com.cv4j.exception.CV4JException;
-
+/**
+ * The ColorProcessor class of DataModel
+ */
 public class ColorProcessor implements ImageProcessor {
     private byte[] R;
     private byte[] G;
@@ -47,7 +49,10 @@ public class ColorProcessor implements ImageProcessor {
     }
 
     private void backFillData(int[] input) {
-        int c=0, r=0, g=0, b=0;
+        int c=0;
+        int r=0;
+        int g=0;
+        int b=0;
         int length = input.length;
         for(int i=0; i<length; i++) {
             c = input[i];

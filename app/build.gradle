@@ -43,6 +43,7 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
@@ -53,7 +54,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${libs.supportVersion}"
     compile "com.android.support:design:${libs.supportVersion}"
 
-    compile project(':rxcv4j')
+    implementation project(path: ':rxcv4j', configuration: 'default')
 
     compile "com.safframework.log:saf-log:${libs.saf_log}"
     compile "com.safframework:saf-aop:${libs.saf_aop}"

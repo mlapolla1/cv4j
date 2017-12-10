@@ -48,7 +48,8 @@ public class HoughCircles {
             Arrays.fill(acc[i], 0);
         }
 
-        int x0, y0;
+        int x0;
+        int y0;
 //        double t;
         double[] coslut = setupCosLUT();
         double[] sinlut = setupSinLUT();

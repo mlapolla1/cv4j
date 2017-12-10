@@ -45,7 +45,10 @@ public class VignetteFilter extends BaseFilter {
 
 		int index = 0;
 		for(int row=0; row<height; row++) {
-			int ta = 0, tr = 0, tg = 0, tb = 0;
+			int ta = 0;
+			int tr = 0;
+			int tg = 0;
+			int tb = 0;
 			for(int col=0; col<width; col++) {
 
 				int dX = Math.min(col, width - col);

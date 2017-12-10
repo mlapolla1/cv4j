@@ -18,6 +18,10 @@ package com.cv4j.image.util;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Preconditions.
+ * Utilities for preconditions.
+ */
 public class Preconditions {
 
     /**
@@ -42,10 +46,8 @@ public class Preconditions {
             if (((List) t).size()==0) {
                 return true;
             }
-        } else if (t instanceof Map) {
-            if (((Map) t).size()==0) {
-                return true;
-            }
+        } else if (t instanceof Map && ((Map) t).size()==0) {
+            return true;
         } else if (t instanceof Object []) {
             if (((Object[]) t).length==0) {
                 return true;

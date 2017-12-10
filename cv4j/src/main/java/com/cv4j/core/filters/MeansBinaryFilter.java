@@ -19,6 +19,9 @@ import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The means binary filter.
+ */
 public class MeansBinaryFilter implements CommonFilter {
 
 	public ImageProcessor filter(ImageProcessor src) {

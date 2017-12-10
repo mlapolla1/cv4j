@@ -29,7 +29,9 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class JetLUT {
-
+    /*
+     * List of jet lut
+     */
     public static int[][] JET_LUT = new int[][]{
             {0, 1, 128}, {0, 0, 130}, {0, 0, 132}, {1, 0, 136}, {0, 0, 142},
             {0, 0, 145}, {0, 0, 150}, {1, 0, 154}, {0, 0, 158}, {1, 0, 163},

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The Scalar class of DataModel
+ */
 public class Scalar {
 	public int red;
 	public int green;

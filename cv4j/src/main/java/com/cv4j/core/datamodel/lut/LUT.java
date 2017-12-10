@@ -27,7 +27,9 @@ import static com.cv4j.core.filters.ColorFilter.RAINBOW_STYLE;
 import static com.cv4j.core.filters.ColorFilter.SPRING_STYLE;
 import static com.cv4j.core.filters.ColorFilter.SUMMER_STYLE;
 import static com.cv4j.core.filters.ColorFilter.WINTER_STYLE;
-
+/**
+ * The LUT class
+ */
 public class LUT {
 
     public static int[][] getColorFilterLUT(int style) {

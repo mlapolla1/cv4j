@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import java.util.Arrays;
-
+/**
+ * The ZhangSuenThin class
+ */
 public class ZhangSuenThin {
 
 	public void process(ByteProcessor binary) {
@@ -56,9 +58,15 @@ public class ZhangSuenThin {
 
 	private boolean step1Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
-		int p1=0, p2=0, p3=0;
-		int p4=0, p5=0, p6=0;
-		int p7=0, p8=0, p9=0;
+		int p1=0
+		int p2=0;
+		int p3=0;
+		int p4=0;
+		int p5=0;
+		int p6=0;
+		int p7=0;
+		int p8=0;
+		int p9=0;
 		int offset = 0;
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;
@@ -116,9 +124,15 @@ public class ZhangSuenThin {
 	
 	private boolean step2Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
-		int p1=0, p2=0, p3=0;
-		int p4=0, p5=0, p6=0;
-		int p7=0, p8=0, p9=0;
+		int p1=0; 
+		int p2=0; 
+		int p3=0;
+		int p4=0;
+		int p5=0;
+		int p6=0;
+		int p7=0;
+		int p8=0;
+		int p9=0;
 		int offset = 0;
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;

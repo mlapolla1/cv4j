@@ -27,6 +27,10 @@ import ar.com.hjg.pngj.ImageInfo;
 import ar.com.hjg.pngj.ImageLineInt;
 import ar.com.hjg.pngj.PngReader;
 
+/**
+ * ImageCodecs.
+ * The class read from an image file.
+ */
 public class ImageCodecs {
 
     public static CV4JImage read(String filePath) {
@@ -56,7 +60,9 @@ public class ImageCodecs {
             int width = info.cols;
             int height = info.rows;
             int dims = info.channels;
-            int r = 0, g = 0, b = 0;
+            int r = 0;
+            int g = 0;
+            int b = 0;
             int index = 0;
             int[] pixels = new int[width * height];
             ImageLineInt line = null;

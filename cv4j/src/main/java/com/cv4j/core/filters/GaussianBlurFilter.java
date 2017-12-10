@@ -24,6 +24,9 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * The gaussian blur filter.
+ */
 public class GaussianBlurFilter extends BaseFilter {
 
     private float[] kernel;
@@ -87,7 +90,8 @@ public class GaussianBlurFilter extends BaseFilter {
     private void blur(byte[] inPixels, byte[] outPixels, int width, int height)
     {
         int subCol = 0;
-        int index = 0, index2 = 0;
+        int index = 0;
+        int index2 = 0;
         float sum = 0;
         int k = kernel.length-1;
         for(int row=0; row<height; row++) {

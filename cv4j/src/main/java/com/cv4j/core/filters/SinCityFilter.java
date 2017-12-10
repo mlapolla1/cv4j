@@ -20,6 +20,9 @@ import android.graphics.Color;
 import com.cv4j.core.datamodel.ImageData;
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The Sin City filter.
+ */
 public class SinCityFilter extends BaseFilter {
 
 	private double threshold = 200; // default value
@@ -33,7 +36,9 @@ public class SinCityFilter extends BaseFilter {
 	public ImageProcessor doFilter(ImageProcessor src) {
 
         int total = width*height;
-		int tr=0, tg=0, tb=0;
+		int tr=0;
+		int g=0;
+		int tb=0;
         for(int i=0; i<total; i++) {
 			tr = R[i] & 0xff;
 			tg = G[i] & 0xff;

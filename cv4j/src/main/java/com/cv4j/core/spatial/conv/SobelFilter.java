@@ -20,8 +20,17 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The sobel filter.
+ */
 public class SobelFilter extends BaseFilter {
+    /*
+     *Sobel filter y
+     */
 	public static int[] sobel_y = new int[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
+    /*
+     *Sobel filter x
+     */
 	public static int[] sobel_x = new int[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 	private boolean xdirect;
 
@@ -44,9 +53,15 @@ public class SobelFilter extends BaseFilter {
 		byte[][] output = new byte[3][total];
 
 		int offset = 0;
-		int k0 = 0, k1 = 0, k2 = 0;
-		int k3 = 0, k4 = 0, k5 = 0;
-		int k6 = 0, k7 = 0, k8 = 0;
+		int k0 = 0;
+		int k1 = 0;
+		int k2 = 0;
+		int k3 = 0;
+		int k4 = 0;
+		int k5 = 0;
+		int k6 = 0;
+		int k7 = 0;
+		int k8 = 0;
 		if(xdirect) {
 			k0 = sobel_x[0];
 			k1 = sobel_x[1];
@@ -70,8 +85,12 @@ public class SobelFilter extends BaseFilter {
 			k8 = sobel_y[8];
 		}
 
-		int sr = 0, sg = 0, sb = 0;
-		int r = 0, g = 0, b = 0;
+		int sr = 0;
+		int sg = 0;
+		int sb = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {

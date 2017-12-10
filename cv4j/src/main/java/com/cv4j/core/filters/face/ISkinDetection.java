@@ -15,6 +15,9 @@
  */
 package com.cv4j.core.filters.face;
 
+/**
+ * Interface of skin detection.
+ */
 public interface ISkinDetection {
 	
 	boolean isSkin(int tr, int tg, int tb);

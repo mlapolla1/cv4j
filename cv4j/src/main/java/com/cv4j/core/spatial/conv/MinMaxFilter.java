@@ -21,6 +21,9 @@ import com.cv4j.core.filters.BaseFilter;
 
 import java.util.Arrays;
 
+/**
+ * The min-max filter.
+ */
 public class MinMaxFilter extends BaseFilter {
 
 	private boolean minFilter;
@@ -55,7 +58,9 @@ public class MinMaxFilter extends BaseFilter {
 
 		int size = radius * 2 + 1;
 		int total = size * size;
-		int r = 0, g = 0, b = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 

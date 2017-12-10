@@ -20,6 +20,9 @@ import com.cv4j.core.filters.BaseFilter;
 
 import java.util.Random;
 
+/**
+ * The SAP-noise filter.
+ */
 public class SAPNoiseFilter extends BaseFilter {
 	private float precent;
 	
@@ -40,7 +43,9 @@ public class SAPNoiseFilter extends BaseFilter {
 
 		Random random = new Random();
 		int numOfSalt = (int)(width*height*precent);
-		int row=0, col=0, index=0;
+		int row=0;
+		int col=0;
+		int index=0;
 		for(int i=0; i<numOfSalt; i++) {
 			row = getPosition(0, height, random);
 			col = getPosition(0, width, random);

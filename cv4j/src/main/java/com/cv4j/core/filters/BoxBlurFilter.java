@@ -17,6 +17,11 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
+/**
+ * The BloxBlurFilter class.
+*  Blurred boxes, horizontal and vertical warp support,
+*  usually fuzzy numbers 1, 3, 5, 7, 9, 11, 15
+ */
 
 public class BoxBlurFilter extends BaseFilter {
 
@@ -52,7 +57,9 @@ public class BoxBlurFilter extends BaseFilter {
         // 每一行
         for ( int y = 0; y < height; y++ ) {
             int outIndex = y;
-            int tr = 0, tg = 0, tb = 0;
+            int tr = 0;
+            int tg = 0;
+            int tb = 0;
 
             // 初始化盒子里面的像素和
             for ( int i = -radius; i <= radius; i++ ) {

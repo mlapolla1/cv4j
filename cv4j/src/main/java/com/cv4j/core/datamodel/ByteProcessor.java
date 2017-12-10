@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The ByteProcessor class of DataModel
+ */
 public class ByteProcessor implements ImageProcessor {
 
     private int width;

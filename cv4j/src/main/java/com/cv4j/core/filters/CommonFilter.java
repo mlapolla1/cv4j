@@ -16,8 +16,11 @@
 package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ImageProcessor;
-
+/**
+ * The CommonFilter class.
+ */
 public interface CommonFilter {
 
     ImageProcessor filter(ImageProcessor src);
+
 }

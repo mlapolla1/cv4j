@@ -26,6 +26,9 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
+/**
+ * The Rx histogram.
+ */
 public class RxHist {
 
     private Flowable flowable;

@@ -15,6 +15,7 @@ import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.filters.CommonFilter;
+import com.cv4j.core.filters.Filter;
 import com.safframework.aop.annotation.Trace;
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
@@ -26,7 +27,6 @@ import java.util.List;
 /**
  * Created by Tony Shen on 2017/3/11.
  */
-
 public class SelectFilterActivity extends BaseActivity {
 
     @InjectView(R.id.image)
@@ -98,28 +98,28 @@ public class SelectFilterActivity extends BaseActivity {
         });
     }
 
-    private Object getFilter(String filterName) {
-
-        Object object = null;
+    private CommonFilter getFilter(String filterName) {
+        CommonFilter filter = null;
         String className = filterName + "Filter";
-        
+
         try {
-            object = Class.forName("com.cv4j.core.filters." + className).newInstance();
+            Class filterClass = Class.forName("com.cv4j.core.filters." + className);
+            filter = (CommonFilter) filterClass.newInstance();
         } catch (ClassNotFoundException e) {
-            System.out.println("Class " + filter + " not found");
+            System.out.println("Class " + className + " not found");
         } catch (InstantiationException e) {
             System.out.println("Instantiation error for class " + className);
         } catch (IllegalAccessException e) {
             System.out.println("Illegal acces error for class " + className);
         }
 
-        return object;
+        return filter;
     }
 
     @Trace
     public void changeFilter(String filterName) {
         CV4JImage colorImage = new CV4JImage(bitmap);
-        CommonFilter filter = (CommonFilter)getFilter(filterName);
+        CommonFilter filter = getFilter(filterName);
         if (filter!=null) {
 
             image.setImageBitmap(filter.filter(colorImage.getProcessor()).getImage().toBitmap());

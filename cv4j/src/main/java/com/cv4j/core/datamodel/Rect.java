@@ -14,19 +14,42 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The Rect class of DataModel
+ */
 public class Rect {
 
+    /*
+     * Coordinate x
+     */
     public int x;
+    /*
+     * Coordinate y
+     */
     public int y;
+    /*
+     * Rectangle width
+     */
     public int width;
+    /*
+     * Rectangle height
+     */
     public int height;
+    /*
+     * Label for ccl 
+     */
     public int labelIdx; // just use it for ccl
 
+    /*
+     * Return point tl
+     */
     public Point tl() {
         return new Point(x, y);
     }
 
+    /*
+     * Return point br
+     */
     public Point br() {
         return new Point(x+width, y+height);
     }

@@ -17,7 +17,9 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import java.util.Arrays;
-
+/**
+ * The DistanceTransform class
+ */
 public class DistanceTransform {
 
 	public void process(ByteProcessor binary) {

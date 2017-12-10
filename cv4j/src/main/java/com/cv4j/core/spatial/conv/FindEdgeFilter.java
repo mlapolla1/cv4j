@@ -21,6 +21,9 @@ import com.cv4j.core.filters.BaseFilter;
 
 import static com.cv4j.image.util.Tools.clamp;
 
+/**
+ * The find-edge filter.
+ */
 public class FindEdgeFilter extends BaseFilter {
 
 	/**
@@ -69,9 +72,15 @@ public class FindEdgeFilter extends BaseFilter {
 		int k7 = sobel_y[7];
 		int k8 = sobel_y[8];
 
-		int yr = 0, yg = 0, yb = 0;
-		int xr = 0, xg = 0, xb = 0;
-		int r = 0, g = 0, b = 0;
+		int yr = 0;
+		int yg = 0;
+		int yb = 0;
+		int xr = 0;
+		int xg = 0;
+		int xb = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {

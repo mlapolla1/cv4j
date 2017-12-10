@@ -19,15 +19,41 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The nature filter.
+ */
 public class NatureFilter extends BaseFilter {
-
+	/*
+	 *Constant of atmosphere style
+	 */
 	public static final int ATMOSPHERE_STYLE = 1;
+	/*
+	 *Constant of burn style
+	 */
 	public static final int BURN_STYLE = 2;
+	/*
+	 *Constant of fog style
+	 */
 	public static final int FOG_STYLE = 3;
+	/*
+	 *Constant of freeze style
+	 */
 	public static final int FREEZE_STYLE = 4;
+	/*
+	 *Constant of lava style
+	 */
 	public static final int LAVA_STYLE = 5;
+	/*
+	 *Constant of metal style
+	 */
 	public static final int METAL_STYLE = 6;
+	/*
+	 *Constant of ocean style
+	 */
 	public static final int OCEAN_STYLE = 7;
+	/*
+	 *Constant of water style
+	 */
 	public static final int WATER_STYLE = 8;
 	private int style;
 	private int[] fogLookUp;
@@ -79,7 +105,10 @@ public class NatureFilter extends BaseFilter {
 
 		int total = width*height;
 		int index = 0;
-		int ta = 0, tr = 0, tg = 0, tb = 0;
+		int ta = 0;
+		int tr = 0;
+		int tg = 0;
+		int tb = 0;
 		for (int i=0; i<total; i++) {
 			tr = R[i] & 0xff;
 			tg = G[i] & 0xff;

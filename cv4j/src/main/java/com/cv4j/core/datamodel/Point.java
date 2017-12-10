@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The Point class of DataModel
+ */
 public class Point {
-
+	/*
+	 * Coordinate x
+	 */
     public int x;
+
+	/*
+	 * Coordinate x
+	 */    
     public int y;
 
+	/*
+	 * Constructor
+	 */    
     public Point() {
     }
 
+	/*
+	 * Constructor
+	 * @param coordinate x, coordinate y
+	 */    
     public Point(int x, int y) {
         this.x = x;
         this.y = y;

@@ -72,7 +72,9 @@ public class CompareHist3Fragment extends BaseFragment {
         CompareHist compareHist = new CompareHist();
         StringBuilder sb = new StringBuilder();
 
-        double sum1=0,sum2=0,sum3=0;
+        double sum1=0;
+        double sum2=0;
+        doble sum3=0;
 
         for (int i=0;i<3;i++) {
             sum1 += compareHist.bhattacharyya(source[i],target[i]);

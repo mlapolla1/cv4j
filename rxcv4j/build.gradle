@@ -29,6 +29,7 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
@@ -50,7 +51,7 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile project(':cv4j')
+    implementation project(path: ':cv4j', configuration: 'default')
 }
 
 repositories {

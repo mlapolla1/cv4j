@@ -19,7 +19,9 @@ import com.cv4j.core.datamodel.MeasureData;
 import com.cv4j.core.datamodel.Point;
 
 import java.util.List;
-
+/**
+ * The GeoMoments class
+ */
 public class GeoMoments {
 
     /***

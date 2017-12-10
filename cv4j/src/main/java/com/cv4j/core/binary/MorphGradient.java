@@ -18,11 +18,22 @@ package com.cv4j.core.binary;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
 import com.cv4j.exception.CV4JException;
-
+/**
+ * The MorphGradient class
+ */
 public class MorphGradient {
 
+    /**
+     * Constant of the internal gradient
+     */ 
     public static final int INTERNAL_GRADIENT = 1;
+    /**
+     * Constant of the external gradient
+     */ 
     public static final int EXTERNAL_GRADIENT = 2;
+    /**
+     * Constant of the basic gradient
+     */ 
     public static final int BASIC_GRADIENT = 3;
 
     /***
@@ -41,7 +52,8 @@ public class MorphGradient {
 
         // X Direction
         int xr = structureElement.cols/2;
-        int min = 0, max = 0;
+        int min = 0;
+        int max = 0;
         System.arraycopy(data, 0, ero, 0, data.length);
         System.arraycopy(data, 0, dil, 0, data.length);
         int offset = 0;

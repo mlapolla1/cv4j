@@ -91,7 +91,9 @@ public class ConnectedAreaLabel {
         int width = binary.getWidth();
         int height = binary.getHeight();
         byte[] data = binary.getGray();
-        int p1, p2, p3;
+        int p1;
+        int p2;
+        int p3;
         int yMin = 1;
         int xMin = 1;
         int offset = 0;
@@ -222,8 +224,10 @@ public class ConnectedAreaLabel {
     }
 
     private Rect boundingRect(List<PixelNode> pixelList) {
-        int minX = 10000, maxX = 0;
-        int minY = 10000, maxY = 0;
+        int minX = 10000;
+        int maxX = 0;
+        int minY = 10000;
+        int maxY = 0;
         for (PixelNode pn : pixelList) {
             minX = Math.min(pn.col, minX);
             maxX = Math.max(pn.col, maxX);

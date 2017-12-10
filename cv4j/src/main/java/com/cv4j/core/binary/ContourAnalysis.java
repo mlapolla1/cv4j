@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * The Analysis of Contour
+ */
 public class ContourAnalysis {
 
     public void process(ByteProcessor binary, int[] labels, List<MeasureData> measureDataList) {

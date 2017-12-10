@@ -2,10 +2,10 @@
 ext {
     configuration = [
             package          : "com.cv4j",
-            buildToolsVersion: "25.0.2",
-            compileVersion   : 25,
+            buildToolsVersion: "26.0.2",
+            compileVersion   : 26,
             minSdk           : 9,
-            targetSdk        : 25,
+            targetSdk        : 26,
             version_code     : 1,
             version_name     : "0.0.1"
     ]
@@ -28,7 +28,7 @@ ext {
 
 buildscript {
     System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
-    ext.kotlin_version = '1.1.4'
+    ext.kotlin_version = '1.1.51'
 
     repositories {
         jcenter()
@@ -37,7 +37,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:1.0.10'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.novoda:bintray-release:0.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -52,12 +52,14 @@ allprojects {
     }
     //加上这些
     tasks.withType(Javadoc) {
-        options{ encoding "UTF-8"
+        options {
+            encoding "UTF-8"
             charSet 'UTF-8'
             links "http://docs.oracle.com/javase/7/docs/api"
         }
     }
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

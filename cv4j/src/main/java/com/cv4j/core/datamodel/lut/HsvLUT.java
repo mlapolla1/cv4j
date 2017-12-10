@@ -29,7 +29,9 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class HsvLUT {
-
+    /*
+     * List of hsv lut
+     */
     public static  int[][] HSV_LUT = new int[][]{
             {253, 1, 0}, {255, 6, 0}, {255, 11, 1}, {254, 17, 1}, {255, 24, 1},
             {255, 30, 0}, {254, 36, 0}, {255, 42, 0}, {254, 48, 0}, {255, 54, 0},

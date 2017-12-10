@@ -28,11 +28,15 @@ public class ConvolutionHVFilter extends BaseFilter {
 
 		int total = width*height;
 		byte[][] output = new byte[3][total];
-		int r=0, g=0, b=0;
+		int r=0;
+		int g=0;
+		int b=0;
 		for(int row=0; row<height; row++) {
 			int offset = row*width;
 			for(int col=1; col<width-1; col++) {
-				int sr=0, sg=0, sb=0; 
+				int sr=0;
+				int sg=0;
+				int sb=0; 
 				for(int j=-1; j<=1; j++) {
 					int coffset = j+col;
 					sr += R[offset+coffset]&0xff;
@@ -52,7 +56,9 @@ public class ConvolutionHVFilter extends BaseFilter {
 		for(int col=0; col<width; col++) {
 			int coffset = col;
 			for(int row=1; row<height-1; row++) {
-				int sr=0, sg=0, sb=0; 
+				int sr=0;
+				int sg=0;
+				int sb=0; 
 				for(int j=-1; j<=1; j++) {
 					int roffset = j+row;
 					sr += output[0][roffset*width+coffset]&0xff;

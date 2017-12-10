@@ -112,7 +112,8 @@ public class Tools {
      * @return the interpolated value
      */
     public static int bilinearInterpolate(float x, float y, int nw, int ne, int sw, int se) {
-        float m0, m1;
+        float m0;
+        float m1;
         int a0 = (nw >> 24) & 0xff;
         int r0 = (nw >> 16) & 0xff;
         int g0 = (nw >> 8) & 0xff;
@@ -213,8 +214,11 @@ public class Tools {
 
     public static int[] rgb2hsv(int r, int g, int b)
     {
-        double delta, min;
-        double h = 0, s, v;
+        double delta;
+        double min;
+        double h = 0;
+        double s;
+        double v;
 
         min = Math.min(Math.min(r, g), b);
         v = Math.max(Math.max(r, g), b);

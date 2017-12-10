@@ -18,7 +18,10 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
-public class GlowFilter extends GaussianBlurFilter{
+/**
+ * The glow filter.
+ */
+public class GlowFilter extends GaussianBlurFilter {
 
 	private float amount = 0.2f;
 	private int radius;

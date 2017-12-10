@@ -38,7 +38,9 @@ public class GaussianNoiseFilter extends BaseFilter {
 
 	public ImageProcessor doFilter(ImageProcessor src) {
 
-		int r=0, g=0, b=0;
+		int r=0;
+		int g=0;
+		int b=0;
 		int offset = 0;
 		int total = width * height;
 		java.util.Random random = new java.util.Random();

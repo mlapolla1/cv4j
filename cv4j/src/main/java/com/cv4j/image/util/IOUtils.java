@@ -18,6 +18,10 @@ package com.cv4j.image.util;
 import java.io.Closeable;
 import java.io.IOException;
 
+/**
+ * IOUtils.
+ * Basic utilities.
+ */
 public class IOUtils {
 
     /**

@@ -19,7 +19,9 @@ import com.cv4j.app.utils.DoubleClickExitUtils;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.tony.common.utils.Preconditions;
 
-
+/**
+* MainActivity class
+*/
 public class MainActivity extends BaseActivity {
 
     @InjectView(R.id.drawer_layout)

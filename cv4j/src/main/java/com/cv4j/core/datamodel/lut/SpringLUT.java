@@ -26,7 +26,9 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class SpringLUT {
-
+    /*
+     * List of spring lut
+     */
     public static int[][] SPRING_LUT = new int[][]{
             {254, 0, 255}, {255, 1, 255}, {255, 1, 255}, {255, 3, 252}, {255, 3, 251},
             {255, 5, 248}, {255, 6, 248}, {255, 7, 247}, {255, 8, 245}, {255, 9, 246},

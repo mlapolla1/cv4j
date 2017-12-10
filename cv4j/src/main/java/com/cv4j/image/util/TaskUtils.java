@@ -22,6 +22,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * TaskUtils.
+ * Utilities for thread tasks.
+ */
 public class TaskUtils {
 
     public static ExecutorService newCachedThreadPool(final String name) {
@@ -45,6 +49,10 @@ public class TaskUtils {
                 new CounterThreadFactory(name));
     }
 
+    /**
+     * CounterThreadFactory.
+     * Implementation of a thread with a counter as name.
+     */
     static class CounterThreadFactory implements ThreadFactory {
         private int count;
         private String name;

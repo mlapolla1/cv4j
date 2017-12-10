@@ -18,13 +18,18 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The sepia tone filter.
+ */
 public class SepiaToneFilter extends BaseFilter {
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
 
         int total = width*height;
-		int r=0, g=0, b=0;
+		int r=0;
+		int g=0;
+		int b=0;
         for(int i=0; i<total; i++) {
 			r = R[i] & 0xff;
 			g = G[i] & 0xff;

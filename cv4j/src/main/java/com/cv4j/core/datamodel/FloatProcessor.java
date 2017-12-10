@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/** 
+ * The FloatProcessor class of DataModel
+ */
 public class FloatProcessor implements ImageProcessor {
 
     private int width;

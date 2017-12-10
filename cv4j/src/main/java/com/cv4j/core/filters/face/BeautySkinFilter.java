@@ -26,6 +26,9 @@ import com.cv4j.core.filters.GradientFilter;
 
 import java.util.Arrays;
 
+/**
+ * The beauty skin filter.
+ */
 public class BeautySkinFilter implements CommonFilter {
 
     @Override
@@ -46,7 +49,9 @@ public class BeautySkinFilter implements CommonFilter {
         ISkinDetection skinDetector = new DefaultSkinDetection();
         byte[] mask = new byte[length];
         Arrays.fill(mask, (byte) 0);
-        int r = 0, g = 0, b = 0;
+        int r = 0;
+        int g = 0;
+        int b = 0;
         for (int i = 0; i < R.length; i++) {
             r = R[i] & 0xff;
             g = G[i] & 0xff;

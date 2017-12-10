@@ -17,6 +17,9 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ImageProcessor;
 
+/**
+ * The white image filter.
+ */
 public class WhiteImageFilter extends BaseFilter {
 	private double beta;
 

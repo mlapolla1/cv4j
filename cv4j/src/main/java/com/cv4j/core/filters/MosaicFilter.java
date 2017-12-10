@@ -19,6 +19,9 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.datamodel.IntIntegralImage;
 
+/**
+ * The mosaic filter.
+ */
 public class MosaicFilter extends BaseFilter {
 	// 窗口半径大小
 	private int r=1;
@@ -39,7 +42,9 @@ public class MosaicFilter extends BaseFilter {
 	public ImageProcessor doFilter(ImageProcessor src) {
 
 		int size = (r * 2 + 1) * (r * 2 + 1);
-		int tr = 0, tg = 0, tb = 0;
+		int tr = 0;
+		int tg = 0;
+		int tb = 0;
 		byte[][] output = new byte[3][R.length];
 
 		IntIntegralImage rii = new IntIntegralImage();

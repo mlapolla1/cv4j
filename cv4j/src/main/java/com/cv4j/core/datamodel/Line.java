@@ -14,13 +14,31 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
-
+/**
+ * The Line class of DataModel
+ */
 public class Line {
+    /*
+     * Coordinate x point one
+     */
     public int x1 = 0;
+    /*
+     * Coordinate y point one
+     */
     public int y1 = 0;
+    /*
+     * Coordinate x point two
+     */
     public int x2 = 0;
+    /*
+     * Coordinate y point two
+     */
     public int y2 = 0;
 
+    /*
+     * Set line's coordinates
+     * @param Coordinate x point one, Coordinate y point one, Coordinate x point two, Coordinate y point two
+     */
     public Line(int x1, int y1, int x2, int y2) {
         this.x1 = x1;
         this.y1 = y1;
@@ -28,8 +46,15 @@ public class Line {
         this.y2 = y2;
     }
 
+    /*
+     * Constructor
+     */
     public Line() {}
 
+    /*
+     * Return the slope
+     * @return the slople
+     */
     public double getSlope() {
         double dy = y2 - y1;
         double dx = x2 - x1;
@@ -39,10 +64,18 @@ public class Line {
         return (dy/dx);
     }
 
+    /*
+     * Return point one
+     * @return point one
+     */
     public Point getPoint1() {
         return new Point(x1, y1);
     }
 
+    /*
+     * Return point two
+     * @return point two
+     */
     public Point getPoint2() {
         return new Point(x2, y2);
     }

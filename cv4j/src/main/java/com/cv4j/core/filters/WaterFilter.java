@@ -19,6 +19,9 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The water filter.
+ */
 public class WaterFilter extends BaseFilter {
 
 	private float wavelength = 16;
@@ -71,7 +74,10 @@ public class WaterFilter extends BaseFilter {
 				int srcY = (int)Math.floor( out[1] );
 				float xWeight = out[0]-srcX;
 				float yWeight = out[1]-srcY;
-				int nw, ne, sw, se;
+				int nw;
+				int ne;
+				int sw;
+				int se;
 
 				// 获取周围四个像素，插值用，
 				if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {

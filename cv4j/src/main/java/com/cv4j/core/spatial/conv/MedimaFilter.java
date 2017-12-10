@@ -22,6 +22,9 @@ import com.cv4j.core.filters.CommonFilter;
 
 import java.util.Arrays;
 
+/**
+ * The medima filter.
+ */
 public class MedimaFilter implements CommonFilter {
 	private boolean meanfilter;
 	private int radius;

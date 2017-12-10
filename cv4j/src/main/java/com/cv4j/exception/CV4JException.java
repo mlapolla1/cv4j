@@ -15,6 +15,9 @@
  */
 package com.cv4j.exception;
 
+/**
+ * The basic exception for CV4J related components.
+ */
 public class CV4JException extends RuntimeException {
 
     private static final long serialVersionUID = -2565764903880816387L;
