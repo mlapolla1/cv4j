@@ -47,9 +47,24 @@ public interface ImageData {
             61504, 62001, 62500, 63001, 63504, 64009, 64516, 65025,
     };
 
+    /**
+     * CV4J image type RGB
+     */
     int CV4J_IMAGE_TYPE_RGB = 0;
+
+    /**
+     * CV4J image type gray
+     */
     int CV4J_IMAGE_TYPE_GRAY = 2;
+
+    /**
+     * CV4J image type hsv
+     */
     int CV4J_IMAGE_TYPE_HSV = 4;
+
+    /**
+     * CV4J image type binary
+     */
     int CV4J_IMAGE_TYPE_BINARY = 8;
 
     ImageProcessor getProcessor();

@@ -51,10 +51,12 @@ public class StrokeAreaFilter extends BaseFilter {
 
         byte[][] output = new byte[3][R.length];
 
-        int index = 0, index2 = 0;
+        int index = 0;
+        int index2 = 0;
         int semiRow = (int)(size/2);
         int semiCol = (int)(size/2);
-        int newX, newY;
+        int newX;
+        int newY;
 
         // initialize the color RGB array with zero...
         int[] rgb = new int[3];
