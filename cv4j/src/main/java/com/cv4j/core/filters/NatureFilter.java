@@ -23,50 +23,76 @@ import com.cv4j.image.util.Tools;
  * The nature filter.
  */
 public class NatureFilter extends BaseFilter {
-	/*
-	 *Constant of atmosphere style
+	
+	/**
+	 * Constant of atmosphere style
 	 */
 	public static final int ATMOSPHERE_STYLE = 1;
-	/*
-	 *Constant of burn style
+	
+	/**
+	 * Constant of burn style
 	 */
 	public static final int BURN_STYLE = 2;
-	/*
-	 *Constant of fog style
+	
+	/**
+	 * Constant of fog style
 	 */
 	public static final int FOG_STYLE = 3;
-	/*
-	 *Constant of freeze style
+	
+	/**
+	 * Constant of freeze style
 	 */
 	public static final int FREEZE_STYLE = 4;
-	/*
-	 *Constant of lava style
+	
+	/**
+	 * Constant of lava style
 	 */
 	public static final int LAVA_STYLE = 5;
-	/*
-	 *Constant of metal style
+	
+	/**
+	 * Constant of metal style
 	 */
 	public static final int METAL_STYLE = 6;
-	/*
-	 *Constant of ocean style
+	
+	/**
+	 * Constant of ocean style
 	 */
 	public static final int OCEAN_STYLE = 7;
-	/*
-	 *Constant of water style
+	
+	/**
+	 * Constant of water style
 	 */
 	public static final int WATER_STYLE = 8;
+	
+	/**
+	 * The style.
+	 */
 	private int style;
+
+	/**
+	 * The fog lookup.
+	 */
 	private int[] fogLookUp;
 
+	/**
+	 * Constructor without parameters.
+	 */
 	public NatureFilter() {
 		this(ATMOSPHERE_STYLE);
 	}
 
+	/**
+	 * Constructor with a given style
+	 * @param  style The style
+	 */
 	public NatureFilter(int style) {
 		this.style = style;
 		buildFogLookupTable();
 	}
 	
+	/**
+	 * Build the fog lookup table.
+	 */
 	private void buildFogLookupTable() {
 		fogLookUp = new int[256];
 		int fogLimit = 40;
@@ -92,10 +118,18 @@ public class NatureFilter extends BaseFilter {
 
 	}
 
+	/**
+	 * Return the style.
+	 * @return The style.
+	 */
 	public int getStyle() {
 		return style;
 	}
 
+	/**
+	 * Set the style.
+	 * @param style The new style.
+	 */
 	public void setStyle(int style) {
 		this.style = style;
 	}

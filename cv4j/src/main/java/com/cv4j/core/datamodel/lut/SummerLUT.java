@@ -26,7 +26,7 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class SummerLUT {
-    /*
+    /**
      * List of summer lut
      */
     public static int[][] SUMMER_LUT = new int[][]{

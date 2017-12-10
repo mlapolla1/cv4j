@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.RecycledViewPool;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +33,7 @@ public class SpitalConvFragment extends BaseFragment {
 
     private List<String> list = new ArrayList<>();
     
-    private static RecyclerView.RecycledViewPool myPool = new RecyclerView.RecycledViewPool();
+    private static RecycledViewPool myPool = new RecycledViewPool();
 
     static {
         myPool.setMaxRecycledViews(0, 10);

@@ -14,34 +14,76 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
+
 /**
  * The Scalar class of DataModel
  */
 public class Scalar {
+	
+	/**
+	 * The red color value of RGBA.
+	 */
 	public int red;
+
+	/**
+	 * The green color value of RGBA.
+	 */
 	public int green;
+
+	/**
+	 * The blue color value of RGBA.
+	 */
 	public int blue;
+
+	/**
+	 * The alpha value of RGBA.
+	 */
 	public int alpha;
+
+	/**
+	 * Constructor with RGB values.
+	 * @param  red   The red value.
+	 * @param  green The green value.
+	 * @param  blue  The blue value.
+	 */
 	public Scalar(int red, int green, int blue) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 		this.alpha = 255;
 	}
-	
-	public static Scalar argb(int alpha, int red, int green, int blue){
-		return new Scalar(red, green, blue);
-	}
-	
-	public static Scalar rgb(int red, int green, int blue){
-		return new Scalar(red, green, blue);
-	}
-	
+
+	/**
+	 * Constructor with RGBA initializations.
+	 */
 	public Scalar() {
 		red = 0;
 		green = 0;
 		blue = 0;
 		alpha = 255;
+	}
+	
+	/**
+	 * Return a scalar with a given ARGB
+	 * @param  alpha The alpha value.
+	 * @param  red   The red value.
+	 * @param  green The green value.
+	 * @param  blue  The blue value.
+	 * @return       The scalar RGB.
+	 */
+	public static Scalar argb(int alpha, int red, int green, int blue){
+		return new Scalar(red, green, blue);
+	}
+	
+	/**
+	 * Return a scalar with a given RGB.
+	 * @param  red   The red value.
+	 * @param  green The green value.
+	 * @param  blue  The blue value.
+	 * @return       The scalar RGB.
+	 */
+	public static Scalar rgb(int red, int green, int blue){
+		return new Scalar(red, green, blue);
 	}
 	
 }

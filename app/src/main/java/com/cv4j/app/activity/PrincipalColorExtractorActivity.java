@@ -33,7 +33,6 @@ import com.cv4j.core.datamodel.Scalar;
 import com.cv4j.core.pixels.PrincipalColorExtractor;
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
-import com.safframework.log.L;
 
 import java.util.List;
 

@@ -26,7 +26,7 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class WinterLUT {
-    /*
+    /**
      * List of winter lut
      */
     public static int[][] WINTER_LUT = new int[][]{

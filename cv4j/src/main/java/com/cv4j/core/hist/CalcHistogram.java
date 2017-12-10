@@ -25,15 +25,23 @@ import com.cv4j.image.util.Tools;
  * type of histograms.
  */
 public class CalcHistogram {
-    /*
-     *Constant of color in rgb
+    
+    /**
+     * Constant of color in rgb
      */
     public final static int COLOR_RGB = 1;
-    /*
-     *Constant of color in hsv
+    
+    /**
+     * Constant of color in hsv
      */
     public final static int COLOR_HSV = 2;
 
+    /**
+     * Calculates the norm histogram.
+     * @param  src  The image processor source.
+     * @param  bins The bins.
+     * @return      The histogram.
+     */
     public static int[] calculateNormHist(ImageProcessor src, int bins) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -57,6 +65,13 @@ public class CalcHistogram {
         return hist;
     }
 
+    /**
+     * Calculates the RGB histogram.
+     * @param src  The image processor source.
+     * @param bins The bins.
+     * @param hist The histogram.
+     * @param norm is norm.
+     */
     public void calcRGBHist(ImageProcessor src, int bins, int[][] hist, boolean norm) {
 
         if (src == null) return;
@@ -83,10 +98,25 @@ public class CalcHistogram {
         }
     }
 
+    /**
+     * Calulates HSV histogram
+     * @param src  The source
+     * @param bins The bins
+     * @param hist The histogram
+     * @param norm Is norm
+     */
     public void calcHSVHist(ImageProcessor src, int bins, int[][] hist, boolean norm) {
         calcHSVHist(src,bins,hist,norm,new int[][]{{0, 180},{0,256},{0,256}});
     }
 
+    /**
+     * Calculates HSV histogram
+     * @param src    The source
+     * @param bins   The bins
+     * @param hist   The histogram
+     * @param norm   Is norm
+     * @param ranges The ranges
+     */
     public void calcHSVHist(ImageProcessor src, int bins, int[][] hist, boolean norm, int[][] ranges) {
 
         if (src == null) return;
@@ -125,6 +155,13 @@ public class CalcHistogram {
         }
     }
 
+    /**
+     * Returns the histogram.
+     * @param  data  The data.
+     * @param  bins  The bins.
+     * @param  range The range.
+     * @return       The histogram.
+     */
     private int[] getHistogram(byte[] data, int bins, int[] range) {
         int dr = range[1] - range[0];
         int[] hist = new int[dr];

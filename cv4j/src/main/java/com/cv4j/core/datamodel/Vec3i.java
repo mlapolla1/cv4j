@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
+
 /**
  * The Vec3i class of DataModel
  */
 public class Vec3i {
-	/*
+	
+    /**
      * Coordinate x
      */  
     public int x = 0;
-    /*
+    
+    /**
      * Coordinate y
      */  
     public int y = 0;
-    /*
+    
+    /**
      * Coordinate z
      */  
     public int z = 0;

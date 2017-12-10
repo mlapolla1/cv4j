@@ -18,7 +18,7 @@ package com.cv4j.core.datamodel.lut;
  * The OceanLUT class
  */
 public class OceanLUT {
-	/*
+	/**
      * List of ocean lut
      */
     public static  int[][] OCEAN_LUT = new int[][]{

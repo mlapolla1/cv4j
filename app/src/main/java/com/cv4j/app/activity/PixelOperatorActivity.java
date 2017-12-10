@@ -57,16 +57,56 @@ public class PixelOperatorActivity extends BaseActivity {
     @InjectExtra(key = "Type")
     int type;
 
+    /**
+     * Add operator.
+     */
     public static final int ADD = 1;
+
+    /**
+     * Subtract operator.
+     */
     public static final int SUBSTRACT = 2;
+
+    /**
+     * Multiply operator.
+     */
     public static final int MULTIPLE = 3;
+
+    /**
+     * Division operator.
+     */
     public static final int DIVISION = 4;
+
+    /**
+     * Bitwise and operator.
+     */
     public static final int BITWISE_AND = 5;
+
+    /**
+     * Bitwise or operator.
+     */
     public static final int BITWISE_OR = 6;
+
+    /**
+     * Bitwise not operator.
+     */
     public static final int BITWISE_NOT = 7;
+
+    /**
+     * Bitwise xor operator.
+     */
     public static final int BITWISE_XOR = 8;
+
+    /**
+     * Add wright operator.
+     */
     public static final int ADD_WEIGHT = 9;
+
+    /**
+     * Sub image operator.
+     */
     public static final int SUB_IMAGE = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +201,6 @@ public class PixelOperatorActivity extends BaseActivity {
 
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
-
         finish();
     }
 }

@@ -27,7 +27,7 @@ package com.cv4j.core.datamodel.lut;
  */
 public class AutumnLUT {
     
-    /*
+    /**
      * List of autumn lut
      */
     public static int[][] AUTUMN_LUT = new int[][]{

@@ -17,6 +17,9 @@ package com.cv4j.core.pixels;
 
 import com.cv4j.core.datamodel.Scalar;
 
+/**
+ * The cluster point.
+ */
 public class ClusterPoint {
 
 	protected double x;

@@ -104,7 +104,8 @@ public class OilPaintFilter extends BaseFilter {
                 }
 
                 // find the max number of same gray level pixel
-                int maxCount = 0, maxIndex = 0;
+                int maxCount = 0;
+                int maxIndex = 0;
                 for(int m=0; m<intensityCount.length; m++)
                 {
                     if(intensityCount[m] > maxCount)

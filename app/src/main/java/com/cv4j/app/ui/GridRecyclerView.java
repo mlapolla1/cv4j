@@ -22,7 +22,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.GridLayoutAnimationController;
 
 /**
@@ -58,7 +58,7 @@ public class GridRecyclerView extends RecyclerView {
     }
 
     @Override
-    protected void attachLayoutAnimationParameters(View child, @NonNull ViewGroup.LayoutParams params, int index, int count) {
+    protected void attachLayoutAnimationParameters(View child, @NonNull LayoutParams params, int index, int count) {
 
         if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager) {
 

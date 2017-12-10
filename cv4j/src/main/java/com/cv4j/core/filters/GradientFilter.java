@@ -22,47 +22,80 @@ import com.cv4j.image.util.Tools;
  * The gradient filter.
  */
 public class GradientFilter {
-        /*
-         * Sobel operator x
-         */
+    
+    /**
+     * Sobel operator x
+     */
 	public final static int[][] SOBEL_X = new int[][]{{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-        /*
-         * Sobel operator x
-         */
+    
+    /**
+     * Sobel operator x
+     */
 	public final static int[][] SOBEL_Y = new int[][]{{-1, -2, -1}, {0,  0,  0}, {1,  2,  1}};
 	
-        /*
-         * Direction parameter x
-         */
+    /**
+     * Direction parameter x
+     */
 	public final static int X_DIRECTION = 0;
-        /*
-         * Direction parameter y
-         */
+    
+    /**
+     * Direction parameter y
+     */
 	public final static int Y_DIRECTION = 2;
-        /*
-         * Direction parameter xy
-         */
+    
+    /**
+     * Direction parameter xy
+     */
 	public final static int XY_DIRECTION = 4;
-	private int direction;
+	
+    /**
+     * The direction.
+     */
+    private int direction;
+
+    /**
+     * Is sobel.
+     */
 	private boolean isSobel;
 	
+    /**
+     * Constructor initialization of the gradient
+     * filter.
+     */
 	public GradientFilter() {
 		direction = XY_DIRECTION;
 		isSobel = true;
 	}
-	
+    
+    /**
+     * Sets the sobel.
+     * @param sobel The sobel.
+     */
 	public void setSoble(boolean sobel) {
 		this.isSobel = sobel;
 	}
 
+    /**
+     * Returns the direction.
+     * @return The direction.
+     */
 	public int getDirection() {
 		return direction;
 	}
 
+    /**
+     * Sets the direction.
+     * @param direction The new direction.
+     */
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
+    /**
+     * Returns a gradient.
+     * @param  src The byte processor source.
+     * @return     The gradient.
+     */
 	public int[] gradient(ByteProcessor src){
 		int width = src.getWidth();
         int height = src.getHeight();

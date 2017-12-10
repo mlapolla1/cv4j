@@ -22,6 +22,9 @@ import java.util.Random;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.Scalar;
 
+/**
+ * The principal color extractor.
+ */
 public class PrincipalColorExtractor {
 	private List<ClusterCenter> clusterCenterList;
 	private List<ClusterPoint> pointList;

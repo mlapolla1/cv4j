@@ -24,24 +24,37 @@ import com.cv4j.image.util.Tools;
  * The mear operator filter.
  */
 public class MaerOperatorFilter extends GaussianBlurFilter {
-    /*
-     *Constant of four
+    
+    /**
+     * Constant of four
      */
 	public static int[] FOUR = new int[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
-    /*
-     *Constant of eight
+    
+    /**
+     * Constant of eight
      */
 	public static int[] EIGHT = new int[] { -1, -1, -1, -1, 8, -1, -1, -1, -1};
+	
 	private boolean _4direction;
 
+	/**
+	 * Constructor.
+	 */
 	public MaerOperatorFilter() {
 		_4direction = true;
 	}
 
+	/**
+	 * @return Is 4 direct.
+	 */
 	public boolean is4direct() {
 		return _4direction;
 	}
 
+	/**
+	 * Set 4 direct.
+	 * @param xdirect The x direct
+	 */
 	public void set4direct(boolean xdirect) {
 		this._4direction = xdirect;
 	}

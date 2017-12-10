@@ -23,6 +23,9 @@ import com.cv4j.exception.CV4JException;
 import com.cv4j.image.util.Preconditions;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The class operator.
+ */
 public final class Operator {
 	
 	public static ImageProcessor add(ImageProcessor image1, ImageProcessor image2) {
@@ -34,7 +37,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -56,7 +60,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -78,7 +83,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -100,7 +106,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -122,7 +129,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -144,7 +152,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -182,7 +191,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
@@ -204,7 +214,8 @@ public final class Operator {
 		int h = image1.getHeight();
 		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0, b=0;
+		int a=0;
+		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {

@@ -20,8 +20,9 @@ import android.graphics.Bitmap;
  * The ImageData class of DataModel
  */
 public interface ImageData {
-    /*
-     *List of square roots
+    
+    /**
+     * Square root lookup table
      */
     int[] SQRT_LUT = new int[] {
             0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324,

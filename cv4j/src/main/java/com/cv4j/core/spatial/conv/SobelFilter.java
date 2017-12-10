@@ -24,24 +24,37 @@ import com.cv4j.image.util.Tools;
  * The sobel filter.
  */
 public class SobelFilter extends BaseFilter {
-    /*
+    
+    /**
      *Sobel filter y
      */
 	public static int[] sobel_y = new int[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
-    /*
+    
+    /**
      *Sobel filter x
      */
 	public static int[] sobel_x = new int[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+	
 	private boolean xdirect;
 
+	/**
+	 * Constructor.
+	 */
 	public SobelFilter() {
 		xdirect = true;
 	}
 
+	/**
+	 * @return Is X direct
+	 */
 	public boolean isXdirect() {
 		return xdirect;
 	}
 
+	/**
+	 * Set x direct
+	 * @param xdirect The x direct.
+	 */
 	public void setXdirect(boolean xdirect) {
 		this.xdirect = xdirect;
 	}

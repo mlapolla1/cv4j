@@ -25,13 +25,27 @@ import com.cv4j.image.util.Tools;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The template match
+ */
 public class TemplateMatch {
 
+    /**
+     * Sq diff normed.
+     */
     public static final int TM_SQDIFF_NORMED = 2;
+    
+    /**
+     * Ccorr normed.
+     */
     public static final int TM_CCORR_NORMED = 4;
+    
+    /**
+     * coeff normed
+     */
     public static final int TM_CCOEFF_NORMED = 6;
 
-    /***
+    /**
      *
      * @param target - source image contain template or not
      * @param tpl - template
@@ -75,6 +89,7 @@ public class TemplateMatch {
         }
         return new FloatProcessor(result, rw, rh);
     }
+
     /**
      *
      * @param target - source image contain template or not

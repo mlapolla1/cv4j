@@ -18,25 +18,27 @@ package com.cv4j.core.datamodel;
  * The Point class of DataModel
  */
 public class Point {
-	/*
-	 * Coordinate x
+	
+	/**
+	 * Coordinate x.
 	 */
     public int x;
 
-	/*
-	 * Coordinate x
+	/**
+	 * Coordinate y.
 	 */    
     public int y;
 
-	/*
-	 * Constructor
+	/**
+	 * Constructor without parameters.
 	 */    
     public Point() {
     }
 
-	/*
-	 * Constructor
-	 * @param coordinate x, coordinate y
+	/**
+	 * Constructor with inizialization of the coordinates.
+	 * @param int x The x coordinate.
+	 * @param int y The y coordinate.
 	 */    
     public Point(int x, int y) {
         this.x = x;

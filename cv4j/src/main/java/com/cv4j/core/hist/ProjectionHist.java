@@ -24,16 +24,18 @@ import static android.R.attr.width;
  * The histogram projection.
  */
 public class ProjectionHist {
-    /*
-     *x direction
+    
+    /**
+     * x direction
      */
     public final static int X_DIRECTION = 1;
-    /*
-     *y direction
+    
+    /**
+     * y direction
      */
     public final static int Y_DIRECTION = 2;
 
-    /***
+    /**
      *
      * @param src - binary image
      * @param direction - X or Y direction
@@ -70,6 +72,17 @@ public class ProjectionHist {
         }
     }
 
+    /**
+     * Returns the weight black number
+     * @param  data   The data
+     * @param  width  The width
+     * @param  height The height
+     * @param  x      The x
+     * @param  y      The y
+     * @param  xstep  The x step
+     * @param  ystep  The y step
+     * @return        The weight black number
+     */
     private float getWeightBlackNumber(byte[] data, float width, float height, float x, float y, float xstep, float ystep) {
         float weightNum = 0;
 

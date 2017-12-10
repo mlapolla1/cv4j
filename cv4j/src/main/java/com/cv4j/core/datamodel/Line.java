@@ -18,25 +18,29 @@ package com.cv4j.core.datamodel;
  * The Line class of DataModel
  */
 public class Line {
-    /*
+    
+    /**
      * Coordinate x point one
      */
     public int x1 = 0;
-    /*
+    
+    /**
      * Coordinate y point one
      */
     public int y1 = 0;
-    /*
+    
+    /**
      * Coordinate x point two
      */
     public int x2 = 0;
-    /*
+    
+    /**
      * Coordinate y point two
      */
     public int y2 = 0;
 
-    /*
-     * Set line's coordinates
+    /**
+     * Set line's coordinates.
      * @param Coordinate x point one, Coordinate y point one, Coordinate x point two, Coordinate y point two
      */
     public Line(int x1, int y1, int x2, int y2) {
@@ -46,13 +50,13 @@ public class Line {
         this.y2 = y2;
     }
 
-    /*
-     * Constructor
+    /**
+     * Constructor without parameters.
      */
     public Line() {}
 
-    /*
-     * Return the slope
+    /**
+     * Return the slope.
      * @return the slople
      */
     public double getSlope() {
@@ -64,7 +68,7 @@ public class Line {
         return (dy/dx);
     }
 
-    /*
+    /**
      * Return point one
      * @return point one
      */
@@ -72,7 +76,7 @@ public class Line {
         return new Point(x1, y1);
     }
 
-    /*
+    /**
      * Return point two
      * @return point two
      */

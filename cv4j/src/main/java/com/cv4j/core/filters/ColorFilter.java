@@ -23,66 +23,80 @@ import com.cv4j.core.datamodel.lut.LUT;
  * based on the look-up table to achieve very fast
  */
 public class ColorFilter extends BaseFilter {
-    /*
-     *Constant autmun style
+    /**
+     * Constant autmun style
      */
     public static final int AUTUMN_STYLE = 0;
-    /*
-     *Constant bone style
+    
+    /**
+     * Constant bone style
      */
     public static final int BONE_STYLE = 1;
-    /*
-     *Constant cool style
+    
+    /**
+     * Constant cool style
      */
     public static final int COOL_STYLE = 2;
-    /*
-     *Constant hot style
+    
+    /**
+     * Constant hot style
      */
     public static final int HOT_STYLE = 3;
-    /*
-     *Constant hsv style
+    
+    /**
+     * Constant hsv style
      */
     public static final int HSV_STYLE = 4;
-    /*
-     *Constant jet style
+    
+    /**
+     * Constant jet style
      */
     public static final int JET_STYLE = 5;
-    /*
-     *Constant ocean style
+    
+    /**
+     * Constant ocean style
      */
     public static final int OCEAN_STYLE = 6;
-    /*
-     *Constant pink style
+    
+    /**
+     * Constant pink style
      */
     public static final int PINK_STYLE = 7;
-    /*
-     *Constant rainbow style
+    
+    /**
+     * Constant rainbow style
      */
     public static final int RAINBOW_STYLE = 8;
-    /*
-     *Constant spring style
+    
+    /**
+     * Constant spring style
      */
     public static final int SPRING_STYLE = 9;
-    /*
-     *Constant summer style
+    
+    /**
+     * Constant summer style
      */
     public static final int SUMMER_STYLE = 10;
-    /*
-     *Constant winter style
+    
+    /**
+     * Constant winter style
      */
     public static final int WINTER_STYLE = 11;
 
+    /**
+     * The style.
+     */
     private int style;
 
-    /*
-     *Set autumn style ad default style
+    /**
+     * Set autumn style ad default style
      */
     public ColorFilter() {
         style = AUTUMN_STYLE;
     }
 
-    /*
-     *Set the style
+    /**
+     * Set the style
      */
     public void setStyle(int style) {
         this.style = style;
@@ -108,6 +122,11 @@ public class ColorFilter extends BaseFilter {
         return src;
     }
 
+    /**
+     * Returns the LUT with a given style.
+     * @param  style The LUT style.
+     * @return       The LUT.
+     */
     private int[][] getStyleLUT(int style) {
         return LUT.getColorFilterLUT(style);
     }

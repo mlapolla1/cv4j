@@ -27,7 +27,7 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class PinkLUT {
-    /*
+    /**
      * List of pink lut
      */
     public static int[][] PINK_LUT = new int[][]{

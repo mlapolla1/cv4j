@@ -20,25 +20,51 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.image.util.Tools;
 
+/**
+ * The class resize.
+ */
 public class Resize {
 
+	/**
+	 * The nearest iterpolate.
+	 */
 	public final static int NEAREST_INTEPOLATE = 1;
+	
+	/**
+	 * The biline interpolate.
+	 */
 	public final static int BILINE_INTEPOLATE = 2;
+	
 	private float xrate;
 	private float yrate;
 	
+	/**
+	 * Constructor with a rate.
+	 * @param  rate The rate
+	 */
 	public Resize(float rate)
 	{
 		xrate = rate;
 		yrate = rate;
 	}
 	
+	/**
+	 * Constructor with a x and y rate.
+	 * @param  xrate The x rate
+	 * @param  yrate The y rate
+	 */
 	public Resize(float xrate, float yrate)
 	{
 		this.xrate = xrate;
 		this.yrate = yrate;
 	}
-	
+
+	/**
+	 * Resizes a image processor with a given type.
+	 * @param  processor The image processor.
+	 * @param  type      The type.
+	 * @return           The new image processor.
+	 */
 	public ImageProcessor resize(ImageProcessor processor, int type) {
 		if(type == NEAREST_INTEPOLATE) {
 			return nearest(processor);
@@ -77,6 +103,11 @@ public class Resize {
 		return dst;
 	}
 	
+	/**
+	 * Biline
+	 * @param  processor The image processor.
+	 * @return           The new image processor.
+	 */
 	public ImageProcessor biline(ImageProcessor processor) {
 		int width = processor.getWidth();
 		int height = processor.getHeight();

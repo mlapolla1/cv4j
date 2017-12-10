@@ -91,7 +91,9 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
     private boolean isLastColum(RecyclerView parent, int pos, int spanCount, int childCount)
     {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager && (pos + 1) % spanCount == 0)// 如果是最后一列，则不需要绘制右边
+
+        // 如果是最后一列，则不需要绘制右边
+        if (layoutManager instanceof GridLayoutManager && (pos + 1) % spanCount == 0)
         {
             return true;
         } else if (layoutManager instanceof StaggeredGridLayoutManager)
@@ -101,11 +103,9 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
             if (orientation == StaggeredGridLayoutManager.VERTICAL && (pos + 1) % spanCount == 0)// 如果是最后一列，则不需要绘制右边
             {
                 return true;
-            } else
+            } else if (pos >= (childCount - childCount % spanCount)) // 如果是最后一列，则不需要绘制右边
             {
-                childCount = childCount - childCount % spanCount;
-                if (pos >= childCount)// 如果是最后一列，则不需要绘制右边
-                    return true;
+                return true;
             }
         }
         return false;
@@ -127,12 +127,9 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
             int orientation = ((StaggeredGridLayoutManager) layoutManager)
                     .getOrientation();
             // StaggeredGridLayoutManager 且纵向滚动
-            if (orientation == StaggeredGridLayoutManager.VERTICAL)
+            if (orientation == StaggeredGridLayoutManager.VERTICAL && pos >= (childCount - childCount % spanCount)) // 如果是最后一行，则不需要绘制底部
             {
-                childCount = childCount - childCount % spanCount;
-                // 如果是最后一行，则不需要绘制底部
-                if (pos >= childCount)
-                    return true;
+                return true;
             } else if ((pos + 1) % spanCount == 0)// 如果是最后一行，则不需要绘制底部
             // StaggeredGridLayoutManager 且横向滚动
             {

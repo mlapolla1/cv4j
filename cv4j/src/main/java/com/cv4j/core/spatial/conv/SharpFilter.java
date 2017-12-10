@@ -25,8 +25,8 @@ import com.cv4j.image.util.Tools;
  */
 public class SharpFilter extends BaseFilter {
 
-    /*
-     *Kernel
+    /**
+     * Kernel
      */
 	public static int[] kernel=new int[]{-1,-1,-1, -1, 12, -1, -1,-1,-1};
 

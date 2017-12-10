@@ -6,12 +6,28 @@ import com.cv4j.core.datamodel.FloatProcessor;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.datamodel.IntIntegralImage;
 
+/**
+ * The template match 2.
+ */
 public class TemplateMatch2 {
+    
+    /**
+     * Sq diff normed.
+     */
     public static final int TM_SQDIFF_NORMED = 2;
+
+    /**
+     * Ccorr normed.
+     */
     public static final int TM_CCORR_NORMED = 4;
+    
+    /**
+     * coeff normed
+     */
     public static final int TM_CCOEFF_NORMED = 6;
     
     private float[] sqrt_tpl;
+
     private void initParams(ImageProcessor tpl) {
     	int chs = tpl.getChannels();
         sqrt_tpl = new float[chs];
@@ -26,6 +42,13 @@ public class TemplateMatch2 {
         }
     }
     
+    /**
+     * Match two image processors with a method.
+     * @param  target The image processor  target
+     * @param  tpl    The tpl
+     * @param  method The method
+     * @return        The float processor
+     */
     public FloatProcessor match(ImageProcessor target, ImageProcessor tpl, int method) {
         int width = target.getWidth();
         int height = target.getHeight();
@@ -54,6 +77,17 @@ public class TemplateMatch2 {
         return tpl_data;
     }
     
+    /**
+     * Process signle channels
+     * @param  width    The width
+     * @param  height   The height
+     * @param  pixels   The pixels
+     * @param  tw       The tw
+     * @param  th       The th
+     * @param  tpl      The tpl
+     * @param  ch_index The channel index
+     * @return          The float processor
+     */
     public FloatProcessor processSingleChannels(int width, int height, byte[] pixels, int tw, int th, byte[] tpl, int ch_index){
         int offx = tw/2+1;
         int offy = th/2+1;
@@ -77,6 +111,12 @@ public class TemplateMatch2 {
         return new FloatProcessor(result, rw, rh);
     }
     
+    /**
+     * Multiply arras
+     * @param  roi The roi
+     * @param  tpl The tpl
+     * @return     The multiply.
+     */
     public float multplyArras(int[] roi, byte[] tpl) {
     	int sum = 0;
     	for(int i=0; i<roi.length; i++) {
@@ -85,7 +125,17 @@ public class TemplateMatch2 {
     	return 2*sum;
     }
     
-    
+    /**
+     * Returns the ROI
+     * @param  w      The width
+     * @param  h      The height
+     * @param  tw     The tw
+     * @param  th     The th
+     * @param  y      The x
+     * @param  x      The y
+     * @param  pixels The pixels
+     * @return        The ROI
+     */
 	private int[] getROI(int w, int h, int tw, int th, int y, int x, byte[] pixels) {
 		int offx = x - tw / 2;
 		int offy = y - th / 2;

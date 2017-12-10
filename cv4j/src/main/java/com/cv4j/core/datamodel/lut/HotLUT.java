@@ -26,7 +26,7 @@ package com.cv4j.core.datamodel.lut;
  *
  */
 public class HotLUT {
-    /*
+    /**
      * List of hot lut
      */ 
     public static  int[][] HOT_LUT = new int[][]{

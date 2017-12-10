@@ -18,7 +18,7 @@ package com.cv4j.core.datamodel.lut;
  * The RainbowLUT class
  */
 public class RainbowLUT {
-    /*
+    /**
      * List of rainbow lut
      */
     public static int[][] RAINBOW_LUT = new int[][]{

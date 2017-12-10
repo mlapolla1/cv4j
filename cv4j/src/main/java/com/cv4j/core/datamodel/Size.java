@@ -14,31 +14,35 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
+
 /**
  * The Size class of DataModel
  */
 public class Size {
-    /*
+    
+    /**
      * Columns
      */
     public int cols;
-    /*
+    
+    /**
      * Rows
      */
     public int rows;
 
-    /*
+    /**
      * Set the size when cols are equals to rows (ex. square)
-     * @param 
+     * @param num The size of the rows and columns. 
      */    
     public Size(int num) {
         this.cols = num;
         this.rows = num;
     }
 
-    /*
+    /**
      * Set the size when cols are not equals to rows (ex. rectangle)
-     * @param width, height
+     * @param width  The number of rows
+     * @param height The number of columns
      */  
     public Size(int width, int height) {
         this.cols = width;

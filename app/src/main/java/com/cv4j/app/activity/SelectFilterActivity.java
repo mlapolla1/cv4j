@@ -15,7 +15,6 @@ import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.filters.CommonFilter;
-import com.cv4j.core.filters.Filter;
 import com.safframework.aop.annotation.Trace;
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;

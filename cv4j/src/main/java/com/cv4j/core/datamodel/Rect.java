@@ -19,35 +19,40 @@ package com.cv4j.core.datamodel;
  */
 public class Rect {
 
-    /*
+    /**
      * Coordinate x
      */
     public int x;
-    /*
+    
+    /**
      * Coordinate y
      */
     public int y;
-    /*
+    
+    /**
      * Rectangle width
      */
     public int width;
-    /*
+    
+    /**
      * Rectangle height
      */
     public int height;
-    /*
-     * Label for ccl 
+    
+    /**
+     * Label for ccl.
+     * Just use it for ccl 
      */
-    public int labelIdx; // just use it for ccl
+    public int labelIdx;
 
-    /*
+    /**
      * Return point tl
      */
     public Point tl() {
         return new Point(x, y);
     }
 
-    /*
+    /**
      * Return point br
      */
     public Point br() {
