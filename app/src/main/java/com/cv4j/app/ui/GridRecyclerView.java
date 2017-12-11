@@ -23,7 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.GridLayoutAnimationController;
+import android.view.animation.GridLayoutAnimationController.AnimationParameters;
 
 /**
  * An extension of RecyclerView, focused more on resembling a GridView.
@@ -62,11 +62,11 @@ public class GridRecyclerView extends RecyclerView {
 
         if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager) {
 
-            GridLayoutAnimationController.AnimationParameters animationParams =
-                    (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
+            AnimationParameters animationParams =
+                    (AnimationParameters) params.layoutAnimationParameters;
 
             if (animationParams == null) {
-                animationParams = new GridLayoutAnimationController.AnimationParameters();
+                animationParams = new AnimationParameters();
                 params.layoutAnimationParameters = animationParams;
             }
 

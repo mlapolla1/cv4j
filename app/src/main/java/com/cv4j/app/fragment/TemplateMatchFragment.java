@@ -40,7 +40,6 @@ import com.cv4j.core.tpl.TemplateMatch2;
 import com.cv4j.image.util.Tools;
 import com.safframework.injectview.Injector;
 import com.safframework.injectview.annotations.InjectView;
-import com.safframework.utils.RxJavaUtils;
 
 import java.util.ArrayList;
 import java.util.List;
