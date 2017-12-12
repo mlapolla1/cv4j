@@ -46,6 +46,42 @@ public class TemplateMatch {
     public static final int TM_CCOEFF_NORMED = 6;
 
     /**
+     * Channel target 3 and tpl 3
+     * @param target [description]
+     * @param tpl    [description]
+     */
+    private void channel3x3(ImageProcessor target, ImageProcessor tpl) {
+        byte[] R = ((ColorProcessor) target).getRed();
+        byte[] G = ((ColorProcessor) target).getGreen();
+        byte[] B = ((ColorProcessor) target).getBlue();
+        
+        for(int row = offy; row < (height - offy); row++) {
+            for(int col = offx; col < (width - offx); col++) {
+                // ...
+            }
+        }
+    }
+
+    
+    public void something(int[] tplmask, byte[] data, int raidus_height, int raidus_width, int th, int tw) {
+        Arrays.fill(tplmask, 0);
+        int wrow = 0;
+
+        for(int subrow = -(raidus_height); subrow <= raidus_height; subrow++ ) {
+            int wcol = 0;
+            for(int subcol = -(raidus_width); subcol <= raidus_width; subcol++ ) {
+                if(wrow >= th || wcol >= tw) {
+                    continue;
+                }
+
+                tplmask[(wrow * tw) + wcol] = data[((row + subrow) * width) + (col + subcol)] & 0xff;
+                wcol++;
+            }
+            wrow++;
+        }
+    }
+
+    /**
      *
      * @param target - source image contain template or not
      * @param tpl - template
@@ -53,40 +89,34 @@ public class TemplateMatch {
      * @return FloatProcessor -
      */
     public FloatProcessor match(ImageProcessor target, ImageProcessor tpl, int method) {
-        int width = target.getWidth();
-        int height = target.getHeight();
-        int tw = tpl.getWidth();
-        int th = tpl.getHeight();
-        int offx = tpl.getWidth()/2+1;
-        int offy = tpl.getHeight()/2+1;
-        int raidus_width = tpl.getWidth() / 2;
+        int width         = target.getWidth();
+        int height        = target.getHeight();
+        int tw            = tpl.getWidth();
+        int th            = tpl.getHeight();
+        int offx          = tpl.getWidth()/2+1;
+        int offy          = tpl.getHeight()/2+1;
+        int raidus_width  = tpl.getWidth() / 2;
         int raidus_height = tpl.getHeight()/2;
-        int[] tplmask = new int[tpl.getWidth() * tpl.getHeight()];
+        int rw            = width - (offx * 2);
+        int rh            = height - (offy * 2);
+
+        int[] tplmask     = new int[tpl.getWidth() * tpl.getHeight()];
         Arrays.fill(tplmask, 0);
-        int rw = width - offx*2;
-        int rh = height - offy*2;
-        float[] result = new float[rw*rh];
+        
+        float[] result = new float[rw * rh];
+        
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
-            byte[] R = ((ColorProcessor)target).getRed();
-            byte[] G = ((ColorProcessor)target).getGreen();
-            byte[] B = ((ColorProcessor)target).getBlue();
-            for(int row=offy; row<height-offy; row++) {
-                for(int col=offx; col<width-offx; col++) {
-
-                }
-            }
-
+            channel3x3(target, tpl);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
             if(method == TM_CCORR_NORMED) {
                 generateNCCResult(target, tpl, result, tplmask);
             } else if (method == TM_SQDIFF_NORMED) {
                 // TODO:zhigang
             }
-
-
         } else {
             throw new IllegalStateException("\nERR:Image Type is not same...\n");
         }
+
         return new FloatProcessor(result, rw, rh);
     }
 
@@ -100,57 +130,39 @@ public class TemplateMatch {
      * @param threhold
      */
     public void match(ImageProcessor target, ImageProcessor tpl, List<Point> locations, int method,double threhold) {
-        int width = target.getWidth();
-        int height = target.getHeight();
-        int tw = tpl.getWidth();
-        int th = tpl.getHeight();
-        int offx = tpl.getWidth()/2+1;
-        int offy = tpl.getHeight()/2+1;
-        int raidus_width = tpl.getWidth() / 2;
-        int raidus_height = tpl.getHeight()/2;
+        int width         = target.getWidth();
+        int height        = target.getHeight();
+        int tw            = tpl.getWidth();
+        int th            = tpl.getHeight();
+        int offx          = (tpl.getWidth() / 2) + 1;
+        int offy          = (tpl.getHeight() / 2) + 1;
+        int raidus_width  = tpl.getWidth() / 2;
+        int raidus_height = tpl.getHeight() / 2;
+
         int[] tplmask = new int[tpl.getWidth() * tpl.getHeight()];
         Arrays.fill(tplmask, 0);
+
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
-            byte[] R = ((ColorProcessor)target).getRed();
-            byte[] G = ((ColorProcessor)target).getGreen();
-            byte[] B = ((ColorProcessor)target).getBlue();
-            for(int row=offy; row<height-offy; row++) {
-                for(int col=offx; col<width-offx; col++) {
-
-                }
-            }
-
+            channel3x3(target, tpl);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
-            byte[] data = ((ByteProcessor)target).getGray();
-            byte[] tdata = ((ByteProcessor)tpl).getGray();
-            float[] meansdev = Tools.calcMeansAndDev(((ByteProcessor)tpl).toFloat(0));
-            double[] tDiff = calculateDiff(tdata, meansdev[0]);
+            byte[]   data     = ((ByteProcessor)target).getGray();
+            byte[]   tdata    = ((ByteProcessor)tpl).getGray();
+            float[]  meansdev = Tools.calcMeansAndDev(((ByteProcessor)tpl).toFloat(0));
+            double[] tDiff    = calculateDiff(tdata, meansdev[0]);
+            
             for(int row=offy; row<height-offy; row+=2) {
                 for(int col=offx; col<width-offx; col+=2) {
-                    int wrow = 0;
-                    Arrays.fill(tplmask, 0);
-                    for(int subrow = -raidus_height; subrow <= raidus_height; subrow++ )
-                    {
-                        int wcol = 0;
-                        for(int subcol = -raidus_width; subcol <= raidus_width; subcol++ )
-                        {
-                            if(wrow >= th || wcol >= tw)
-                            {
-                                continue;
-                            }
-                            tplmask[wrow * tw + wcol] = data[(row+subrow)*width + (col+subcol)]&0xff;
-                            wcol++;
-                        }
-                        wrow++;
-                    }
+                    something(tplmask, data, raidus_height, raidus_width, th, tw);
+                    
                     // calculate the ncc
                     float[] _meansDev = Tools.calcMeansAndDev(tplmask);
                     double[] diff = calculateDiff(tplmask, _meansDev[0]);
                     double ncc = calculateNcc(tDiff, diff, _meansDev[1], meansdev[1]);
+                    
                     if(ncc > threhold) {
                         Point mpoint = new Point();
-                        mpoint.x = col-raidus_width;
-                        mpoint.y  = row-raidus_height;
+                        mpoint.x = (col - raidus_width);
+                        mpoint.y  = (row - raidus_height);
                         locations.add(mpoint);
                     }
                 }
