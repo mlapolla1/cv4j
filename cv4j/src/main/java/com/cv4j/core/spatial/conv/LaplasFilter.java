@@ -37,6 +37,21 @@ public class LaplasFilter extends BaseFilter {
 	
 	private boolean _4direction;
 
+	/**
+	 * The type of color red.
+	 */
+	private static final int TYPE_COLOR_RED   = 0;
+	
+	/**
+	 * The type of color grren.
+	 */
+	private static final int TYPE_COLOR_GREEN = 1;
+	
+	/**
+	 * The type of color blue.
+	 */
+	private static final int TYPE_COLOR_BLUE  = 2;
+
 	public LaplasFilter() {
 		_4direction = true;
 	}
@@ -59,19 +74,21 @@ public class LaplasFilter extends BaseFilter {
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
 
-		int total = width*height;
-		byte[][] output = new byte[3][total];
+		int total = width * height;
 
 		int offset = 0;
-		int k0 = 0;
-		int k1 = 0;
-		int k2 = 0;
-		int k3 = 0;
-		int k4 = 0;
-		int k5 = 0;
-		int k6 = 0;
-		int k7 = 0;
-		int k8 = 0;
+		int k0;
+		int k1;
+		int k2;
+		int k3;
+		int k4;
+		int k5;
+		int k6;
+		int k7;
+		int k8;
+
+		byte[][] output = new byte[3][total];
+		
 		if(_4direction) {
 			k0 = FOUR[0];
 			k1 = FOUR[1];
@@ -93,63 +110,73 @@ public class LaplasFilter extends BaseFilter {
 			k7 = EIGHT[7];
 			k8 = EIGHT[8];
 		}
-
-		int sr = 0;
-		int sg = 0;
-		int sb = 0;
+		
 		int r = 0;
 		int g = 0;
 		int b = 0;
+
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
-				// red
-				sr = k0 * ((R[offset - width + col - 1] >> 16) & 0xff)
-						+ k1 * (R[offset - width + col] & 0xff)
-						+ k2 * (R[offset - width + col + 1] & 0xff)
-						+ k3 * (R[offset + col - 1] & 0xff)
-						+ k4 * (R[offset + col] & 0xff)
-						+ k5 * (R[offset + col + 1] & 0xff)
-						+ k6 * (R[offset + width + col - 1] & 0xff)
-						+ k7 * (R[offset + width + col] & 0xff)
-						+ k8 * (R[offset + width + col + 1] & 0xff);
-				// green
-				sg = k0 * (G[offset - width + col - 1] & 0xff)
-						+ k1 * (G[offset - width + col] & 0xff)
-						+ k2 * (G[offset - width + col + 1] & 0xff)
-						+ k3 * (G[offset + col - 1] & 0xff)
-						+ k4 * (G[offset + col] & 0xff)
-						+ k5 * (G[offset + col + 1] & 0xff)
-						+ k6 * (G[offset + width + col - 1] & 0xff)
-						+ k7 * (G[offset + width + col] & 0xff)
-						+ k8 * (G[offset + width + col + 1] & 0xff);
-				// blue
-				sb = k0 * (B[offset - width + col - 1] & 0xff)
-						+ k1 * (B[offset - width + col] & 0xff)
-						+ k2 * (B[offset - width + col + 1] & 0xff)
-						+ k3 * (B[offset + col - 1] & 0xff)
-						+ k4 * (B[offset + col] & 0xff)
-						+ k5 * (B[offset + col + 1] & 0xff)
-						+ k6 * (B[offset + width + col - 1] & 0xff)
-						+ k7 * (B[offset + width + col] & 0xff)
-						+ k8 * (B[offset + width + col + 1] & 0xff);
-				r = sr;
-				g = sg;
-				b = sb;
+				r = getFilteredColor(TYPE_COLOR_RED, row, col);
+				g = getFilteredColor(TYPE_COLOR_GREEN, row, col);
+				b = getFilteredColor(TYPE_COLOR_BLUE, row, col);
 
-				output[0][offset+col]=(byte) Tools.clamp(r);
-				output[1][offset+col]=(byte)Tools.clamp(g);
-				output[2][offset+col]=(byte)Tools.clamp(b);
-
-				// for next pixel
-				sr = 0;
-				sg = 0;
-				sb = 0;
+				int outputOffset = offset + col;
+				output[0][outputOffset] = (byte) Tools.clamp(r);
+				output[1][outputOffset] = (byte) Tools.clamp(g);
+				output[2][outputOffset] = (byte) Tools.clamp(b);
 			}
 		}
-		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
+		
+		ColorProcessor colorSource = (ColorProcessor) src;
+		colorSource.putRGB(output[0], output[1], output[2]);
 		output = null;
+		
 		return src;
+	}
+
+	/**
+	 * Given a type of color (red, green or blue), an offset
+	 * and a column, it returns the color filtered with the
+	 * laplas filter.
+	 * @param  type   The type of the color.
+	 * @param  offset The offset of the color.
+	 * @param  col    The column of the color.
+	 * @return        The filtered color.
+	 */
+	private int getFilteredColor(int type, int row, int col) {
+		int andValue = 0xff;
+		int offset = row * width;
+		int shiftValue;
+		int[] arrayColor;
+
+		switch (type) {
+		case TYPE_COLOR_RED:
+			shiftValue = 16;
+			arrayColor = R;
+			break;
+		case TYPE_COLOR_GREEN:
+			shiftValue = 0;
+			arrayColor = G;
+			break;
+		case TYPE_COLOR_BLUE:
+			shiftValue = 0
+			arrayColor = B;
+			break;
+		}
+
+		int color = k0 * ((arrayColor[offset - width + col - 1] >> shiftValue) & andValue)
+		          + k1 * (arrayColor[offset - width + col] & andValue)
+		          + k2 * (arrayColor[offset - width + col + 1] & andValue)
+		          + k3 * (arrayColor[offset + col - 1] & andValue)
+		          + k4 * (arrayColor[offset + col] & andValue)
+		          + k5 * (arrayColor[offset + col + 1] & andValue)
+		          + k6 * (arrayColor[offset + width + col - 1] & andValue)
+		          + k7 * (arrayColor[offset + width + col] & andValue)
+		          + k8 * (arrayColor[offset + width + col + 1] & andValue);
+
+		return color;
 	}
 
 }

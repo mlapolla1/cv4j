@@ -26,83 +26,111 @@ import com.cv4j.image.util.Tools;
 public class SharpFilter extends BaseFilter {
 
     /**
-     * Kernel
+     * The kernel
      */
 	public static int[] kernel=new int[]{-1,-1,-1, -1, 12, -1, -1,-1,-1};
+
+	/**
+	 * The type of color red.
+	 */
+	private static final int TYPE_COLOR_RED   = 0;
+	
+	/**
+	 * The type of color grren.
+	 */
+	private static final int TYPE_COLOR_GREEN = 1;
+	
+	/**
+	 * The type of color blue.
+	 */
+	private static final int TYPE_COLOR_BLUE  = 2;
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
 
-		int total = width*height;
+		int total = width * height;
 		byte[][] output = new byte[3][total];
 
-		int offset=0;
-		int k0=kernel[0];
-		int k1=kernel[1];
-		int k2=kernel[2];
-		int k3=kernel[3];
-		int k4=kernel[4];
-		int k5=kernel[5];
-		int k6=kernel[6];
-		int k7=kernel[7];
-		int k8=kernel[8];
+		int offset = 0;
+		int k0 = kernel[0];
+		int k1 = kernel[1];
+		int k2 = kernel[2];
+		int k3 = kernel[3];
+		int k4 = kernel[4];
+		int k5 = kernel[5];
+		int k6 = kernel[6];
+		int k7 = kernel[7];
+		int k8 = kernel[8];
 		
-		int scale = k0+k1+k2+k3+k4+k5+k6+k7+k8;
-		int sr=0;
-		int sg=0;
-		int sb=0;
-		int r=0;
-		int g=0;
-		int b=0;
+		int scale = (k0 + k1 + k2 + k3 + k4 + k5 + k6 + k7 + k8);
+		
+		int sr = 0;
+		int sg = 0;
+		int sb = 0;
+		
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		
 		for(int row=1; row<height-1; row++) {
-			offset = row*width;
+			offset = row * width;
 			for(int col=1; col<width-1; col++) {
-				// red
-				sr = k0*(R[offset-width+col-1]&0xff)
-					+ k1* (R[offset-width+col]&0xff)
-					+ k2* (R[offset-width+col+1]&0xff)
-					+ k3* (R[offset+col-1]&0xff)
-					+ k4* (R[offset+col]&0xff)
-					+ k5* (R[offset+col+1]&0xff)
-					+ k6* (R[offset+width+col-1]&0xff)
-					+ k7* (R[offset+width+col]&0xff)
-					+ k8* (R[offset+width+col+1]&0xff);
-				// green
-				sg = k0*(G[offset-width+col-1]&0xff)
-						+ k1* (G[offset-width+col]&0xff)
-						+ k2* (G[offset-width+col+1]&0xff)
-						+ k3* (G[offset+col-1]&0xff)
-						+ k4* (G[offset+col]&0xff)
-						+ k5* (G[offset+col+1]&0xff)
-						+ k6* (G[offset+width+col-1]&0xff)
-						+ k7* (G[offset+width+col]&0xff)
-						+ k8* (G[offset+width+col+1]&0xff);
-				// blue
-				sb = k0*(B[offset-width+col-1]&0xff)
-						+ k1* (B[offset-width+col]&0xff)
-						+ k2* (B[offset-width+col+1]&0xff)
-						+ k3* (B[offset+col-1]&0xff)
-						+ k4* (B[offset+col]&0xff)
-						+ k5* (B[offset+col+1]&0xff)
-						+ k6* (B[offset+width+col-1]&0xff)
-						+ k7* (B[offset+width+col]&0xff)
-						+ k8* (B[offset+width+col+1]&0xff);
-				r = sr / scale;
-				g = sg / scale;
-				b = sb / scale;
-				output[0][offset+col]=(byte)Tools.clamp(r);
-				output[1][offset+col]=(byte)Tools.clamp(g);
-				output[2][offset+col]=(byte)Tools.clamp(b);
-
-				// for next pixel
-				sr = 0;
-				sg = 0;
-				sb = 0;
+				r = getFilteredColor(TYPE_COLOR_RED, row, col) / scale;
+				g = getFilteredColor(TYPE_COLOR_GREEN, row, col) / scale;
+				b = getFilteredColor(TYPE_COLOR_BLUE, row, col) / scale;
+				
+				int offsetOutput = offset + col;
+				output[0][offsetOutput] = (byte) Tools.clamp(r);
+				output[1][offsetOutput] = (byte) Tools.clamp(g);
+				output[2][offsetOutput] = (byte) Tools.clamp(b);
 			}
 		}
-		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
+
+		ColorProcessor colorSrc = (ColorProcessor) src;
+		colorSrc.putRGB(output[0], output[1], output[2]);
+		
 		output = null;
+		
 		return src;
+	}
+
+		/**
+	 * Given a type of color (red, green or blue), an offset
+	 * and a column, it returns the color filtered with the
+	 * laplas filter.
+	 * @param  type   The type of the color.
+	 * @param  offset The offset of the color.
+	 * @param  col    The column of the color.
+	 * @return        The filtered color.
+	 */
+	private int getFilteredColor(int type, int row, int col) {
+		int andValue = 0xff;
+		int offset = row * width;
+		int[] arrayColor;
+
+		switch (type) {
+		case TYPE_COLOR_RED:
+			arrayColor = R;
+			break;
+		case TYPE_COLOR_GREEN:
+			arrayColor = G;
+			break;
+		case TYPE_COLOR_BLUE:
+			arrayColor = B;
+			break;
+		}
+
+		int color = k0 * (arrayColor[offset-width+col-1] & andValue)
+		          + k1 * (arrayColor[offset-width+col] & andValue)
+		          + k2 * (arrayColor[offset-width+col+1] & andValue)
+		          + k3 * (arrayColor[offset+col-1] & andValue)
+		          + k4 * (arrayColor[offset+col] & andValue)
+		          + k5 * (arrayColor[offset+col+1] & andValue)
+		          + k6 * (arrayColor[offset+width+col-1] & andValue)
+		          + k7 * (arrayColor[offset+width+col] & andValue)
+		          + k8 * (arrayColor[offset+width+col+1] & andValue);
+
+		return color;
 	}
 
 }
