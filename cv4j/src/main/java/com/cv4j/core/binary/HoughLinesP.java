@@ -83,10 +83,10 @@ public class HoughLinesP {
 		return max_value;
 	}
 
-	private List<Line> createListOfLines(int[] results, int accSize) {
+	private List<Line> createListOfLines(int[] results, int sizeAcc) {
 		List<Line> lines = new ArrayList<>();
 		
-		for (int i = accSize-1; i >= 0; i--) {
+		for (int i = sizeAcc-1; i >= 0; i--) {
 			Line line = drawPolarLine(results[i * 3], results[i * 3 + 1], results[i * 3 + 2]);
 			lines.add(line);
 		}

@@ -48,6 +48,39 @@ public class FloSteDitheringFilter implements CommonFilter {
      */
 	public final static int[] COLOR_PALETTE = new int[] {0, 255};
 
+	private void algorithm(byte[] GRAY, int width, int height, int row, int col, int er) {
+        int k;
+        int err;
+
+        if(row + 1 < height && col - 1 > 0) {
+            k = (row + 1) * width + col - 1;
+            err = GRAY[k] & 0xff;
+            err += (int)(er * kernelData[0]);
+            GRAY[k] = (byte)Tools.clamp(err);
+        }
+
+        if(col + 1 < width) {
+            k = row * width + col + 1;
+            err = GRAY[k]&0xff;
+            err += (int)(er * kernelData[3]);
+            GRAY[k] = (byte)Tools.clamp(err);
+        }
+
+        if(row + 1 < height) {
+            k = (row + 1) * width + col;
+            err = GRAY[k]&0xff;
+            err += (int)(er * kernelData[1]);
+            GRAY[k] = (byte)Tools.clamp(err);
+        }
+
+        if(row + 1 < height && col + 1 < width) {
+            k = (row + 1) * width + col + 1;
+            err = GRAY[k]&0xff;
+            err += (int)(er * kernelData[2]);
+            GRAY[k] = (byte)Tools.clamp(err);
+        }
+    }
+
 	@Override
 	public ImageProcessor filter(ImageProcessor src) {
 
@@ -58,58 +91,37 @@ public class FloSteDitheringFilter implements CommonFilter {
 
 		int width = src.getWidth();
         int height = src.getHeight();
-        byte[] GRAY = ((ByteProcessor)src).getGray();
+
+        ByteProcessor byteSrc = (ByteProcessor) src;
+
+        byte[] GRAY = byteSrc.getGray();
         byte[] output = new byte[GRAY.length];
 
-        int gray = 0;
-        int err = 0;
-        for(int row=0; row<height; row++) {
-            int offset = row*width;
-        	for(int col=0; col<width; col++) {
-                gray = GRAY[offset]&0xff;
+        int gray;
+
+        for(int row = 0; row < height; row++) {
+            int offset = row * width;
+        	for(int col = 0; col < width; col++) {
+                gray = GRAY[offset] & 0xff;
                 int cIndex = getCloseColor(gray);
-                output[offset] = (byte)COLOR_PALETTE[cIndex];
-                int er = gray - COLOR_PALETTE[cIndex];
-                int k = 0;
-                
-                if(row + 1 < height && col - 1 > 0) {
-                	k = (row + 1) * width + col - 1;
-                    err = GRAY[k]&0xff;
-                    err += (int)(er * kernelData[0]);
-                    GRAY[k] = (byte)Tools.clamp(err);
-                }
-                
-                if(col + 1 < width) {
-                	k = row * width + col + 1;
-                    err = GRAY[k]&0xff;
-                    err += (int)(er * kernelData[3]);
-                    GRAY[k] = (byte)Tools.clamp(err);
-                }
-                
-                if(row + 1 < height) {
-                	k = (row + 1) * width + col;
-                    err = GRAY[k]&0xff;
-                    err += (int)(er * kernelData[1]);
-                    GRAY[k] = (byte)Tools.clamp(err);
-                }
-                
-                if(row + 1 < height && col + 1 < width) {
-                	k = (row + 1) * width + col + 1;
-                    err = GRAY[k]&0xff;
-                    err += (int)(er * kernelData[2]);
-                    GRAY[k] = (byte)Tools.clamp(err);
-                }
+                output[offset] = (byte) COLOR_PALETTE[cIndex];
+                int er = (gray - COLOR_PALETTE[cIndex]);
+
+                algorithm(GRAY, width, height, row, col, er);
+
                 offset++;
         	}
         }
-        ((ByteProcessor)src).putGray(GRAY);
-        GRAY = null;
+
+        byteSrc.putGray(GRAY);
+
         return src;
 	}
 	
 	private int getCloseColor(int gray) {
 		int minDistanceSquared = 255*255 + 1;
 		int bestIndex = 0;
+
 		for(int i=0; i<COLOR_PALETTE.length; i++) {
 			int diff = Math.abs(gray - COLOR_PALETTE[i]);
 			if(ImageData.SQRT_LUT[diff] < minDistanceSquared) {
@@ -117,6 +129,7 @@ public class FloSteDitheringFilter implements CommonFilter {
 				bestIndex = i;
 			}
 		}
+
 		return bestIndex;
 	}
 }

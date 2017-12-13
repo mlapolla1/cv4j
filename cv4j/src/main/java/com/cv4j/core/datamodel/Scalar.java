@@ -71,7 +71,7 @@ public class Scalar {
 	 * @param  b 	 The blue value.
 	 * @return       The scalar RGB.
 	 */
-	public static Scalar argb(int alpha, int r, int g, int b){
+	public static Scalar argb(int a, int r, int g, int b){
 		return new Scalar(r, g, b);
 	}
 	

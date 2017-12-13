@@ -45,69 +45,71 @@ public class MotionFilter extends BaseFilter  {
 		this.angle = angle;
 	}
 
+	private void motionBlurIterationPixels(int iteration, int row, int col, int cx, int cy, float sinAngle, float coseAngle) {
+		// iterate the source pixels according to distance
+		for(int i=0; i < iteration; i++) {
+			int newX = col;
+			int newY = row;
+
+			// calculate the operator source pixel
+			if(distance > 0) {
+				newY = (int) Math.floor(newY + (i * sinAngle));
+				newX = (int) Math.floor(newX + (i * coseAngle));
+			}
+			float f = (float) (i / iteration);
+
+			if (newX < 0 || newX >= width) {
+				break;
+			}
+			if (newY < 0 || newY >= height) {
+				break;
+			}
+
+			// scale the pixels
+			float scale = 1-zoom*f;
+			float m11 = cx - (cx * scale);
+			float m22 = cy - (cy * scale);
+			newY = (int)(newY * scale + m22);
+			newX = (int)(newX * scale + m11);
+
+			// blur the pixels, here
+			count++;
+			int idx = newY*width+newX;
+			tr += R[idx] & 0xff;
+			tg += G[idx] & 0xff;
+			tb += B[idx] & 0xff;
+		}
+	}
 	
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
 
-		int total = width*height;
+		int total = width * height;
 		byte[][] output = new byte[3][total];
+
         int index = 0;
-        int cx = width/2;
-        int cy = height/2;
+        int cx = width / 2;
+        int cy = height / 2;
         
         // calculate the triangle geometry value
-        float sinAngle = (float)Math.sin(angle/180.0f * onePI);
-        float coseAngle = (float)Math.cos(angle/180.0f * onePI);
+        float sinAngle = (float) Math.sin(angle/180.0f * onePI);
+        float cosAngle = (float) Math.cos(angle/180.0f * onePI);
         
         // calculate the distance, same as box blur
-        float imageRadius = (float)Math.sqrt(cx*cx + cy*cy);
+        float imageRadius = (float) Math.sqrt(cx*cx + cy*cy);
         float maxDistance = distance + imageRadius * zoom;
-        
-        int iteration = (int)maxDistance;
-        for(int row=0; row<height; row++) {
+
+        for(int row = 0; row < height; row++) {
         	int ta = 0;
         	int tr = 0;
         	int tg = 0;
         	int tb = 0;
-        	for(int col=0; col<width; col++) {
-        		int newX= col;
+        	for(int col = 0; col < width; col++) {
         		int count = 0;
-        		int newY = row;
+				int newX;
+        		int newY;
         		
-        		// iterate the source pixels according to distance
-        		float m11 = 0.0f;
-        		float m22 = 0.0f;
-        		for(int i=0; i<iteration; i++) {
-        			newX = col;
-        			newY = row;
-        			
-        			// calculate the operator source pixel
-        			if(distance > 0) {
-	        			newY = (int)Math.floor((newY + i*sinAngle));
-	        			newX = (int)Math.floor((newX + i*coseAngle));
-        			}
-        			float f = (float)i/iteration;
-        			if (newX < 0 || newX >= width) {
-        				break;
-					}
-					if (newY < 0 || newY >= height) {
-						break;
-					}
-					
-					// scale the pixels
-					float scale = 1-zoom*f;
-					m11 = cx - cx*scale;
-					m22 = cy - cy*scale;
-					newY = (int)(newY * scale + m22);
-					newX = (int)(newX * scale + m11);
-					
-					// blur the pixels, here
-					count++;
-					int idx = newY*width+newX;
-					tr += R[idx] & 0xff;
-					tg += G[idx] & 0xff;
-					tb += B[idx] & 0xff;
-        		}
+        		motionBlurIterationPixels((int) maxDistance, row, col, cx, cy, sinAngle, cosAngle);
         		
         		// fill the destination pixel with final RGB value
         		if (count == 0) {
@@ -115,12 +117,13 @@ public class MotionFilter extends BaseFilter  {
 					output[1][index] = G[index];
 					output[2][index] = B[index];
 				} else {
-					tr = Tools.clamp((int)(tr/count));
-					tg = Tools.clamp((int)(tg/count));
-					tb = Tools.clamp((int)(tb/count));
-					output[0][index] = (byte)tr;
-					output[1][index] = (byte)tg;
-					output[2][index] = (byte)tb;
+					tr = Tools.clamp(tr / count);
+					tg = Tools.clamp(tg / count);
+					tb = Tools.clamp(tb/count);
+					
+					output[0][index] = (byte) tr;
+					output[1][index] = (byte) tg;
+					output[2][index] = (byte) tb;
 				}
 				index++;
         	}

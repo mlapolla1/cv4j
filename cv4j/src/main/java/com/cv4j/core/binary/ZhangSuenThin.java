@@ -93,6 +93,7 @@ public class ZhangSuenThin {
 				p9 = (p9 == 255) ? 1 : 0;
 				
 				int con1 = p2+p3+p4+p5+p6+p7+p8+p9;
+				String one = "01"
 
 				StringBuilder sb = new StringBuilder();
 				sb.append(String.valueOf(p2))
@@ -106,8 +107,8 @@ public class ZhangSuenThin {
 						.append(String.valueOf(p2));
 
 				String sequence = sb.toString();
-				int index1 = sequence.indexOf("01");
-				int index2 = sequence.lastIndexOf("01");
+				int index1 = sequence.indexOf(one);
+				int index2 = sequence.lastIndexOf(one);
 				
 				int con3 = p2*p4*p6;
 				int con4 = p4*p6*p8;

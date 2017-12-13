@@ -15,6 +15,8 @@
  */
 package com.cv4j.core.datamodel.lut;
 
+import android.util.SparseArray;
+
 import static com.cv4j.core.filters.ColorFilter.AUTUMN_STYLE;
 import static com.cv4j.core.filters.ColorFilter.BONE_STYLE;
 import static com.cv4j.core.filters.ColorFilter.COOL_STYLE;
@@ -31,48 +33,43 @@ import static com.cv4j.core.filters.ColorFilter.WINTER_STYLE;
  * The LUT class
  */
 public class LUT {
+    /**
+     * Initialization of the class.
+     */
+    private static boolean initialized = false;
+
+    private static SparseArray<int[][]> luts;
+
+    /**
+     * Initialization of the class LUT.
+     */
+    private static void init() {
+        luts = new SparseArray<int[][]>(12);
+        luts.append(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
+        luts.append(BONE_STYLE, BoneLUT.BONE_LUT);
+        luts.append(COOL_STYLE, CoolLUT.COOL_LUT);
+        luts.append(HOT_STYLE, HotLUT.HOT_LUT);
+        luts.append(HSV_STYLE, HsvLUT.HSV_LUT);
+        luts.append(JET_STYLE, JetLUT.JET_LUT);
+        luts.append(OCEAN_STYLE, OceanLUT.OCEAN_LUT);
+        luts.append(PINK_STYLE, PinkLUT.PINK_LUT);
+        luts.append(RAINBOW_STYLE, RainbowLUT.RAINBOW_LUT);
+        luts.append(SPRING_STYLE, SpringLUT.SPRING_LUT);
+        luts.append(SUMMER_STYLE, SummerLUT.SUMMER_LUT);
+        luts.append(WINTER_STYLE, WinterLUT.WINTER_LUT);
+    }
 
     public static int[][] getColorFilterLUT(int style) {
-
-        switch(style) {
-            case AUTUMN_STYLE:
-                return AutumnLUT.AUTUMN_LUT;
-
-            case BONE_STYLE:
-                return BoneLUT.BONE_LUT;
-
-            case COOL_STYLE:
-                return CoolLUT.COOL_LUT;
-
-            case HOT_STYLE:
-                return HotLUT.HOT_LUT;
-
-            case HSV_STYLE:
-                return HsvLUT.HSV_LUT;
-
-            case JET_STYLE:
-                return JetLUT.JET_LUT;
-
-            case OCEAN_STYLE:
-                return OceanLUT.OCEAN_LUT;
-
-            case PINK_STYLE:
-                return PinkLUT.PINK_LUT;
-
-            case RAINBOW_STYLE:
-                return RainbowLUT.RAINBOW_LUT;
-
-            case SPRING_STYLE:
-                return SpringLUT.SPRING_LUT;
-
-            case SUMMER_STYLE:
-                return SummerLUT.SUMMER_LUT;
-
-            case WINTER_STYLE:
-                return WinterLUT.WINTER_LUT;
-
-            default:
-                return AutumnLUT.AUTUMN_LUT;
+        if (LUT.initialized === false) {
+            LUT.init();
         }
+
+        int[][] lutStyle = luts.get(style);
+
+        if (lutStyle == null) {
+            lutStyle = luts.get(AUTUMN_STYLE);
+        }
+
+        return lutStyle;
     }
 }
