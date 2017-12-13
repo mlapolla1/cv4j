@@ -75,14 +75,15 @@ public class DistanceTransform {
 	
 	private boolean dt(byte[] input, byte[] output, int[] distmap, int level, int width, int height) {
 		boolean stop = true;
-		int numOfPixels = 8
+		int numOfPixels = 8;
 		int total = 255 * numOfPixels;
+		int andValue = 0xff;
 
 		for(int row = 1; row < height-1; row++) {
 			int offset = row * width;
 			for(int col = 1; col < width-1; col++) {
 				int p5 = input[offset+col] & andValue;
-				int sum = sumInputValues(input, row, col);
+				int sum = sumInputValues(input, width, row, col);
 				
 				if(p5 == 255 &&  sum != total) {
 					output[offset + col] = (byte) 0;
@@ -94,7 +95,7 @@ public class DistanceTransform {
 		return stop;
 	}
 
-	public int sumInputValues(int[] input, int row, int col) {
+	public int sumInputValues(byte[] input, int width, int row, int col) {
 		int offset = row * width;
 		int andValue = 0xff;
 
@@ -110,7 +111,7 @@ public class DistanceTransform {
 
 		int sum = (p1 + p2 + p3 + p4 + p6 + p7 + p8 + p9);
 
-		return sum
+		return sum;
 	}
 
 }

@@ -71,6 +71,9 @@ public class PixelOperatorFragment extends BaseFragment {
     @InjectView(R.id.text11)
     TextView text11;
 
+    String title = "Title";
+    String type = "Type";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pixel_operator, container, false);
@@ -83,8 +86,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText1() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text1.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.ADD);
+        i.putExtra(title,text1.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.ADD);
         startActivity(i);
     }
 
@@ -92,8 +95,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText2() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text2.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.SUBSTRACT);
+        i.putExtra(title,text2.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.SUBTRACT);
         startActivity(i);
     }
 
@@ -101,8 +104,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText3() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text3.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.MULTIPLE);
+        i.putExtra(title,text3.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.MULTIPLE);
         startActivity(i);
     }
 
@@ -110,8 +113,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText4() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text4.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.DIVISION);
+        i.putExtra(title,text4.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.DIVISION);
         startActivity(i);
     }
 
@@ -119,8 +122,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText5() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text5.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.BITWISE_AND);
+        i.putExtra(title,text5.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.BITWISE_AND);
         startActivity(i);
     }
 
@@ -128,8 +131,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText6() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text6.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.BITWISE_OR);
+        i.putExtra(title,text6.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.BITWISE_OR);
         startActivity(i);
     }
 
@@ -137,8 +140,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText7() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text7.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.BITWISE_NOT);
+        i.putExtra(title,text7.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.BITWISE_NOT);
         startActivity(i);
     }
 
@@ -146,8 +149,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText8() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text8.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.BITWISE_XOR);
+        i.putExtra(title,text8.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.BITWISE_XOR);
         startActivity(i);
     }
 
@@ -155,8 +158,8 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText9() {
 
         Intent i = new Intent(mContext,PixelOperatorActivity.class);
-        i.putExtra("Title",text9.getText().toString());
-        i.putExtra("Type",PixelOperatorActivity.ADD_WEIGHT);
+        i.putExtra(title,text9.getText().toString());
+        i.putExtra(type,PixelOperatorActivity.ADD_WEIGHT);
         startActivity(i);
     }
 
@@ -164,7 +167,7 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText10() {
 
         Intent i = new Intent(mContext,SubImageActivity.class);
-        i.putExtra("Title",text10.getText().toString());
+        i.putExtra(title,text10.getText().toString());
         startActivity(i);
     }
 
@@ -172,7 +175,7 @@ public class PixelOperatorFragment extends BaseFragment {
     void clickText11() {
 
         Intent i = new Intent(mContext,PrincipalColorExtractorActivity.class);
-        i.putExtra("Title",text11.getText().toString());
+        i.putExtra(title,text11.getText().toString());
         startActivity(i);
     }
 }

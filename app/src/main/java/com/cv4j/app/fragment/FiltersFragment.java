@@ -55,6 +55,8 @@ public class FiltersFragment extends BaseFragment {
     @InjectView(R.id.text9)
     TextView text9;
 
+    String title = "Title";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_filters, container, false);
@@ -67,7 +69,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText1() {
 
         Intent i = new Intent(mContext,SelectFilterActivity.class);
-        i.putExtra("Title",text1.getText().toString());
+        i.putExtra(title,text1.getText().toString());
         startActivity(i);
     }
 
@@ -75,7 +77,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText2() {
 
         Intent i = new Intent(mContext,CompositeFilersActivity.class);
-        i.putExtra("Title",text2.getText().toString());
+        i.putExtra(title,text2.getText().toString());
         startActivity(i);
     }
 
@@ -83,7 +85,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText3() {
 
         Intent i = new Intent(mContext,UseFilterWithRxActivity.class);
-        i.putExtra("Title",text3.getText().toString());
+        i.putExtra(title,text3.getText().toString());
         startActivity(i);
     }
 
@@ -91,7 +93,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText4() {
 
         Intent i = new Intent(mContext,DslActivity.class);
-        i.putExtra("Title",text4.getText().toString());
+        i.putExtra(title,text4.getText().toString());
         startActivity(i);
     }
 
@@ -99,7 +101,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText5() {
 
         Intent i = new Intent(mContext,GridViewFilterActivity.class);
-        i.putExtra("Title",text5.getText().toString());
+        i.putExtra(title,text5.getText().toString());
         startActivity(i);
     }
 
@@ -107,7 +109,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText6() {
 
         Intent i = new Intent(mContext,ColorFilterActivity.class);
-        i.putExtra("Title",text6.getText().toString());
+        i.putExtra(title,text6.getText().toString());
         startActivity(i);
     }
 
@@ -115,7 +117,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText7() {
 
         Intent i = new Intent(mContext,GaussianBlurActivity.class);
-        i.putExtra("Title",text7.getText().toString());
+        i.putExtra(title,text7.getText().toString());
         startActivity(i);
     }
 
@@ -123,7 +125,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText8() {
 
         Intent i = new Intent(mContext,BeautySkinActivity.class);
-        i.putExtra("Title",text8.getText().toString());
+        i.putExtra(title,text8.getText().toString());
         startActivity(i);
     }
 
@@ -131,7 +133,7 @@ public class FiltersFragment extends BaseFragment {
     void clickText9() {
 
         Intent i = new Intent(mContext,PaintActivity.class);
-        i.putExtra("Title",text9.getText().toString());
+        i.putExtra(title,text9.getText().toString());
         startActivity(i);
     }
 

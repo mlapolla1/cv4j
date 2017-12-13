@@ -58,7 +58,7 @@ public class ZhangSuenThin {
 
 	private boolean step1Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
-		int p1=0
+		int p1=0;
 		int p2=0;
 		int p3=0;
 		int p4=0;

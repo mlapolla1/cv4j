@@ -81,18 +81,18 @@ public class GaussianBlurActivity extends BaseActivity {
 
     /**
      * 使用RenderScript实现高斯模糊的算法
-     * @param bitmap
+     * @param image
      * @return
      */
-    public Bitmap blur(Bitmap bitmap){
+    public Bitmap blur(Bitmap image){
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
-        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap outBitmap = Bitmap.createBitmap(image.getWidth(), image.getHeight(), Bitmap.Config.ARGB_8888);
         //Instantiate a new Renderscript
         RenderScript rs = RenderScript.create(getApplicationContext());
         //Create an Intrinsic Blur Script using the Renderscript
         ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
         //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
-        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+        Allocation allIn = Allocation.createFromBitmap(rs, image);
         Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
         //Set the radius of the blur: 0 < radius <= 25
         blurScript.setRadius(20.0f);
@@ -102,7 +102,7 @@ public class GaussianBlurActivity extends BaseActivity {
         //Copy the final bitmap created by the out Allocation to the outBitmap
         allOut.copyTo(outBitmap);
         //recycle the original bitmap
-        bitmap.recycle();
+        image.recycle();
         //After finishing everything, we destroy the Renderscript.
         rs.destroy();
 

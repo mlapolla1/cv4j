@@ -25,7 +25,7 @@ import com.cv4j.core.datamodel.ImageProcessor;
  */
 public class SinCityFilter extends BaseFilter {
 
-	private double threshold = 200; // default value
+	private final double threshold = 200; // default value
 	private int mainColor = Color.argb(255, 255, 0, 0);
 
 	public void setMainColor(int argb) {
@@ -35,10 +35,11 @@ public class SinCityFilter extends BaseFilter {
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
 
-        int total = width*height;
-		int tr=0;
-		int g=0;
-		int tb=0;
+        int total = width * height;
+		int tr;
+		int tg;
+		int tb;
+
         for(int i=0; i<total; i++) {
 			tr = R[i] & 0xff;
 			tg = G[i] & 0xff;

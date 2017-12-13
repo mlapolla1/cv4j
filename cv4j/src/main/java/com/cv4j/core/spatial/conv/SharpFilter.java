@@ -103,7 +103,7 @@ public class SharpFilter extends BaseFilter {
 	private int getFilteredColor(int type, int row, int col) {
 		int andValue = 0xff;
 		int offset = row * width;
-		int[] arrayColor;
+		byte[] arrayColor = null;
 
 		switch (type) {
 		case TYPE_COLOR_RED:

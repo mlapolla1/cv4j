@@ -39,6 +39,8 @@ public class BinaryFragment extends BaseFragment {
     @InjectView(R.id.text5)
     TextView text5;
 
+    String title = "Title";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_binary, container, false);
@@ -51,7 +53,7 @@ public class BinaryFragment extends BaseFragment {
     void clickText1() {
 
         Intent i = new Intent(mContext,MorphologyActivity.class);
-        i.putExtra("Title",text1.getText().toString());
+        i.putExtra(title,text1.getText().toString());
         startActivity(i);
     }
 
@@ -59,7 +61,7 @@ public class BinaryFragment extends BaseFragment {
     void clickText2() {
 
         Intent i = new Intent(mContext,CoinsActivity.class);
-        i.putExtra("Title",text2.getText().toString());
+        i.putExtra(title,text2.getText().toString());
         startActivity(i);
     }
 
@@ -67,7 +69,7 @@ public class BinaryFragment extends BaseFragment {
     void clickText3() {
 
         Intent i = new Intent(mContext,ContourAnalysisActivity.class);
-        i.putExtra("Title",text3.getText().toString());
+        i.putExtra(title,text3.getText().toString());
         startActivity(i);
     }
 
@@ -75,7 +77,7 @@ public class BinaryFragment extends BaseFragment {
     void clickText4() {
 
         Intent i = new Intent(mContext,LineDetectionActivity.class);
-        i.putExtra("Title",text4.getText().toString());
+        i.putExtra(title,text4.getText().toString());
         startActivity(i);
     }
 
@@ -83,7 +85,7 @@ public class BinaryFragment extends BaseFragment {
     void clickText5() {
 
         Intent i = new Intent(mContext,DetectQRActivity.class);
-        i.putExtra("Title",text5.getText().toString());
+        i.putExtra(title,text5.getText().toString());
         startActivity(i);
     }
 }

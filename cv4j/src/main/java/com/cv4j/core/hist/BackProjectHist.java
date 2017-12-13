@@ -26,7 +26,7 @@ import com.cv4j.core.datamodel.ImageProcessor;
  */
 public class BackProjectHist {
 
-    public void backProjection(ImageProcessor src, ByteProcessor backProjection, int[] mHist, int bins) {
+    public void backProjection(ImageProcessor src, ByteProcessor backProj, int[] mHist, int bins) {
 
         int width = src.getWidth();
         int height = src.getHeight();
@@ -106,7 +106,7 @@ public class BackProjectHist {
             if (pv>10)
                 pv = 255;
 
-            backProjection.getGray()[i] = (byte)pv;
+            backProj.getGray()[i] = (byte)pv;
         }
 
     }

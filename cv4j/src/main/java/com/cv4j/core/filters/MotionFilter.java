@@ -25,9 +25,9 @@ import com.cv4j.image.util.Tools;
 public class MotionFilter extends BaseFilter  {
 
 	private float distance = 10;// default;
-	private float onePI = (float)Math.PI;
+	private final float onePI = (float)Math.PI;
 	private float angle = 0.0f;
-	private float zoom = 0.4f;
+	private final float zoom = 0.4f;
 
 	public float getDistance() {
 		return distance;

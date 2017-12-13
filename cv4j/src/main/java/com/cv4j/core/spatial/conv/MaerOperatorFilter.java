@@ -38,6 +38,21 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 	private boolean _4direction;
 
 	/**
+	 * The type of color red.
+	 */
+	private static final int TYPE_COLOR_RED   = 0;
+
+	/**
+	 * The type of color grren.
+	 */
+	private static final int TYPE_COLOR_GREEN = 1;
+
+	/**
+	 * The type of color blue.
+	 */
+	private static final int TYPE_COLOR_BLUE  = 2;
+
+	/**
 	 * Constructor.
 	 */
 	public MaerOperatorFilter() {
@@ -79,9 +94,9 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
-				r = getFilteredColor(TYPE_COLOR_RED, row, cl);
-				g = getFilteredColor(TYPE_COLOR_GREEN, row, cl);
-				b = getFilteredColor(TYPE_COLOR_BLUE, row, cl);
+				r = getFilteredColor(TYPE_COLOR_RED, row, col);
+				g = getFilteredColor(TYPE_COLOR_GREEN, row, col);
+				b = getFilteredColor(TYPE_COLOR_BLUE, row, col);
 
 				int offsetOutput = offset + col;
 				output[0][offsetOutput] = (byte) Tools.clamp(r);
@@ -111,13 +126,13 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 		int andValue = 0xff;
 		int offset = row * width;
 
-		int shiftValue;
-		int[] arrayColor;
+		int shiftValue = 0;
+		byte[] arrayColor = null;
 
 		switch (type) {
 		case TYPE_COLOR_RED:
 			arrayColor = R;
-			shiftValue = 16
+			shiftValue = 16;
 			break;
 		case TYPE_COLOR_GREEN:
 			arrayColor = G;
@@ -144,7 +159,7 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 		          + constants[5] * (arrayColor[offset + col + 1] & andValue)
 		          + constants[6] * (arrayColor[offset + width + col - 1] & andValue)
 		          + constants[7] * (arrayColor[offset + width + col] >> shiftValue & andValue)
-		          + constants[8] * (arrayColor[offset + width + col + 1] >> shiftValue & andValue)
+		          + constants[8] * (arrayColor[offset + width + col + 1] >> shiftValue & andValue);
 
 		return color;
 	}

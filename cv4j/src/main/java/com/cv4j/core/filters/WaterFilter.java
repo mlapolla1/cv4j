@@ -25,10 +25,10 @@ import com.cv4j.image.util.Tools;
 public class WaterFilter extends BaseFilter {
 
 	private float wavelength = 16;
-	private float amplitude = 10;
-	private float phase = 0;
-	private float centreX = 0.5f;
-	private float centreY = 0.5f;
+	private final float amplitude = 10;
+	private final float phase = 0;
+	private final float centreX = 0.5f;
+	private final float centreY = 0.5f;
 	private float radius = 50;
 	private float radius2 = 0;
 	private float icentreX;

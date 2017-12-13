@@ -114,20 +114,20 @@ public class GaussianBlurFilter extends BaseFilter {
         }
     }
 
-    public void makeGaussianKernel(final double sigma, final double accuracy, int maxRadius) {
-        int kRadius = (int)Math.ceil(sigma*Math.sqrt(-2*Math.log(accuracy)))+1;
+    public void makeGaussianKernel(final double sig, final double accuracy, int maxRadius) {
+        int kRadius = (int)Math.ceil(sig*Math.sqrt(-2*Math.log(accuracy)))+1;
         if (maxRadius < 50) maxRadius = 50;         // too small maxRadius would result in inaccurate sum.
         if (kRadius > maxRadius) kRadius = maxRadius;
         kernel = new float[kRadius];
         for (int i=0; i<kRadius; i++)               // Gaussian function
-            kernel[i] = (float)(Math.exp(-0.5*i*i/sigma/sigma));
+            kernel[i] = (float)(Math.exp(-0.5*i*i/sig/sig));
         double sum;                                 // sum over all kernel elements for normalization
         if (kRadius < maxRadius) {
             sum = kernel[0];
             for (int i=1; i<kRadius; i++)
                 sum += 2*kernel[i];
         } else
-            sum = sigma * Math.sqrt(2*Math.PI);
+            sum = sig * Math.sqrt(2*Math.PI);
 
         for (int i=0; i<kRadius; i++) {
             double v = (kernel[i]/sum);

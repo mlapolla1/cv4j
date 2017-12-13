@@ -2,6 +2,7 @@ package com.cv4j.app.adapter;
 
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,18 +32,18 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
         mList = data;
         mBitmap = bitmap;
         map = new HashMap<>();
-        map.put(0,"原图");
-        map.put(1,"卷积");
-        map.put(2,"最大最小值滤波");
-        map.put(3,"椒盐噪声");
-        map.put(4,"锐化");
-        map.put(5,"中值滤波");
-        map.put(6,"拉普拉斯");
-        map.put(7,"寻找边缘");
-        map.put(8,"梯度");
-        map.put(9,"方差滤波");
-        map.put(10,"马尔操作");
-        map.put(11,"USM");
+        map.put(0, "原图");
+        map.put(1, "卷积");
+        map.put(2, "最大最小值滤波");
+        map.put(3, "椒盐噪声");
+        map.put(4, "锐化");
+        map.put(5, "中值滤波");
+        map.put(6, "拉普拉斯");
+        map.put(7, "寻找边缘");
+        map.put(8, "梯度");
+        map.put(9, "方差滤波");
+        map.put(10, "马尔操作");
+        map.put(11, "USM");
     }
 
     @Override

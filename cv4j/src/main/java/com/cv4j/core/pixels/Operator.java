@@ -51,7 +51,7 @@ public final class Operator {
 		return dst;
 	}
 	
-	public static ImageProcessor substract(ImageProcessor image1, ImageProcessor image2) {
+	public static ImageProcessor subtract(ImageProcessor image1, ImageProcessor image2) {
 		if(!checkParams(image1, image2)) {
 			return null;
 		}

@@ -35,6 +35,8 @@ public class HistFragment extends BaseFragment {
     @InjectView(R.id.text4)
     TextView text4;
 
+    String title = "Title";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_hist, container, false);
@@ -47,7 +49,7 @@ public class HistFragment extends BaseFragment {
     void clickText1() {
 
         Intent i = new Intent(mContext,HistogramEqualizationActivity.class);
-        i.putExtra("Title",text1.getText().toString());
+        i.putExtra(title,text1.getText().toString());
         startActivity(i);
     }
 
@@ -55,7 +57,7 @@ public class HistFragment extends BaseFragment {
     void clickText2() {
 
         Intent i = new Intent(mContext, HistogramDemoActivity.class);
-        i.putExtra("Title",text2.getText().toString());
+        i.putExtra(title,text2.getText().toString());
         startActivity(i);
     }
 
@@ -63,7 +65,7 @@ public class HistFragment extends BaseFragment {
     void clickText3() {
 
         Intent i = new Intent(mContext, CompareHistActivity.class);
-        i.putExtra("Title",text3.getText().toString());
+        i.putExtra(title,text3.getText().toString());
         startActivity(i);
     }
 
@@ -71,7 +73,7 @@ public class HistFragment extends BaseFragment {
     void clickText4() {
 
         Intent i = new Intent(mContext, ProjectHistActivity.class);
-        i.putExtra("Title",text4.getText().toString());
+        i.putExtra(title,text4.getText().toString());
         startActivity(i);
     }
 }

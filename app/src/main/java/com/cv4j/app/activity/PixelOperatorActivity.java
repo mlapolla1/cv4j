@@ -30,9 +30,11 @@ import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
 import com.cv4j.core.pixels.Operator;
 import com.cv4j.exception.CV4JException;
+
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;
+
 /**
  * Created by tony on 2017/11/5.
  */
@@ -65,7 +67,7 @@ public class PixelOperatorActivity extends BaseActivity {
     /**
      * Subtract operator.
      */
-    public static final int SUBSTRACT = 2;
+    public static final int SUBTRACT = 2;
 
     /**
      * Multiply operator.
@@ -117,8 +119,7 @@ public class PixelOperatorActivity extends BaseActivity {
     }
 
     private void initData() {
-
-        toolbar.setTitle("< "+title);
+        toolbar.setTitle("< " + title);
         Resources res = getResources();
 
         final Bitmap bitmap1 = BitmapFactory.decodeResource(res, R.drawable.pixel_test_1);
@@ -138,11 +139,11 @@ public class PixelOperatorActivity extends BaseActivity {
         switch (type) {
 
             case ADD:
-                imageProcessor = Operator.add(imageProcessor1,imageProcessor2);
+                imageProcessor = Operator.add(imageProcessor1, imageProcessor2);
                 break;
 
-            case SUBSTRACT:
-                imageProcessor = Operator.substract(imageProcessor1,imageProcessor2);
+            case SUBTRACT:
+                imageProcessor = Operator.subtract(imageProcessor1,imageProcessor2);
                 break;
 
             case MULTIPLE:
@@ -182,8 +183,9 @@ public class PixelOperatorActivity extends BaseActivity {
                 rect.height = 300;
 
                 try {
-                    imageProcessor = Operator.subImage(imageProcessor1,rect);
+                    imageProcessor = Operator.subImage(imageProcessor1, rect);
                 } catch (CV4JException e) {
+                    System.out.println("CV4J error on sub image operator.");
                 }
 
                 break;
@@ -193,7 +195,7 @@ public class PixelOperatorActivity extends BaseActivity {
                 break;
         }
 
-        if (imageProcessor!=null) {
+        if (imageProcessor != null) {
             CV4JImage resultCV4JImage = new CV4JImage(imageProcessor.getWidth(), imageProcessor.getHeight(), imageProcessor.getPixels());
             result.setImageBitmap(resultCV4JImage.getProcessor().getImage().toBitmap());
         }

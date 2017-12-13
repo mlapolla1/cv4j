@@ -42,14 +42,14 @@ public class Scalar {
 
 	/**
 	 * Constructor with RGB values.
-	 * @param  red   The red value.
-	 * @param  green The green value.
-	 * @param  blue  The blue value.
+	 * @param  re  The red value.
+	 * @param  g The green value.
+	 * @param  b  The blue value.
 	 */
-	public Scalar(int red, int green, int blue) {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
+	public Scalar(int r, int g, int b) {
+		this.red = r;
+		this.green = g;
+		this.blue = b;
 		this.alpha = 255;
 	}
 
@@ -66,24 +66,24 @@ public class Scalar {
 	/**
 	 * Return a scalar with a given ARGB
 	 * @param  alpha The alpha value.
-	 * @param  red   The red value.
-	 * @param  green The green value.
-	 * @param  blue  The blue value.
+	 * @param  r     The red value.
+	 * @param  g     The green value.
+	 * @param  b 	 The blue value.
 	 * @return       The scalar RGB.
 	 */
-	public static Scalar argb(int alpha, int red, int green, int blue){
-		return new Scalar(red, green, blue);
+	public static Scalar argb(int alpha, int r, int g, int b){
+		return new Scalar(r, g, b);
 	}
 	
 	/**
 	 * Return a scalar with a given RGB.
-	 * @param  red   The red value.
-	 * @param  green The green value.
-	 * @param  blue  The blue value.
+	 * @param  r     The red value.
+	 * @param  g     The green value.
+	 * @param  b     The blue value.
 	 * @return       The scalar RGB.
 	 */
-	public static Scalar rgb(int red, int green, int blue){
-		return new Scalar(red, green, blue);
+	public static Scalar rgb(int r, int g, int b){
+		return new Scalar(r, g, b);
 	}
 	
 }

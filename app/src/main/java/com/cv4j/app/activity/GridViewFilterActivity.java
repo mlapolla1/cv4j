@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView.RecycledViewPool;
 import android.support.v7.widget.Toolbar;
 
 import com.cv4j.app.R;
@@ -17,6 +18,7 @@ import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class GridViewFilterActivity extends BaseActivity {
 
     private List<String> list = new ArrayList<>();
 
-    private static RecyclerView.RecycledViewPool myPool = new RecyclerView.RecycledViewPool();
+    private static RecycledViewPool myPool = new RecycledViewPool();
 
     static {
         myPool.setMaxRecycledViews(0, 10);
@@ -60,9 +62,8 @@ public class GridViewFilterActivity extends BaseActivity {
         Resources res = getResources();
         String[] filterNames = res.getStringArray(R.array.filterNames);
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_mm);
-        for (String filter:filterNames) {
-            list.add(filter);
-        }
+
+        list.addAll(Arrays.asList(filterNames));
 
         GridLayoutManager manager = new GridLayoutManager(GridViewFilterActivity.this, 3);
         manager.setRecycleChildrenOnDetach(true);

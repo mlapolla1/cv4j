@@ -124,10 +124,10 @@ public class ColorFilter extends BaseFilter {
 
     /**
      * Returns the LUT with a given style.
-     * @param  style The LUT style.
+     * @param  quality The LUT style.
      * @return       The LUT.
      */
-    private int[][] getStyleLUT(int style) {
-        return LUT.getColorFilterLUT(style);
+    private int[][] getStyleLUT(int quality) {
+        return LUT.getColorFilterLUT(quality);
     }
 }

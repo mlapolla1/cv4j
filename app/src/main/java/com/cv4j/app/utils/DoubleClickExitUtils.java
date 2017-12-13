@@ -57,7 +57,7 @@ public class DoubleClickExitUtils {
 		}
 	}
 	
-	private Runnable onBackTimeRunnable = new Runnable() {
+	private final Runnable onBackTimeRunnable = new Runnable() {
 		
 		@Override
 		public void run() {

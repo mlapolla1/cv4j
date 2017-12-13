@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class MainActivity extends BaseActivity {
     private MenuManager menuManager;
     private Fragment mContent;
     private DoubleClickExitUtils doubleClickExitHelper;
+    private SparseArray<MenuManager.MenuType> menuArray;
 
 
     @Override
@@ -77,6 +79,16 @@ public class MainActivity extends BaseActivity {
         }
 
         getSupportFragmentManager().beginTransaction().add(R.id.content_frame,mContent, MenuManager.MenuType.HOME.getTitle()).commit();
+
+        menuArray = new SparseArray<>(8);
+        menuArray.append(R.id.drawer_cv4j, MenuManager.MenuType.HOME);
+        menuArray.append(R.id.drawer_io, MenuManager.MenuType.IO);
+        menuArray.append(R.id.drawer_filters, MenuManager.MenuType.FILTERS);
+        menuArray.append(R.id.drawer_spatial_conv, MenuManager.MenuType.SPTIAL_CONV);
+        menuArray.append(R.id.drawer_binary, MenuManager.MenuType.BINARY);
+        menuArray.append(R.id.drawer_hist, MenuManager.MenuType.HIST);
+        menuArray.append(R.id.drawer_template_match, MenuManager.MenuType.TEMPLATE_MATCH);
+        menuArray.append(R.id.drawer_pixel_operator, MenuManager.MenuType.PIXEL_OPERATOR);
     }
 
     private void initToolbar() {
@@ -98,42 +110,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showMenu(MenuItem menuItem) {
+        MenuManager.MenuType menuType = menuArray.get(menuItem.getItemId());
 
-        switch (menuItem.getItemId()) {
-            case R.id.drawer_cv4j:
-                menuManager.show(MenuManager.MenuType.HOME);
-                break;
-
-            case R.id.drawer_io:
-                menuManager.show(MenuManager.MenuType.IO);
-                break;
-
-            case R.id.drawer_filters:
-                menuManager.show(MenuManager.MenuType.FILTERS);
-                break;
-
-            case R.id.drawer_spatial_conv:
-                menuManager.show(MenuManager.MenuType.SPTIAL_CONV);
-                break;
-
-            case R.id.drawer_binary:
-                menuManager.show(MenuManager.MenuType.BINARY);
-                break;
-
-            case R.id.drawer_hist:
-                menuManager.show(MenuManager.MenuType.HIST);
-                break;
-
-            case R.id.drawer_template_match:
-                menuManager.show(MenuManager.MenuType.TEMPLATE_MATCH);
-                break;
-
-            case R.id.drawer_pixel_operator:
-                menuManager.show(MenuManager.MenuType.PIXEL_OPERATOR);
-                break;
-
-            default:
-                break;
+        if (menuType != null) {
+            menuManager.show(menuType);
         }
     }
 

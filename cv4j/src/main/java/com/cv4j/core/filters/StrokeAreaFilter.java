@@ -28,7 +28,7 @@ public class StrokeAreaFilter extends BaseFilter {
     // default value, optional value 30, 15, 10, 5, 2
     private double size = 10;
 
-    private static double d02 = 150*150;
+    private final static double d02 = 150*150;
 
     public StrokeAreaFilter() {
         this(15);

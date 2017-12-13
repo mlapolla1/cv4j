@@ -35,9 +35,9 @@ public class CompositeFilters {
         lists = new ArrayList<>();
     }
 
-    public CompositeFilters addFilter(CommonFilter filter) {
+    public CompositeFilters addFilter(CommonFilter f) {
 
-        lists.add(filter);
+        lists.add(f);
         return this;
     }
 

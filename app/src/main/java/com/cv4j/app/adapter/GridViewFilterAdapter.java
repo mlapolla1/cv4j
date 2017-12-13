@@ -2,6 +2,7 @@ package com.cv4j.app.adapter;
 
 import android.graphics.Bitmap;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -59,7 +60,7 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
         String className = filterName + "Filter";
 
         try {
-            Class fiterClass = Class.forName("com.cv4j.core.filters." + className);
+            Class filterClass = Class.forName("com.cv4j.core.filters." + className);
             filter = (CommonFilter) filterClass.newInstance();
         } catch (ClassNotFoundException e) {
             System.out.println("Class " + filter + " not found");

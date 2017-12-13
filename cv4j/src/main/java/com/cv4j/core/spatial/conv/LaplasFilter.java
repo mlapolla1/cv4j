@@ -76,10 +76,11 @@ public class LaplasFilter extends BaseFilter {
 
 		int total = width * height;
 		byte[][] output = new byte[3][total];
-		
-		int r = 0;
-		int g = 0;
-		int b = 0;
+
+		int offset;
+		int r;
+		int g;
+		int b;
 
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
@@ -97,7 +98,6 @@ public class LaplasFilter extends BaseFilter {
 		
 		ColorProcessor colorSource = (ColorProcessor) src;
 		colorSource.putRGB(output[0], output[1], output[2]);
-		output = null;
 		
 		return src;
 	}
@@ -114,8 +114,8 @@ public class LaplasFilter extends BaseFilter {
 	private int getFilteredColor(int type, int row, int col) {
 		int andValue = 0xff;
 		int offset = row * width;
-		int shiftValue;
-		int[] arrayColor;
+		int shiftValue = 0;
+		byte[] arrayColor = null;
 
 		switch (type) {
 		case TYPE_COLOR_RED:
@@ -127,7 +127,7 @@ public class LaplasFilter extends BaseFilter {
 			arrayColor = G;
 			break;
 		case TYPE_COLOR_BLUE:
-			shiftValue = 0
+			shiftValue = 0;
 			arrayColor = B;
 			break;
 		}

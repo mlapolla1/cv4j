@@ -291,7 +291,7 @@ public class Threshold {
     private int shift(ByteProcessor gray) {
         // find threshold
         int t = 127;
-        int = 0;
+        int nt = 0;
         int m1=0;
         int m2=0;
         int sum1=0;

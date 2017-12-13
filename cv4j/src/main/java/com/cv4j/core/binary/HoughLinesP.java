@@ -136,7 +136,7 @@ public class HoughLinesP {
 	 * @param  lines  The lines.
 	 * @return        The map of labels and lines.
 	 */
-	public Map<Integer, Line> getLinesMap(int[] labels, int[] lines) {
+	public Map<Integer, Line> getLinesMap(int[] labels, List<Line> lines) {
 		Map<Integer, Line> lineMap = new HashMap<>();
 		
 		for(int i = 0; i < labels.length; i++) {
@@ -155,10 +155,10 @@ public class HoughLinesP {
 	 *
 	 * @return
 	 */
-	public void process(ByteProcessor binary, int accSize, int minGap, int minAcc, List<Line> lines) {
+	public void process(ByteProcessor binary, int sizeAcc, int minGap, int minAcc, List<Line> rows) {
 		this.width        = binary.getWidth();
 		this.height       = binary.getHeight();
-		this.accSize      = accSize; // 前K=accSize个累积值
+		this.accSize      = sizeAcc; // 前K=accSize个累积值
 		this.accThreshold = minAcc;// 最小累积值
 		
 		int rmax  = (int) Math.sqrt(width * width + height * height);
@@ -183,7 +183,7 @@ public class HoughLinesP {
 		normalizeAccValues(acc, rmax);
 
 		// 发现前N个信号最强的点，转换为平面坐标，得到直线
-		findMaxima(acc, lines);
+		findMaxima(acc, rows);
 
 		// filter by min gap
 		// TODO: zhigaang

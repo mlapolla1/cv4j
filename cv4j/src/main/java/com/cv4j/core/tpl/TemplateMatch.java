@@ -50,7 +50,7 @@ public class TemplateMatch {
      * @param target [description]
      * @param tpl    [description]
      */
-    private void channel3x3(ImageProcessor target, ImageProcessor tpl) {
+    private void channel3x3(ImageProcessor target, ImageProcessor tpl, int width, int height, int offx, int offy) {
         byte[] R = ((ColorProcessor) target).getRed();
         byte[] G = ((ColorProcessor) target).getGreen();
         byte[] B = ((ColorProcessor) target).getBlue();
@@ -63,7 +63,7 @@ public class TemplateMatch {
     }
 
     
-    public void something(int[] tplmask, byte[] data, int raidus_height, int raidus_width, int th, int tw) {
+    public void something(int[] tplmask, byte[] data, int raidus_height, int raidus_width, int th, int tw, int width, int row, int col) {
         Arrays.fill(tplmask, 0);
         int wrow = 0;
 
@@ -106,7 +106,7 @@ public class TemplateMatch {
         float[] result = new float[rw * rh];
         
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
-            channel3x3(target, tpl);
+            channel3x3(target, tpl, width, height, offx, offy);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
             if(method == TM_CCORR_NORMED) {
                 generateNCCResult(target, tpl, result, tplmask);
@@ -143,16 +143,16 @@ public class TemplateMatch {
         Arrays.fill(tplmask, 0);
 
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
-            channel3x3(target, tpl);
+            channel3x3(target, tpl, width, height, offx, offy);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
             byte[]   data     = ((ByteProcessor)target).getGray();
             byte[]   tdata    = ((ByteProcessor)tpl).getGray();
             float[]  meansdev = Tools.calcMeansAndDev(((ByteProcessor)tpl).toFloat(0));
             double[] tDiff    = calculateDiff(tdata, meansdev[0]);
             
-            for(int row=offy; row<height-offy; row+=2) {
-                for(int col=offx; col<width-offx; col+=2) {
-                    something(tplmask, data, raidus_height, raidus_width, th, tw);
+            for(int row = offy; row < height-offy; row += 2) {
+                for(int col = offx; col < width-offx; col += 2) {
+                    something(tplmask, data, raidus_height, raidus_width, th, tw, width, row, col);
                     
                     // calculate the ncc
                     float[] _meansDev = Tools.calcMeansAndDev(tplmask);

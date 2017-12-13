@@ -57,7 +57,6 @@ public class GridRecyclerView extends RecyclerView {
         }
     }
 
-    @Override
     protected void attachLayoutAnimationParameters(View child, @NonNull LayoutParams params, int index, int count) {
 
         if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager) {

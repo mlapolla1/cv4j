@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * The CV4JImage class of DataModel
  */
-public class CV4JImage implements ImageData, Serializable{
+public class CV4JImage implements ImageData {
 
     private static final long serialVersionUID = -8832812623741546452L;
     private int width;
@@ -180,16 +180,16 @@ public class CV4JImage implements ImageData, Serializable{
 
     /**
      * 保存图片到指定路径
-     * @param bitmap
+     * @param image
      * @param format 支持jpg、png、webp
      * @param path
      */
-    public void savePic(Bitmap bitmap, Bitmap.CompressFormat format, String path) {
+    public void savePic(Bitmap image, Bitmap.CompressFormat format, String path) {
         File file = new File(path);
 
         try {
             FileOutputStream out = new FileOutputStream(file);
-            if (bitmap.compress(format, 100, out)) {
+            if (image.compress(format, 100, out)) {
                 out.flush();
                 out.close();
             }

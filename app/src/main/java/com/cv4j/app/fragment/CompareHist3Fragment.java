@@ -44,7 +44,6 @@ public class CompareHist3Fragment extends BaseFragment {
     }
 
     private void initData() {
-
         Resources res = getResources();
         final Bitmap bitmap1 = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist1);
         final Bitmap bitmap2 = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist2);
@@ -72,19 +71,25 @@ public class CompareHist3Fragment extends BaseFragment {
         CompareHist compareHist = new CompareHist();
         StringBuilder sb = new StringBuilder();
 
-        double sum1=0;
-        double sum2=0;
-        doble sum3=0;
+        double sum1 = 0;
+        double sum2 = 0;
+        double sum3 = 0;
 
-        for (int i=0;i<3;i++) {
+        int sumLength = 3;
+        for (int i = 0; i < sumLength; i++) {
             sum1 += compareHist.bhattacharyya(source[i],target[i]);
             sum2 += compareHist.covariance(source[i],target[i]);
             sum3 += compareHist.ncc(source[i],target[i]);
         }
 
-        sb.append("巴氏距离:").append(sum1/3).append("\r\n")
-                .append("协方差:").append(sum2/3).append("\r\n")
-                .append("相关性因子:").append(sum3/3);
+        sb.append("巴氏距离:")
+          .append(sum1 / sumLength)
+          .append("\r\n")
+          .append("协方差:")
+          .append(sum2 / sumLength)
+          .append("\r\n")
+          .append("相关性因子:")
+          .append(sum3 / sumLength);
 
         result.setText(sb.toString());
     }

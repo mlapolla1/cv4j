@@ -103,73 +103,73 @@ public class IntIntegralImage {
 		return ((sum1 + sum4) - sum2 - sum3);
 	}
 
-	public void process(int width, int height) {
-		this.width = width;
-		this.height = height;
+	private int calculateSumOffsetValue(int row, int col) {
+		int offset = row * this.width;
+		int uprow = row - 1;
+		int leftcol = col - 1;
+
+		int p1 = image[offset] & 0xff;                                   // p(x, y)
+		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);                      // p(x-1, y)
+		int p3 = (uprow < 0 ? 0 : sum[offset-width]);                    // p(x, y-1);
+		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+		return p1 + p2 + p3 - p4;
+	}
+
+	private float calculateSquaresumOffsetValue(int row, int col) {
+		int offset = row * this.width;
+		int uprow = row - 1;
+		int leftcol = col - 1;
+
+		int p1 = image[offset] & 0xff;                  // p(x, y)
+		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);     // p(x-1, y)
+		int p3 = (uprow < 0 ? 0 : sum[offset-width]);   // p(x, y-1);
+		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+
+		float sp2 = (leftcol<0) ? 0:squaresum[offset-1]; // p(x-1, y)
+		float sp3 = (uprow<0) ? 0:squaresum[offset-width]; // p(x, y-1);
+		float sp4 = (uprow<0||leftcol<0) ? 0:squaresum[offset-width-1]; // p(x-1, y-1);
+		return (p1 * p1) + sp2 + sp3 - sp4;
+	}
+
+	public void process(int distance, int elevation) {
+		this.width = distance;
+		this.height = elevation;
 		sum = new int[width*height];
+
 		// rows
-		int p1=0;
-		int p2=0;
-		int p3=0;
+		int p1;
+		int p2;
+		int p3;
 		int p4;
-		int offset = 0;
-		int uprow=0;
-		int leftcol=0;
-		float sp2=0;
-		float sp3=0;
-		float sp4=0;
-		for(int row=0; row<height; row++ ) {
-			offset = row*width;
+
+		int offset;
+		int uprow;
+		int leftcol;
+
+		for(int row = 0; row < height; row++ ) {
+			offset = row * width;
 			uprow = row-1;
-			for(int col=0; col<width; col++) {
+			for(int col = 0; col < width; col++) {
 				leftcol=col-1;
-				// 计算和查找表
-				p1=image[offset]&0xff;// p(x, y)
-				p2=(leftcol<0) ? 0:sum[offset-1]; // p(x-1, y)
-				p3=(uprow<0) ? 0:sum[offset-width]; // p(x, y-1);
-				p4=(uprow<0||leftcol<0) ? 0:sum[offset-width-1]; // p(x-1, y-1);
-				sum[offset]= p1+p2+p3-p4;
+				sum[offset] = calculateSumOffsetValue(row, col);
 				offset++;
 			}
 		}
 	}
 
-	public void process(int width, int height, boolean includeSqrt) {
-		this.width = width;
-		this.height = height;
-		sum = new int[width*height];
-		squaresum = new float[width*height];
-		// rows
-		int p1=0;
-		int p2=0;
-		int p3=0;
-		int p4;
-		int offset = 0;
-		int uprow=0;
-		int leftcol=0;
-		float sp2=0;
-		float sp3=0;
-		float sp4=0;
-		for(int row=0; row<height; row++ ) {
-			offset = row*width;
-			uprow = row-1;
-			for(int col=0; col<width; col++) {
-				leftcol=col-1;
-				// 计算和查找表
-				p1=image[offset]&0xff;// p(x, y)
-				p2=(leftcol<0) ? 0:sum[offset-1]; // p(x-1, y)
-				p3=(uprow<0) ? 0:sum[offset-width]; // p(x, y-1);
-				p4=(uprow<0||leftcol<0) ? 0:sum[offset-width-1]; // p(x-1, y-1);
-				sum[offset]= p1+p2+p3-p4;
+	public void process(int distance, int elevation, boolean includeSqrt) {
+		this.width = distance;
+		this.height = elevation;
+		this.sum = new int[width * height];
+		this.squaresum = new float[width * height];
 
-				// 计算平方查找表
-				sp2=(leftcol<0) ? 0:squaresum[offset-1]; // p(x-1, y)
-				sp3=(uprow<0) ? 0:squaresum[offset-width]; // p(x, y-1);
-				sp4=(uprow<0||leftcol<0) ? 0:squaresum[offset-width-1]; // p(x-1, y-1);
-				squaresum[offset]=p1*p1+sp2+sp3-sp4;
+		for(int row = 0; row < height; row++ ) {
+			int offset = row * width;
+			for(int col = 0; col < width; col++) {
+				sum[offset]       = calculateSumOffsetValue(row, col);
+				squaresum[offset] = calculateSquaresumOffsetValue(row, col);
 				offset++;
 			}
-			// System.out.println();
 		}
 	}
 }

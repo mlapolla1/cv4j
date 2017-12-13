@@ -58,6 +58,7 @@ public class CompositeFilersActivity extends BaseActivity {
     }
 
     private void initData() {
+        String newLine = "\r\n";
         Resources res = getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_filters);
 
@@ -81,14 +82,14 @@ public class CompositeFilersActivity extends BaseActivity {
 
         StringBuilder code = new StringBuilder();
         code.append("CompositeFilters compositeFilters = new CompositeFilters();")
-                .append("\r\n")
+                .append(newLine)
                 .append("Bitmap newBitmap = compositeFilters")
-                .append("\r\n")
-                .append(".addFilter(new NatureFilter())").append("\r\n")
-                .append(".addFilter(new SpotlightFilter())").append("\r\n")
-                .append(".filter(new CV4JImage(bitmap).getProcessor())").append("\r\n")
-                .append(".getImage()").append("\r\n")
-                .append(".toBitmap();").append("\r\n").append("\r\n")
+                .append(newLine)
+                .append(".addFilter(new NatureFilter())").append(newLine)
+                .append(".addFilter(new SpotlightFilter())").append(newLine)
+                .append(".filter(new CV4JImage(bitmap).getProcessor())").append(newLine)
+                .append(".getImage()").append(newLine)
+                .append(".toBitmap();").append(newLine).append(newLine)
                 .append("image3.setImageBitmap(newBitmap);");
 
         codeView.showCode(code.toString());
