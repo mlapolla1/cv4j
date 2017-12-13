@@ -75,41 +75,7 @@ public class LaplasFilter extends BaseFilter {
 	public ImageProcessor doFilter(ImageProcessor src){
 
 		int total = width * height;
-
-		int offset = 0;
-		int k0;
-		int k1;
-		int k2;
-		int k3;
-		int k4;
-		int k5;
-		int k6;
-		int k7;
-		int k8;
-
 		byte[][] output = new byte[3][total];
-		
-		if(_4direction) {
-			k0 = FOUR[0];
-			k1 = FOUR[1];
-			k2 = FOUR[2];
-			k3 = FOUR[3];
-			k4 = FOUR[4];
-			k5 = FOUR[5];
-			k6 = FOUR[6];
-			k7 = FOUR[7];
-			k8 = FOUR[8];
-		} else {
-			k0 = EIGHT[0];
-			k1 = EIGHT[1];
-			k2 = EIGHT[2];
-			k3 = EIGHT[3];
-			k4 = EIGHT[4];
-			k5 = EIGHT[5];
-			k6 = EIGHT[6];
-			k7 = EIGHT[7];
-			k8 = EIGHT[8];
-		}
 		
 		int r = 0;
 		int g = 0;
@@ -166,15 +132,22 @@ public class LaplasFilter extends BaseFilter {
 			break;
 		}
 
-		int color = k0 * ((arrayColor[offset - width + col - 1] >> shiftValue) & andValue)
-		          + k1 * (arrayColor[offset - width + col] & andValue)
-		          + k2 * (arrayColor[offset - width + col + 1] & andValue)
-		          + k3 * (arrayColor[offset + col - 1] & andValue)
-		          + k4 * (arrayColor[offset + col] & andValue)
-		          + k5 * (arrayColor[offset + col + 1] & andValue)
-		          + k6 * (arrayColor[offset + width + col - 1] & andValue)
-		          + k7 * (arrayColor[offset + width + col] & andValue)
-		          + k8 * (arrayColor[offset + width + col + 1] & andValue);
+		int[] constants;
+		if (_4direction) {
+			constants = FOUR;
+		} else {
+			constants = EIGHT;
+		}
+
+		int color = constants[0] * ((arrayColor[offset - width + col - 1] >> shiftValue) & andValue)
+		          + constants[1] * (arrayColor[offset - width + col] & andValue)
+		          + constants[2] * (arrayColor[offset - width + col + 1] & andValue)
+		          + constants[3] * (arrayColor[offset + col - 1] & andValue)
+		          + constants[4] * (arrayColor[offset + col] & andValue)
+		          + constants[5] * (arrayColor[offset + col + 1] & andValue)
+		          + constants[6] * (arrayColor[offset + width + col - 1] & andValue)
+		          + constants[7] * (arrayColor[offset + width + col] & andValue)
+		          + constants[8] * (arrayColor[offset + width + col + 1] & andValue);
 
 		return color;
 	}

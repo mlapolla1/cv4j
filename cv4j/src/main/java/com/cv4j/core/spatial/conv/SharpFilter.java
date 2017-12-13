@@ -28,7 +28,9 @@ public class SharpFilter extends BaseFilter {
     /**
      * The kernel
      */
-	public static int[] kernel=new int[]{-1,-1,-1, -1, 12, -1, -1,-1,-1};
+	public static int[] kernel = new int[] {
+		-1, -1, -1, -1, 12, -1, -1, -1, -1
+	};
 
 	/**
 	 * The type of color red.
@@ -51,30 +53,25 @@ public class SharpFilter extends BaseFilter {
 		int total = width * height;
 		byte[][] output = new byte[3][total];
 
+		int scale = kernel[0]
+		          + kernel[1]
+		          + kernel[2]
+		          + kernel[3]
+		          + kernel[4]
+		          + kernel[5]
+		          + kernel[6]
+		          + kernel[7]
+		          + kernel[8];
+		
 		int offset = 0;
-		int k0 = kernel[0];
-		int k1 = kernel[1];
-		int k2 = kernel[2];
-		int k3 = kernel[3];
-		int k4 = kernel[4];
-		int k5 = kernel[5];
-		int k6 = kernel[6];
-		int k7 = kernel[7];
-		int k8 = kernel[8];
-		
-		int scale = (k0 + k1 + k2 + k3 + k4 + k5 + k6 + k7 + k8);
-		
-		int sr = 0;
-		int sg = 0;
-		int sb = 0;
 		
 		int r = 0;
 		int g = 0;
 		int b = 0;
 		
-		for(int row=1; row<height-1; row++) {
+		for(int row = 1; row < height-1; row++) {
 			offset = row * width;
-			for(int col=1; col<width-1; col++) {
+			for(int col = 1; col < width-1; col++) {
 				r = getFilteredColor(TYPE_COLOR_RED, row, col) / scale;
 				g = getFilteredColor(TYPE_COLOR_GREEN, row, col) / scale;
 				b = getFilteredColor(TYPE_COLOR_BLUE, row, col) / scale;
@@ -94,7 +91,7 @@ public class SharpFilter extends BaseFilter {
 		return src;
 	}
 
-		/**
+	/**
 	 * Given a type of color (red, green or blue), an offset
 	 * and a column, it returns the color filtered with the
 	 * laplas filter.
@@ -120,15 +117,15 @@ public class SharpFilter extends BaseFilter {
 			break;
 		}
 
-		int color = k0 * (arrayColor[offset-width+col-1] & andValue)
-		          + k1 * (arrayColor[offset-width+col] & andValue)
-		          + k2 * (arrayColor[offset-width+col+1] & andValue)
-		          + k3 * (arrayColor[offset+col-1] & andValue)
-		          + k4 * (arrayColor[offset+col] & andValue)
-		          + k5 * (arrayColor[offset+col+1] & andValue)
-		          + k6 * (arrayColor[offset+width+col-1] & andValue)
-		          + k7 * (arrayColor[offset+width+col] & andValue)
-		          + k8 * (arrayColor[offset+width+col+1] & andValue);
+		int color = kernel[0] * (arrayColor[offset-width+col-1] & andValue)
+		          + kernel[1] * (arrayColor[offset-width+col] & andValue)
+		          + kernel[2] * (arrayColor[offset-width+col+1] & andValue)
+		          + kernel[3] * (arrayColor[offset+col-1] & andValue)
+		          + kernel[4] * (arrayColor[offset+col] & andValue)
+		          + kernel[5] * (arrayColor[offset+col+1] & andValue)
+		          + kernel[6] * (arrayColor[offset+width+col-1] & andValue)
+		          + kernel[7] * (arrayColor[offset+width+col] & andValue)
+		          + kernel[8] * (arrayColor[offset+width+col+1] & andValue);
 
 		return color;
 	}

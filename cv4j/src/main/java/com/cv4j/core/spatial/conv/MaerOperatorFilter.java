@@ -67,97 +67,86 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 		
 		// 拉普拉斯算子 ，发现边缘
 
-		int total = width*height;
+		int total = width * height;
 		byte[][] output = new byte[3][total];
 
 		int offset = 0;
-		int k0 = 0;
-		int k1 = 0;
-		int k2 = 0;
-		int k3 = 0;
-		int k4 = 0;
-		int k5 = 0;
-		int k6 = 0;
-		int k7 = 0;
-		int k8 = 0;
-		if(_4direction) {
-			k0 = FOUR[0];
-			k1 = FOUR[1];
-			k2 = FOUR[2];
-			k3 = FOUR[3];
-			k4 = FOUR[4];
-			k5 = FOUR[5];
-			k6 = FOUR[6];
-			k7 = FOUR[7];
-			k8 = FOUR[8];
-		} else {
-			k0 = EIGHT[0];
-			k1 = EIGHT[1];
-			k2 = EIGHT[2];
-			k3 = EIGHT[3];
-			k4 = EIGHT[4];
-			k5 = EIGHT[5];
-			k6 = EIGHT[6];
-			k7 = EIGHT[7];
-			k8 = EIGHT[8];
-		}
 
-		int sr = 0;
-		int sg = 0;
-		int sb = 0;
 		int r = 0;
 		int g = 0;
 		int b = 0;
+		
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
-				// red
-				sr = k0 * (R[offset - width + col - 1] & 0xff)
-						+ k1 * (R[offset - width + col] & 0xff)
-						+ k2 * (R[offset - width + col + 1] & 0xff)
-						+ k3 * (R[offset + col - 1] & 0xff)
-						+ k4 * (R[offset + col] & 0xff)
-						+ k5 * (R[offset + col + 1] & 0xff)
-						+ k6 * (R[offset + width + col - 1] & 0xff)
-						+ k7 * (R[offset + width + col] >> 16 & 0xff)
-						+ k8 * (R[offset + width + col + 1] >> 16 & 0xff);
-				// green
-				sg = k0 * (G[offset - width + col - 1] & 0xff)
-						+ k1 * (G[offset - width + col] & 0xff)
-						+ k2 * (G[offset - width + col + 1] & 0xff)
-						+ k3 * (G[offset + col - 1] & 0xff)
-						+ k4 * (G[offset + col] & 0xff)
-						+ k5 * (G[offset + col + 1] & 0xff)
-						+ k6 * (G[offset + width + col - 1] & 0xff)
-						+ k7 * (G[offset + width + col] & 0xff)
-						+ k8 * (G[offset + width + col + 1] & 0xff);
-				// blue
-				sb = k0 * (B[offset - width + col - 1] & 0xff)
-						+ k1 * (B[offset - width + col] & 0xff)
-						+ k2 * (B[offset - width + col + 1] & 0xff)
-						+ k3 * (B[offset + col - 1] & 0xff)
-						+ k4 * (B[offset + col] & 0xff)
-						+ k5 * (B[offset + col + 1] & 0xff)
-						+ k6 * (B[offset + width + col - 1] & 0xff)
-						+ k7 * (B[offset + width + col] & 0xff)
-						+ k8 * (B[offset + width + col + 1] & 0xff);
-				r = sr;
-				g = sg;
-				b = sb;
+				r = getFilteredColor(TYPE_COLOR_RED, row, cl);
+				g = getFilteredColor(TYPE_COLOR_GREEN, row, cl);
+				b = getFilteredColor(TYPE_COLOR_BLUE, row, cl);
 
-				output[0][offset + col] = (byte) Tools.clamp(r);
-				output[1][offset + col] = (byte)Tools.clamp(g);
-				output[2][offset + col] = (byte)Tools.clamp(b);
-
-				// for next pixel
-				sr = 0;
-				sg = 0;
-				sb = 0;
+				int offsetOutput = offset + col;
+				output[0][offsetOutput] = (byte) Tools.clamp(r);
+				output[1][offsetOutput] = (byte) Tools.clamp(g);
+				output[2][offsetOutput] = (byte) Tools.clamp(b);
 			}
 		}
-		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
+
+		ColorProcessor colorSrc = (ColorProcessor) src;
+		colorSrc.putRGB(output[0], output[1], output[2]);
+		
 		output = null;
+		
 		return src;
+	}
+
+	/**
+	 * Given a type of color (red, green or blue), an offset
+	 * and a column, it returns the color filtered with the
+	 * laplas filter.
+	 * @param  type   The type of the color.
+	 * @param  offset The offset of the color.
+	 * @param  col    The column of the color.
+	 * @return        The filtered color.
+	 */
+	private int getFilteredColor(int type, int row, int col) {
+		int andValue = 0xff;
+		int offset = row * width;
+
+		int shiftValue;
+		int[] arrayColor;
+
+		switch (type) {
+		case TYPE_COLOR_RED:
+			arrayColor = R;
+			shiftValue = 16
+			break;
+		case TYPE_COLOR_GREEN:
+			arrayColor = G;
+			shiftValue = 0;
+			break;
+		case TYPE_COLOR_BLUE:
+			arrayColor = B;
+			shiftValue = 0;
+			break;
+		}
+
+		int[] constants;
+		if (_4direction) {
+			constants = FOUR;
+		} else {
+			constants = EIGHT;
+		}
+
+		int color = constants[0] * (arrayColor[offset - width + col - 1] & andValue)
+		          + constants[1] * (arrayColor[offset - width + col] & andValue)
+		          + constants[2] * (arrayColor[offset - width + col + 1] & andValue)
+		          + constants[3] * (arrayColor[offset + col - 1] & andValue)
+		          + constants[4] * (arrayColor[offset + col] & andValue)
+		          + constants[5] * (arrayColor[offset + col + 1] & andValue)
+		          + constants[6] * (arrayColor[offset + width + col - 1] & andValue)
+		          + constants[7] * (arrayColor[offset + width + col] >> shiftValue & andValue)
+		          + constants[8] * (arrayColor[offset + width + col + 1] >> shiftValue & andValue)
+
+		return color;
 	}
 
 }
