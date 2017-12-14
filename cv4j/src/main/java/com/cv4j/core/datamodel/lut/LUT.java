@@ -60,7 +60,7 @@ public class LUT {
     }
 
     public static int[][] getColorFilterLUT(int style) {
-        if (LUT.initialized === false) {
+        if (LUT.initialized == false) {
             LUT.init();
         }
 

@@ -37,10 +37,11 @@ public class WhiteImageFilter extends BaseFilter {
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
-
+		int maxRgb = 255;
+		maxRgb++;
 		// make LUT
-		int[] lut = new int[256];
-		for(int i=0; i<256; i++) {
+		int[] lut = new int[maxRgb];
+		for(int i=0; i<maxRgb; i++) {
 			lut[i] = imageMath(i);
 		}
 
@@ -58,7 +59,8 @@ public class WhiteImageFilter extends BaseFilter {
 	}
 
 	private int imageMath(int gray) {
-		double scale = 255 / (Math.log(255 * (this.beta -1) + 1) / Math.log(this.beta));
+		int maxRgb = 255;
+		double scale = maxRgb / (Math.log(maxRgb * (this.beta -1) + 1) / Math.log(this.beta));
 		double p1 = Math.log(gray * (this.beta -1) + 1);
 		double np = p1 / Math.log(this.beta);
 		return (int)(np * scale);

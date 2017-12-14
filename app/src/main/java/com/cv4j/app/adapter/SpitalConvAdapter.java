@@ -32,18 +32,30 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
         mList = data;
         mBitmap = bitmap;
         map = new HashMap<>();
-        map.put(0, "原图");
-        map.put(1, "卷积");
-        map.put(2, "最大最小值滤波");
-        map.put(3, "椒盐噪声");
-        map.put(4, "锐化");
-        map.put(5, "中值滤波");
-        map.put(6, "拉普拉斯");
-        map.put(7, "寻找边缘");
-        map.put(8, "梯度");
-        map.put(9, "方差滤波");
-        map.put(10, "马尔操作");
-        map.put(11, "USM");
+        int index0 = 0;
+        map.put(index0, "原图");
+        int index1 = 1;
+        map.put(index1, "卷积");
+        int index2 = 2;
+        map.put(index2, "最大最小值滤波");
+        int index3 = 3;
+        map.put(index3, "椒盐噪声");
+        int index4 = 4;
+        map.put(index4, "锐化");
+        int index5 = 5;
+        map.put(index5, "中值滤波");
+        int index6 = 6;
+        map.put(index6, "拉普拉斯");
+        int index7 = 7;
+        map.put(index7, "寻找边缘");
+        int index8 = 8;
+        map.put(index8, "梯度");
+        int index9 = 9;
+        map.put(index9, "方差滤波");
+        int index10 = 10;
+        map.put(index10, "马尔操作");
+        int index11 = 11;
+        map.put(index11, "USM");
     }
 
     @Override

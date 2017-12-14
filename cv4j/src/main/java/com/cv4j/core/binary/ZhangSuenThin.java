@@ -93,7 +93,7 @@ public class ZhangSuenThin {
 				p9 = (p9 == 255) ? 1 : 0;
 				
 				int con1 = p2+p3+p4+p5+p6+p7+p8+p9;
-				String one = "01"
+				String one = "01";
 
 				StringBuilder sb = new StringBuilder();
 				sb.append(String.valueOf(p2))

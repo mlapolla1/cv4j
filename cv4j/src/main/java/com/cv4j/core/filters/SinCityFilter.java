@@ -26,7 +26,8 @@ import com.cv4j.core.datamodel.ImageProcessor;
 public class SinCityFilter extends BaseFilter {
 
 	private final double threshold = 200; // default value
-	private int mainColor = Color.argb(255, 255, 0, 0);
+	int maxRgb = 255;
+	private int mainColor = Color.argb(maxRgb, maxRgb, 0, 0);
 
 	public void setMainColor(int argb) {
 		this.mainColor = argb;
@@ -44,14 +45,20 @@ public class SinCityFilter extends BaseFilter {
 			tr = R[i] & 0xff;
 			tg = G[i] & 0xff;
 			tb = B[i] & 0xff;
-			int gray = (int)(0.299 * (double)tr + 0.587 * (double)tg + 0.114 * (double)tb);
+			int r1 = 0.299;
+			int g1 = 0.587;
+			int b1 = 0.114;
+			int gray = (int)(r1 * (double)tr + g1 * (double)tg + b1 * (double)tb);
 			double distance = getDistance(tr, tg, tb);
 			if(distance < threshold) {
 				double k = distance / threshold;
 				int[] rgb = getAdjustableRGB(tr, tg, tb, gray, (float)k);
-				tr = rgb[0];
-				tg = rgb[1];
-				tb = rgb[2];
+				int index0 = 0;
+				int index1 = 1;
+				int index2 = 2;
+				tr = rgb[index0];
+				tg = rgb[index1];
+				tb = rgb[index2];
 				R[i] = (byte)tr;
 				G[i] = (byte)tg;
 				B[i] = (byte)tb;
@@ -65,10 +72,14 @@ public class SinCityFilter extends BaseFilter {
 	}
 
 	private int[] getAdjustableRGB(int tr, int tg, int tb, int gray, float rate) {
-		int[] rgb = new int[3];
-		rgb[0] = (int)(tr * rate + gray * (1.0f-rate));
-		rgb[1] = (int)(tg * rate + gray * (1.0f-rate));
-		rgb[2] = (int)(tb * rate + gray * (1.0f-rate));
+		int length = 3;
+		int[] rgb = new int[length];
+		int index0 = 0;
+		int index1 = 1;
+		int index2 = 2;
+		rgb[index0] = (int)(tr * rate + gray * (1.0f-rate));
+		rgb[index1] = (int)(tg * rate + gray * (1.0f-rate));
+		rgb[index2] = (int)(tb * rate + gray * (1.0f-rate));
 		return rgb;
 	}
 

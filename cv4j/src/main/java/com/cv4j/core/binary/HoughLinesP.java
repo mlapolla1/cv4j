@@ -50,12 +50,14 @@ public class HoughLinesP {
 		int value;
 		int value_pos;
 		int max_value = findAccMaxValue(acc, rmax);
-
+		float maxRgb = 255.0;
+		int ex = 16;
+		int oct = 8;
 		for (int r = 0; r < rmax; r++) {
 			for (int theta = 0; theta < DEGREE_180; theta++) {
 				value_pos = (r * DEGREE_180) + theta;
-				value = (int) (((double) acc[value_pos] / (double) max_value) * 255.0);
-				acc[value_pos] = 0xff000000 | (value << 16 | value << 8 | value);
+				value = (int) (((double) acc[value_pos] / (double) max_value) * maxRgb);
+				acc[value_pos] = 0xff000000 | (value << ex | value << oct | value);
 			}
 		}
 	}
@@ -85,9 +87,10 @@ public class HoughLinesP {
 
 	private List<Line> createListOfLines(int[] results, int sizeAcc) {
 		List<Line> lines = new ArrayList<>();
-		
+		int dim = 3;
+		int add = 2;
 		for (int i = sizeAcc-1; i >= 0; i--) {
-			Line line = drawPolarLine(results[i * 3], results[i * 3 + 1], results[i * 3 + 2]);
+			Line line = drawPolarLine(results[i * dim], results[i * dim + 1], results[i * dim + add]);
 			lines.add(line);
 		}
 
@@ -118,11 +121,12 @@ public class HoughLinesP {
 	 */
 	public void merge(double[] karray, int[] labels) {
 		double distance;
+		double distanceThreshold = 0.1;
 
 		for(int i = 0; i < karray.length-1; i++) {
 			for(int j = i+1; j < karray.length; j++) {
 				distance = Math.abs(karray[i] - karray[j]);
-				if(distance < 0.1) {
+				if(distance < distanceThreshold) {
 					labels[i] = i;
 					labels[j] = i;
 				}
@@ -192,7 +196,9 @@ public class HoughLinesP {
 	private void findMaxima(int[] acc, List<Line> lines) {
 		// 初始化
 		int   rmax    = (int) Math.sqrt(width * width + height * height);
-		int[] results = new int[accSize * 3];
+		int dim = 3;
+		int add = 2;
+		int[] results = new int[accSize * dim];
 		
 		// 开始寻找前N个最强信号点，记录极坐标坐标位置
 		for (int r = 0; r < rmax; r++) {
@@ -203,19 +209,19 @@ public class HoughLinesP {
 				if (value > results[(accSize - 1) * 3]) {
 
 					// add to bottom of array
-					results[(accSize - 1) * 3]     = value;
-					results[(accSize - 1) * 3 + 1] = r;
-					results[(accSize - 1) * 3 + 2] = theta;
+					results[(accSize - 1) * dim]     = value;
+					results[(accSize - 1) * dim + 1] = r;
+					results[(accSize - 1) * dim + add] = theta;
 
 					// shift up until its in right place
-					int i = (accSize - 2) * 3;
-					while ((i >= 0) && (results[i + 3] > results[i])) {
-						for (int j = 0; j < 3; j++) {
+					int i = (accSize - add) * dim;
+					while ((i >= 0) && (results[i + dim] > results[i])) {
+						for (int j = 0; j < dim; j++) {
 							int temp = results[i + j];
-							results[i + j] = results[i + 3 + j];
-							results[i + 3 + j] = temp;
+							results[i + j] = results[i + dim + j];
+							results[i + dim + j] = temp;
 						}
-						i = i - 3;
+						i = i - dim;
 						if (i < 0)
 							break;
 					}

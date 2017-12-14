@@ -90,7 +90,11 @@ public class ColorFilterActivity extends BaseActivity {
             LinearLayout.LayoutParams linearLp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LinearLayout myLinear = new LinearLayout(this);
-            linearLp.setMargins(5, 0, 5, 20);
+            int top = 5;
+            int right = 0;
+            int bottom = 5;
+            int left = 20;
+            linearLp.setMargins(top, right, bottom, left);
             myLinear.setOrientation(LinearLayout.HORIZONTAL);
             myLinear.setTag(i);
             linear.addView(myLinear, linearLp);

@@ -189,7 +189,9 @@ public class CV4JImage implements ImageData {
 
         try {
             FileOutputStream out = new FileOutputStream(file);
-            if (image.compress(format, 100, out)) {
+
+            int quality = 100;
+            if (bitmap.compress(format, quality, out)) {
                 out.flush();
                 out.close();
             }

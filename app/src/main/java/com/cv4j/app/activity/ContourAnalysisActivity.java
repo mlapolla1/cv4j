@@ -61,6 +61,8 @@ public class ContourAnalysisActivity extends BaseActivity {
     }
 
     private void initData() {
+        final int MAX_RGB = 255;
+
         toolbar.setTitle("< "+title);
         Resources res = getResources();
         final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_ca);
@@ -68,7 +70,7 @@ public class ContourAnalysisActivity extends BaseActivity {
 
         CV4JImage cv4JImage = new CV4JImage(bitmap);
         Threshold threshold = new Threshold();
-        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY,255);
+        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY, MAX_RGB);
         image1.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
 
         ConnectedAreaLabel connectedAreaLabel = new ConnectedAreaLabel();
@@ -76,8 +78,8 @@ public class ContourAnalysisActivity extends BaseActivity {
         int[] mask = new int[cv4JImage.getProcessor().getWidth() * cv4JImage.getProcessor().getHeight()];
         connectedAreaLabel.process((ByteProcessor)cv4JImage.getProcessor(),mask,null,false);
 
-        SparseIntArray colors = new SparseIntArray();
-        Random random = new Random();
+        ActivityUtility util = new ActivityUtility();
+        util.subInitData(cv4JImage, mask);
 
         int height = cv4JImage.getProcessor().getHeight();
         int width = cv4JImage.getProcessor().getWidth();
@@ -85,7 +87,7 @@ public class ContourAnalysisActivity extends BaseActivity {
         for (int i = 0;i<size;i++) {
             int c = mask[i];
             if (c>=0) {
-                colors.put(c, Color.argb(255, random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                colors.put(c, Color.argb(MAX_RGB, random.nextInt(MAX_RGB),random.nextInt(MAX_RGB),random.nextInt(MAX_RGB)));
             }
         }
 

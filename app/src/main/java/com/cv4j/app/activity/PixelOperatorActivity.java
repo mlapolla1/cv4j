@@ -19,8 +19,10 @@ package com.cv4j.app.activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.widget.ImageView;
 
 import com.cv4j.app.R;
@@ -29,11 +31,14 @@ import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.datamodel.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
 import com.cv4j.core.pixels.Operator;
+import com.cv4j.core.pixels.OperatorFunction;
 import com.cv4j.exception.CV4JException;
 
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;
+
+import java.util.concurrent.Callable;
 
 /**
  * Created by tony on 2017/11/5.
@@ -58,6 +63,8 @@ public class PixelOperatorActivity extends BaseActivity {
 
     @InjectExtra(key = "Type")
     int type;
+
+    SparseArray<OperatorFunction> operationsTwoImages;
 
     /**
      * Add operator.
@@ -134,65 +141,49 @@ public class PixelOperatorActivity extends BaseActivity {
         CV4JImage cv4jImage2 = new CV4JImage(bitmap2);
         ImageProcessor imageProcessor2 = cv4jImage2.getProcessor();
 
+        operationsTwoImages = new SparseArray<>(8);
+        operationsTwoImages.append(ADD, Operator::add);
+        operationsTwoImages.append(SUBTRACT, Operator::subtract);
+        operationsTwoImages.append(MULTIPLE, Operator::multiple);
+        operationsTwoImages.append(DIVISION, Operator::division);
+        operationsTwoImages.append(BITWISE_AND, Operator::bitwise_and);
+        operationsTwoImages.append(BITWISE_OR, Operator::bitwise_or);
+
+        OperatorFunction operator = operationsTwoImages.get(type);
         ImageProcessor imageProcessor = null;
+        if (operator != null) {
+            operator.call(imageProcessor1, imageProcessor2);
+        } else {
+            switch (type) {
+                case BITWISE_NOT:
+                    imageProcessor = Operator.bitwise_not(imageProcessor1);
+                    break;
 
-        switch (type) {
+                case ADD_WEIGHT:
+                    float weight1 = 2.0f;
+                    float weight2 = 1.0f;
+                    int gamma = 4;
+                    imageProcessor = Operator.addWeight(imageProcessor1,weight1,imageProcessor2,weight2,gamma);
+                    break;
 
-            case ADD:
-                imageProcessor = Operator.add(imageProcessor1, imageProcessor2);
-                break;
+                case SUB_IMAGE:
+                    Rect rect = new Rect();
+                    rect.x = 0;
+                    rect.y = 0;
+                    rect.width = 300;
+                    rect.height = 300;
 
-            case SUBTRACT:
-                imageProcessor = Operator.subtract(imageProcessor1,imageProcessor2);
-                break;
+                    try {
+                        imageProcessor = Operator.subImage(imageProcessor1, rect);
+                    } catch (CV4JException e) {
+                        System.out.println("CV4J error on sub image operator.");
+                    }
+                    break;
 
-            case MULTIPLE:
-                imageProcessor = Operator.multiple(imageProcessor1,imageProcessor2);
-                break;
-
-            case DIVISION:
-                imageProcessor = Operator.division(imageProcessor1,imageProcessor2);
-                break;
-
-            case BITWISE_AND:
-                imageProcessor = Operator.bitwise_and(imageProcessor1,imageProcessor2);
-                break;
-
-            case BITWISE_OR:
-                imageProcessor = Operator.bitwise_or(imageProcessor1,imageProcessor2);
-                break;
-
-            case BITWISE_NOT:
-                imageProcessor = Operator.bitwise_not(imageProcessor1);
-                break;
-
-            case BITWISE_XOR:
-                imageProcessor = Operator.bitwise_xor(imageProcessor1,imageProcessor2);
-                break;
-
-            case ADD_WEIGHT:
-                imageProcessor = Operator.addWeight(imageProcessor1,2.0f,imageProcessor2,1.0f,4);
-                break;
-
-            case SUB_IMAGE:
-
-                Rect rect = new Rect();
-                rect.x = 0;
-                rect.y = 0;
-                rect.width = 300;
-                rect.height = 300;
-
-                try {
-                    imageProcessor = Operator.subImage(imageProcessor1, rect);
-                } catch (CV4JException e) {
-                    System.out.println("CV4J error on sub image operator.");
-                }
-
-                break;
-
-            default:
-                imageProcessor = Operator.add(imageProcessor1,imageProcessor2);
-                break;
+                default:
+                    imageProcessor = Operator.add(imageProcessor1,imageProcessor2);
+                    break;
+            }
         }
 
         if (imageProcessor != null) {

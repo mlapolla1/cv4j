@@ -92,6 +92,9 @@ public class MotionFilter extends BaseFilter  {
         int cy = height / 2;
         
         // calculate the triangle geometry value
+        float degree180 = 180.0f;
+        float sinAngle = (float)Math.sin(angle/degree180 * onePI);
+        float coseAngle = (float)Math.cos(angle/degree180 * onePI);
         float sinAngle = (float) Math.sin(angle/180.0f * onePI);
         float cosAngle = (float) Math.cos(angle/180.0f * onePI);
         
@@ -120,7 +123,7 @@ public class MotionFilter extends BaseFilter  {
 					tr = Tools.clamp(tr / count);
 					tg = Tools.clamp(tg / count);
 					tb = Tools.clamp(tb/count);
-					
+
 					output[0][index] = (byte) tr;
 					output[1][index] = (byte) tg;
 					output[2][index] = (byte) tb;

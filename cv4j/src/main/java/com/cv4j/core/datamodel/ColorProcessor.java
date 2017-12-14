@@ -77,7 +77,8 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public int getChannels() {
-        return 3;
+        int channel = 3;
+        return channel;
     }
 
     public byte[] getRed() {

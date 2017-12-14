@@ -71,7 +71,8 @@ public class GaussianBlurActivity extends BaseActivity {
 
     private void useCV4j() {
         GaussianBlurFilter filter = new GaussianBlurFilter();
-        filter.setSigma(10);
+        int sigma = 10;
+        filter.setSigma(sigma);
 
         RxImageData.bitmap(bitmap)
                 .dialog(progDailog)
@@ -95,7 +96,8 @@ public class GaussianBlurActivity extends BaseActivity {
         Allocation allIn = Allocation.createFromBitmap(rs, image);
         Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
         //Set the radius of the blur: 0 < radius <= 25
-        blurScript.setRadius(20.0f);
+        int radius = 20.0f;
+        blurScript.setRadius(radius);
         //Perform the Renderscript
         blurScript.setInput(allIn);
         blurScript.forEach(allOut);

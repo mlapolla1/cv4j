@@ -112,17 +112,21 @@ public class HoughCircles {
     }
 
     private double[] setupCosLUT() {
-        double[] coslut = new double[360];
-        for (int theta = 0; theta < 360; theta++) {
-            coslut[theta] = Math.cos((theta * Math.PI) / 180.0);
+        float angle180 = 180.0;
+        int angle360 = 360;
+        double[] coslut = new double[angle360];
+        for (int theta = 0; theta < angle360; theta++) {
+            coslut[theta] = Math.cos((theta * Math.PI) / angle1);
         }
         return coslut;
     }
 
     private double[] setupSinLUT() {
-        double[] sinlut = new double[360];
-        for (int theta = 0; theta < 360; theta++) {
-            sinlut[theta] = Math.sin((theta * Math.PI) / 180.0);
+        float angle180 = 180.0;
+        int angle360 = 360;
+        double[] sinlut = new double[angle360];
+        for (int theta = 0; theta < angle360; theta++) {
+            sinlut[theta] = Math.sin((theta * Math.PI) / angle180);
         }
         return sinlut;
     }

@@ -82,13 +82,17 @@ public class CompareHist3Fragment extends BaseFragment {
             sum3 += compareHist.ncc(source[i],target[i]);
         }
 
-        sb.append("巴氏距离:")
+        String distance = "巴氏距离:";
+        String covariance = "协方差:";
+        String correlation = "相关性因子:";
+        String newline = "\r\n";
+        sb.append(distance)
           .append(sum1 / sumLength)
-          .append("\r\n")
-          .append("协方差:")
+          .append(newLine)
+          .append(covariance)
           .append(sum2 / sumLength)
-          .append("\r\n")
-          .append("相关性因子:")
+          .append(newLine)
+          .append(correlation)
           .append(sum3 / sumLength);
 
         result.setText(sb.toString());

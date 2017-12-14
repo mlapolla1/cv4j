@@ -74,7 +74,10 @@ public class HistogramDemoActivity extends BaseActivity {
         int channels = imageProcessor.getChannels();
 
         int h = imageProcessor.getHeight();
-        int[] colors = new int[]{Color.argb(77,255,0,0),Color.argb(77,0,255,0),Color.argb(77,0,0,255)};
+        int color1 = 77;
+        int color2 = 255;
+        int color3 = 0;
+        int[] colors = new int[]{Color.argb(color1,color2,color3,color3),Color.argb(color1,color3,color2,color3),Color.argb(color1,color3,color3,color2)};
         for (int i=0;i<channels;i++) {
 
             paint.setColor(colors[i]);

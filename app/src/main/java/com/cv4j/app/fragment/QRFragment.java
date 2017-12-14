@@ -115,16 +115,20 @@ public class QRFragment extends BaseFragment {
         CV4JImage cv4JImage = new CV4JImage(bitmap);
 
         QRCodeScanner qrCodeScanner = new QRCodeScanner();
-        Rect rect = qrCodeScanner.findQRCodeBounding(cv4JImage.getProcessor(),1,6);
+        int n1 = 1;
+        int n2 = 6;
+        Rect rect = qrCodeScanner.findQRCodeBounding(cv4JImage.getProcessor(),n1,n2);
 
         Bitmap bm = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(bm);
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-        paint.setStrokeWidth((float) 10.0);
+        float width = 10.0;
+        paint.setStrokeWidth((float) width);
         paint.setStyle(Paint.Style.STROKE);
 
-        android.graphics.Rect androidRect = new android.graphics.Rect(rect.x-20,rect.y-20,rect.br().x+20,rect.br().y+20);
+        int diff = 20;
+        android.graphics.Rect androidRect = new android.graphics.Rect(rect.x-diff,rect.y-diff,rect.br().x+diff,rect.br().y+diff);
         canvas.drawRect(androidRect,paint);
         image.setImageBitmap(bm);
     }

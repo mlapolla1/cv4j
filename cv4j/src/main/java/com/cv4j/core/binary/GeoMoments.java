@@ -34,19 +34,29 @@ public class GeoMoments {
         measures.setArea(pixelList.size());
         measures.setCp(getCenterPoint(pixelList));
 
-        double m11 = centralMoments(pixelList, 1, 1);
-        double m02 = centralMoments(pixelList, 0, 2);
-        double m20 = centralMoments(pixelList, 2, 0);
+        int pm11 = 1;
+        int qm11 = 1;
+        double m11 = centralMoments(pixelList, pm11, q11);
+        int pm02 = 0;
+        int qm02 = 2;
+        double m02 = centralMoments(pixelList, pm02, qm02);
+        int pm20 = 2;
+        int qm20 = 0;
+        double m20 = centralMoments(pixelList, pm20, qm20);
         double m112 = m11 * m11;
-        double dd = Math.pow((m20-m02), 2);
-        double sum1 = Math.sqrt(dd + 4*m112);
+        int power = 2;
+        double dd = Math.pow((m20-m02), power);
+        double m112x4 = 4*m112;
+        double sum1 = Math.sqrt(dd + m112x4);
         double sum2 = m02 + m20;
         double a1 = sum2 + sum1;
         double a2 = sum2 - sum1;
 
-        double ra = Math.sqrt((2*a1)/Math.abs(pixelList.size()));
-        double rb = Math.sqrt((2*a2)/Math.abs(pixelList.size()));
-        double angle = ((m20 - m02) == 0) ? Math.PI/4.0 : Math.atan((2*m11)/(m20 - m02))/2.0;
+        double pi4 = Math.PI/4.0;
+        double half = 2.0;
+        double ra = Math.sqrt((power*a1)/Math.abs(pixelList.size()));
+        double rb = Math.sqrt((power*a2)/Math.abs(pixelList.size()));
+        double angle = ((m20 - m02) == 0) ? pi4 : Math.atan((power*m11)/(m20 - m02))/half;
         measures.setAngle(angle);
         measures.setRoundness(rb == 0? Double.MAX_VALUE : ra/rb);
         return measures;

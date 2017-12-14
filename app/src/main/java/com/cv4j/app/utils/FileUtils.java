@@ -45,7 +45,8 @@ public class FileUtils {
                             FileOutputStream output = null;
                             try {
                                 output = new FileOutputStream(tempFile);
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+                                int quality = 100;
+                                bitmap.compress(Bitmap.CompressFormat.PNG, quality, output);
                             }catch (IOException ioe) {
                                 Log.e("DEBUG-ERR", ioe.getMessage());
                             } finally {

@@ -34,9 +34,10 @@ public class SpitalConvFragment extends BaseFragment {
     private List<String> list = new ArrayList<>();
     
     private static RecycledViewPool myPool = new RecycledViewPool();
-
+    int maxRecycledViews1 = 0;
+    int maxRecycledViews1 = 10;
     static {
-        myPool.setMaxRecycledViews(0, 10);
+        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class SpitalConvFragment extends BaseFragment {
                 list.add(filter);
             }
         }
-
-        GridLayoutManager manager = new GridLayoutManager(mContext, 3);
+        int grid = 3;
+        GridLayoutManager manager = new GridLayoutManager(mContext, grid);
         manager.setRecycleChildrenOnDetach(true);
         recyclerview.setLayoutManager(manager);
         recyclerview.setAdapter(new SpitalConvAdapter(list,bitmap));

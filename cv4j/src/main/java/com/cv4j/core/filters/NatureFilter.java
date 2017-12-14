@@ -96,22 +96,23 @@ public class NatureFilter extends BaseFilter {
 	private void buildFogLookupTable() {
 		fogLookUp = new int[256];
 		int fogLimit = 40;
+		int fogLookUpLimit = 127;
 		for(int i=0; i<fogLookUp.length; i++)
 		{
-			if(i > 127)
+			if(i > fogLookUpLimit)
 			{
 				fogLookUp[i] = i - fogLimit;
-				if(fogLookUp[i] < 127)
+				if(fogLookUp[i] < fogLookUpLimit)
 				{
-					fogLookUp[i] = 127;
+					fogLookUp[i] = fogLookUpLimit;
 				}
 			}
 			else
 			{
 				fogLookUp[i] = i + fogLimit;
-				if(fogLookUp[i] > 127)
+				if(fogLookUp[i] > fogLookUpLimit)
 				{
-					fogLookUp[i] = 127;
+					fogLookUp[i] = fogLookUpLimit;
 				}
 			}
 		}
@@ -143,96 +144,122 @@ public class NatureFilter extends BaseFilter {
 		int tr = 0;
 		int tg = 0;
 		int tb = 0;
+		int index0 = 0;
+		int index1 = 1;
+		int index2 = 2;
 		for (int i=0; i<total; i++) {
 			tr = R[i] & 0xff;
 			tg = G[i] & 0xff;
 			tb = B[i] & 0xff;
 			int[] onePixel = processOnePixel(ta, tr, tg, tb);
 
-			R[i] = (byte)onePixel[0];
-			G[i] = (byte)onePixel[1];
-			B[i] = (byte)onePixel[2];
+			R[i] = (byte)onePixel[index0];
+			G[i] = (byte)onePixel[index1];
+			B[i] = (byte)onePixel[index2];
 		}
 		((ColorProcessor) src).putRGB(R, G, B);
 		return src;
 	}
 
 	private int[] processOnePixel(int ta, int tr, int tg, int tb) {
-		int[] pixel = new int[4];
+		int pixelLength = 4;
+		int[] pixel = new int[pixelLength];
 		pixel[0] = ta;
-		int gray = (tr + tg + tb) / 3;
-
+		int processFactor = 3;
+		int gray = (tr + tg + tb) / processFactor;
+		int index1 = 1;
+		int index2 = 2;
+		int index3 = 3;
 		switch (style) {
 			case ATMOSPHERE_STYLE:
-				pixel[1] = (tg + tb) / 2;
-				pixel[2] = (tr + tb) / 2;
-				pixel[3] = (tg + tr) / 2;
+				int atmosphereFactor = 2;
+				pixel[index1] = (tg + tb) / atmosphereFactor;
+				pixel[index2] = (tr + tb) / atmosphereFactor;
+				pixel[index3] = (tg + tr) / atmosphereFactor;
 
 				break;
 
 			case BURN_STYLE:
-				pixel[1] = Tools.clamp(gray * 3);
-				pixel[2] = gray;
-				pixel[3] = gray / 3;
+				int burnFactor = 3;
+				pixel[index1] = Tools.clamp(gray * burnFactor);
+				pixel[index2] = gray;
+				pixel[index3] = gray / burnFactor;
 
 				break;
 
 			case FOG_STYLE:
-				pixel[1] = fogLookUp[tr];
-				pixel[2] = fogLookUp[tg];
-				pixel[3] = fogLookUp[tb];
+				pixel[index1] = fogLookUp[tr];
+				pixel[index2] = fogLookUp[tg];
+				pixel[index3] = fogLookUp[tb];
 
 				break;
 
 			case FREEZE_STYLE:
-				pixel[1] = Tools.clamp((int)Math.abs((tr - tg - tb) * 1.5));
-				pixel[2] = Tools.clamp((int)Math.abs((tg - tb - pixel[1]) * 1.5));
-				pixel[3] = Tools.clamp((int)Math.abs((tb - pixel[1] - pixel[2]) * 1.5));
+				freezeFactor = 1.5;
+				pixel[index1] = Tools.clamp((int)Math.abs((tr - tg - tb) * freezeFactor));
+				pixel[index2] = Tools.clamp((int)Math.abs((tg - tb - pixel[index1]) * freezeFactor));
+				pixel[index3] = Tools.clamp((int)Math.abs((tb - pixel[index1] - pixel[index2]) * freezeFactor));
 
 				break;
 
 			case LAVA_STYLE:
-				pixel[1] = gray;
-				pixel[2] = Math.abs(tb - 128);
-				pixel[3] = Math.abs(tb - 128);
+				int lavaFactor = lavaFactor;
+				pixel[index1] = gray;
+				pixel[index2] = Math.abs(tb - lavaFactor);
+				pixel[index3] = Math.abs(tb - lavaFactor);
 
 				break;
 
 			case METAL_STYLE:
-				float r = Math.abs(tr - 64);
-				float g = Math.abs(r - 64);
-				float b = Math.abs(g - 64);
-				float grayFloat = ((222 * r + 707 * g + 71 * b) / 1000);
-				r = grayFloat + 70;
-				r = r + (((r - 128) * 100) / 100f);
-				g = grayFloat + 65;
-				g = g + (((g - 128) * 100) / 100f);
-				b = grayFloat + 75;
-				b = b + (((b - 128) * 100) / 100f);
-				pixel[1] = Tools.clamp((int)r);
-				pixel[2] = Tools.clamp((int)g);
-				pixel[3] = Tools.clamp((int)b);
+				int metalFactor = 64;
+				float r = Math.abs(tr - metalFactor);
+				float g = Math.abs(r - metalFactor);
+				float b = Math.abs(g - metalFactor);
+				int grayR = 222;
+				int grayG = 707;
+				int grayB = 71;
+				int grayFactor = 1000;
+				float grayFloat = ((grayR * r + grayG * g + grayB * b) / grayFactor);
+				int r1 = 70;
+				int r2 = 128;
+				int rgbFactor = 100;
+				float rgbFactor2 = 100f;
+				r = grayFloat + r1;
+				r = r + (((r - r2) * rgbFactor) / rgbFactor2);
+				int g1 = 65;
+				int g2 = 128;
+				g = grayFloat + g1;
+				g = g + (((g - g2) * rgbFactor) / rgbFactor2);
+				int b1 = 75;
+				int b2 = 128;
+				b = grayFloat + b1;
+				b = b + (((b - b2) * rgbFactor) / rgbFactor2);
+				pixel[index1] = Tools.clamp((int)r);
+				pixel[index2] = Tools.clamp((int)g);
+				pixel[index3] = Tools.clamp((int)b);
 
 				break;
 
 			case OCEAN_STYLE:
-				pixel[1] = Tools.clamp(gray / 3);
-				pixel[2] = gray;
-				pixel[3] = Tools.clamp(gray * 3);
+				int oceanFactor = 3;
+				pixel[index1] = Tools.clamp(gray / oceanFactor);
+				pixel[index2] = gray;
+				pixel[index3] = Tools.clamp(gray * oceanFactor);
 
 				break;
 
 			case WATER_STYLE:
-				pixel[1] = Tools.clamp(gray - tg - tb);
-				pixel[2] = Tools.clamp(gray - pixel[1] - tb);
-				pixel[3] = Tools.clamp(gray - pixel[1] - pixel[2]);
+				pixel[index1] = Tools.clamp(gray - tg - tb);
+				pixel[v2] = Tools.clamp(gray - pixel[index1] - tb);
+				pixel[index3] = Tools.clamp(gray - pixel[index1] - pixel[index2]);
 
 				break;
 
 			default:
-				pixel[1] = (tg + tb) / 2;
-				pixel[2] = (tr + tb) / 2;
-				pixel[3] = (tg + tr) / 2;
+				int defaultFactor = 2;
+				pixel[index1] = (tg + tb) / defaultFactor;
+				pixel[index2] = (tr + tb) / defaultFactor;
+				pixel[index3] = (tg + tr) / defaultFactor;
 				break;
 		}
 

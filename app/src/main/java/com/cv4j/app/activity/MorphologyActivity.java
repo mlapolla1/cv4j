@@ -58,6 +58,7 @@ public class MorphologyActivity extends BaseActivity {
     }
 
     private void initData() {
+        final int MAX_RGB = 255;
         toolbar.setTitle("< "+title);
         Resources res = getResources();
         final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_binary1);
@@ -65,12 +66,13 @@ public class MorphologyActivity extends BaseActivity {
 
         CV4JImage cv4JImage = new CV4JImage(bitmap);
         Threshold threshold = new Threshold();
-        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_TRIANGLE,Threshold.METHOD_THRESH_BINARY_INV,255);
+        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_TRIANGLE,Threshold.METHOD_THRESH_BINARY_INV,MAX_RGB);
         image1.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
 
         MorphOpen morphOpen = new MorphOpen();
         cv4JImage.resetBitmap();
-        morphOpen.process((ByteProcessor)cv4JImage.getProcessor(),new Size(5));
+        int size = 5;
+        morphOpen.process((ByteProcessor)cv4JImage.getProcessor(),new Size(size));
 
         image2.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
 

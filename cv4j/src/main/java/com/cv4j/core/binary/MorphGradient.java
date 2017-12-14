@@ -68,8 +68,10 @@ public class MorphGradient {
                     if((offset+col+i) < 0 || (offset+col+i) >= width) {
                         continue;
                     }
-                    min = Math.min(min, data[offset+col+i]&0xff);
-                    max = Math.max(max, data[offset+col+i]&0xff);
+                    int dataMin = data[offset+col+i]&0xff;
+                    min = Math.min(min, dataMin);
+                    int dataMax = data[offset+col+i]&0xff;
+                    max = Math.max(max, dataMax);
                 }
                 ero[offset+col] = (byte)min;
                 dil[offset+col] = (byte)max;
@@ -88,7 +90,8 @@ public class MorphGradient {
                         continue;
                     }
                     offset = (row+i)*width;
-                    min = Math.min(min, data[offset+col]&0xff);
+                    int dataMin = data[offset+col]&0xff;
+                    min = Math.min(min, dataMin);
                 }
                 ero[row*width+col] = (byte)min;
             }
@@ -105,7 +108,8 @@ public class MorphGradient {
                         continue;
                     }
                     offset = (row+i)*width;
-                    max = Math.max(max, data[offset+col]&0xff);
+                    int dataMax = data[offset+col]&0xff;
+                    max = Math.max(max, dataMax);
                 }
                 dil[row*width+col] = (byte)max;
             }

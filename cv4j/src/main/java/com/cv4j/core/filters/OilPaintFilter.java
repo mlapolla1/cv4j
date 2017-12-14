@@ -27,7 +27,7 @@ public class OilPaintFilter extends BaseFilter {
     private int intensity = 40; // default value
 
     public OilPaintFilter() {
-        this(15, 40);
+        this(radius, intensity);
     }
 
     public OilPaintFilter(int radius, int graylevel) {

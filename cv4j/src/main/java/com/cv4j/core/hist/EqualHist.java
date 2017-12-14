@@ -34,8 +34,9 @@ public class EqualHist {
         int width = src.getWidth();
         int height = src.getHeight();
 
-        int[] inputBins = new int[256]; // RGB
-        int[] outputBins = new int[256]; // after HE
+        int rgb = 256;
+        int[] inputBins = new int[rgb]; // RGB
+        int[] outputBins = new int[rgb]; // after HE
         Arrays.fill(inputBins, 0);
         Arrays.fill(outputBins, 0);
 
@@ -48,7 +49,7 @@ public class EqualHist {
         }
 
         // generate original source image RGB histogram
-        generateHEData(inputBins, outputBins, data.length, 256);
+        generateHEData(inputBins, outputBins, data.length, rgb);
         for(int row=0; row<height; row++) {
             int pv = 0;
             for(int col=0; col<width; col++) {
@@ -74,9 +75,10 @@ public class EqualHist {
 
     private int getNewintensityRate(int[] grayHis, double total, int index) {
         double sum = 0;
+        float maxRgb = 255.0;
         for(int i=0; i<=index; i++) {
             sum += ((double)grayHis[i])/total;
         }
-        return (int)(sum * 255.0);
+        return (int)(sum * maxRgb);
     }
 }

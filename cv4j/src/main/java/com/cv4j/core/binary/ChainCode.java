@@ -56,63 +56,73 @@ public class ChainCode extends CourtEdge {
 	}
 
 	private int getRelationship(byte[] pixels1, int[] codemap, int row, int col, int width, int height) {
+		int maxRgb = 255;
+		int col0 = 0;
+		int col1 = 1;
+		int col2 = 2;
+		int col3 = 3;
+		int col4 = 4;
+		int col5 = 5;
+		int col6 = 6;
+		int col7 = 7;
+		int invalid = -2;
 		int offset = row*width;
 		if((col+1) < width) {
 			int pv = pixels1[offset+col+1]&0xff;
 			int c = codemap[offset+col+1];
-			if(pv == 255 && c < 0 ) {
-				return 0;
+			if(pv == maxRgb && c < 0 ) {
+				return col0;
 			}
 		}
 		if((col+1) < width && (row+1) < height) {
 			int pv = pixels1[offset+width+col+1]&0xff;
 			int c = codemap[offset+width+col+1];
-			if(pv == 255 && c < 0 ) {
-				return 1;
+			if(pv == maxRgb && c < 0 ) {
+				return col1;
 			}
 		}
 		if((row+1) < height) {
 			int pv = pixels1[offset+width+col]&0xff;
 			int c = codemap[offset+width+col];
-			if(pv == 255 && c < 0) {
-				return 2;
+			if(pv == maxRgb && c < 0) {
+				return col2;
 			}
 		}
 		if((col-1) >= 0 && (row+1) < height) {
 			int pv = pixels1[offset+width+col-1]&0xff;
 			int c = codemap[offset+width+col-1];
-			if(pv == 255 && c < 0 ) {
-				return 3;
+			if(pv == maxRgb && c < 0 ) {
+				return col3;
 			}
 		}
 		if((col-1) >= 0) {
 			int pv = pixels1[offset+col-1]&0xff;
 			int c = codemap[offset+col-1];
-			if(pv == 255 && c < 0 ) {
-				return 4;
+			if(pv == maxRgb && c < 0 ) {
+				return col4;
 			}
 		}
 		if((col-1) >= 0 && (row-1) >= 0) {
 			int pv = pixels1[offset-width+col-1]&0xff;
 			int c = codemap[offset-width+col-1];
-			if(pv == 255 && c < 0 ) {
-				return 5;
+			if(pv == maxRgb && c < 0 ) {
+				return col5;
 			}
 		}
 		if((row-1) >= 0) {
 			int pv = pixels1[offset-width+col]&0xff;
 			int c = codemap[offset-width+col];
-			if(pv == 255 && c < 0 ) {
-				return 6;
+			if(pv == maxRgb && c < 0 ) {
+				return col6;
 			}
 		}
 		if((row-1) >= 0 && (col+1) < width) {
 			int pv = pixels1[offset-width+col+1]&0xff;
 			int c = codemap[offset-width+col+1];
-			if(pv == 255 && c < 0) {
-				return 7;
+			if(pv == maxRgb && c < 0) {
+				return col7;
 			}
 		}
-		return -2; // invalid, stop condition
+		return invalid; // invalid, stop condition
 	}
 }

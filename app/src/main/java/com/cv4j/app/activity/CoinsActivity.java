@@ -59,6 +59,8 @@ public class CoinsActivity extends BaseActivity {
     }
 
     private void initData() {
+        final int MAX_RGB = 255;
+
         toolbar.setTitle("< "+title);
         Resources res = getResources();
         final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_coins);
@@ -66,12 +68,14 @@ public class CoinsActivity extends BaseActivity {
 
         CV4JImage cv4JImage = new CV4JImage(bitmap);
         Threshold threshold = new Threshold();
-        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY_INV,255);
+        threshold.process((ByteProcessor)(cv4JImage.convert2Gray().getProcessor()),Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY_INV, MAX_RGB);
         image1.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
 
         Erode erode = new Erode();
         cv4JImage.resetBitmap();
-        erode.process((ByteProcessor)cv4JImage.getProcessor(),new Size(3),10);
+        int size = 3;
+        int iteration = 10;
+        erode.process((ByteProcessor)cv4JImage.getProcessor(),new Size(size), iteration);
         image2.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
 
         ConnectedAreaLabel connectedAreaLabel = new ConnectedAreaLabel();
@@ -79,8 +83,8 @@ public class CoinsActivity extends BaseActivity {
 
         int num = connectedAreaLabel.process((ByteProcessor)cv4JImage.getProcessor(),mask,null,false); // 获取连通组件的个数
 
-        SparseIntArray colors = new SparseIntArray();
-        Random random = new Random();
+        ActivityUtility util = new ActivityUtility();
+        util.subInitData(cv4JImage, mask);
 
         int height = cv4JImage.getProcessor().getHeight();
         int width = cv4JImage.getProcessor().getWidth();
@@ -88,7 +92,7 @@ public class CoinsActivity extends BaseActivity {
         for (int i = 0;i<size;i++) {
             int c = mask[i];
             if (c>=0) {
-                colors.put(c,Color.argb(255, random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                colors.put(c,Color.argb(MAX_RGB, random.nextInt(MAX_RGB),random.nextInt(MAX_RGB),random.nextInt(MAX_RGB)));
             }
         }
 

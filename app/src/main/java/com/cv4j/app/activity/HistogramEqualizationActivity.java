@@ -80,28 +80,33 @@ public class HistogramEqualizationActivity extends BaseActivity {
 
         CalcHistogram calcHistogram = new CalcHistogram();
         int bins = 127;
+        int histNumber = 512;
+        int maxRgb = 255;
         int[][] hist = new int[imageProcessor.getChannels()][bins];
         calcHistogram.calcRGBHist(imageProcessor,bins,hist,true);
-        Bitmap bm = Bitmap.createBitmap(512,512, Bitmap.Config.ARGB_8888);
+        Bitmap bm = Bitmap.createBitmap(histNumber,histNumber, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bm);
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawRect(0,0,512,512,paint);
+        int point1 = 0;
+        int pont2 = 0;
+        canvas.drawRect(point1,point2,histNumber,histNumber,paint);
 
-        float step = 512.0f/127;
+        int histNumberFloat = 512.0f
+        float step = histNumberFloat/bins;
         int xoffset;
         int yoffset;
         int channels = imageProcessor.getChannels();
 
-        int[] colors = new int[]{Color.argb(127,255,0,0),Color.argb(127,0,255,0),Color.argb(127,0,0,255)};
+        int[] colors = new int[]{Color.argb(bins,maxRgb,point1,point2),Color.argb(bins,point1,maxRgb,point2),Color.argb(bins,point1,point2,maxRgb)};
         for (int i=0;i<channels;i++) {
 
             paint.setColor(colors[i]);
             for (int j=0;j<bins;j++) {
 
                 xoffset = (int)(j*step);
-                yoffset = hist[i][j]*512/255;
-                canvas.drawRect(xoffset,512-yoffset,xoffset+step,512,paint);
+                yoffset = hist[i][j]*histNumber/maxRgb;
+                canvas.drawRect(xoffset,histNumber-yoffset,xoffset+step,histNumber,paint);
             }
         }
 

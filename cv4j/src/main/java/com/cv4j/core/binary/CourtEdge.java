@@ -30,7 +30,9 @@ public class CourtEdge {
 		System.arraycopy(binary.getGray(), 0, input1, 0, input1.length);
 
 		Erode erode = new Erode();
-		erode.process(binary, new Size(3, 3));
+		int size1 = 3;
+		int size2 = 3;
+		erode.process(binary, new Size(size1, size2));
 		byte[] input2 = binary.getGray();
 		byte[] output = new byte[input1.length];
 		System.arraycopy(input1, 0, output, 0, input1.length);

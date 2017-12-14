@@ -39,9 +39,10 @@ public class GridViewFilterActivity extends BaseActivity {
     private List<String> list = new ArrayList<>();
 
     private static RecycledViewPool myPool = new RecycledViewPool();
-
+    int maxRecycledViews1 = 0;
+    int maxRecycledViews1 = 10;
     static {
-        myPool.setMaxRecycledViews(0, 10);
+        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
     }
 
     @Override
@@ -64,8 +65,8 @@ public class GridViewFilterActivity extends BaseActivity {
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_mm);
 
         list.addAll(Arrays.asList(filterNames));
-
-        GridLayoutManager manager = new GridLayoutManager(GridViewFilterActivity.this, 3);
+        int gridLayoutManagerNumber = 3;
+        GridLayoutManager manager = new GridLayoutManager(GridViewFilterActivity.this, gridLayoutManagerNumber);
         manager.setRecycleChildrenOnDetach(true);
         recyclerview.setLayoutManager(manager);
         recyclerview.setAdapter(new GridViewFilterAdapter(list,bitmap));

@@ -57,15 +57,17 @@ public class TemplateMatch2 {
         int[] tplmask = new int[tpl.getWidth() * tpl.getHeight()];
         Arrays.fill(tplmask, 0);
         initParams(tpl);
-        int offx = tw/2+1;
-        int offy = th/2+1;
-        int rw = width - offx*2;
-        int rh = height - offy*2;
+        int offFactor = 2;
+        int offx = tw/offFactor+1;
+        int offy = th/offFactor+1;
+        int rw = width - offx*offFactor;
+        int rh = height - offy*offFactor;
         float[] result = new float[rw*rh];
         Arrays.fill(result, 0);
         FloatProcessor tpl_data = new FloatProcessor(result, rw, rh);
-        if(target.getChannels() == 3 && tpl.getChannels() == 3) {
-            for(int ch=0; ch<3; ch++) {
+        int channelValue = 3;
+        if(target.getChannels() == channelValue && tpl.getChannels() == channelValue) {
+            for(int ch=0; ch<channelValue; ch++) {
             	FloatProcessor tmp = processSingleChannels(width, height, target.toByte(ch), tw, th, tpl.toByte(ch), ch);
             	tpl_data.addArray(tmp.toFloat(0));
             }
@@ -89,12 +91,13 @@ public class TemplateMatch2 {
      * @return          The float processor
      */
     public FloatProcessor processSingleChannels(int width, int height, byte[] pixels, int tw, int th, byte[] tpl, int ch_index){
-        int offx = tw/2+1;
-        int offy = th/2+1;
+        int offFactor = 2;
+        int offx = tw/offFactor+1;
+        int offy = th/offFactor+1;
         int[] tplmask = new int[tw * th];
         Arrays.fill(tplmask, 0);
-        int rw = width - offx*2;
-        int rh = height - offy*2;
+        int rw = width - offx*offFactor;
+        int rh = height - offy*offFactor;
         float[] result = new float[rw*rh];
         IntIntegralImage ii = new IntIntegralImage();
         ii.setImage(pixels);
@@ -102,7 +105,7 @@ public class TemplateMatch2 {
         for(int row=offy; row<height-offy; row++) {
             for(int col=offx; col<width-offx; col++) {
             	int[] roi = getROI(width, height, tw, th, row, col, pixels);
-            	float sr = ii.getBlockSquareSum(col, row, (offx * 2 + 1), (offy * 2 + 1));
+            	float sr = ii.getBlockSquareSum(col, row, (offx * offFactor + 1), (offy * offFactor + 1));
             	float sum = sqrt_tpl[ch_index] + sr - multplyArras(roi, tpl);
             	result[(row-offy)*rw + (col-offx)] = sum;
             }
@@ -119,10 +122,11 @@ public class TemplateMatch2 {
      */
     public float multplyArras(int[] roi, byte[] tpl) {
     	int sum = 0;
+        int factor = 2;
     	for(int i=0; i<roi.length; i++) {
     		sum += (tpl[i]&0xff)*roi[i];
     	}
-    	return 2*sum;
+    	return factor*sum;
     }
     
     /**
@@ -137,8 +141,9 @@ public class TemplateMatch2 {
      * @return        The ROI
      */
 	private int[] getROI(int w, int h, int tw, int th, int y, int x, byte[] pixels) {
-		int offx = x - tw / 2;
-		int offy = y - th / 2;
+        int offFactor = 2;
+		int offx = x - tw / offFactor;
+		int offy = y - th / offFactor;
 		int[] roidata = new int[tw*th];
 		for(int row=offy; row<th+offy; row++) {
 			int index1 = row*w;

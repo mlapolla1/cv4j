@@ -15,6 +15,9 @@
  */
 package com.cv4j.core.binary;
 
+import android.util.SparseArray;
+
+import com.cv4j.core.binary.functions.ThresholdFunction;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.IntIntegralImage;
 /**
@@ -38,6 +41,17 @@ public class Threshold {
     public static final int ADAPTIVE_C_MEANS_THRESH = 5;
     /** it is not reasonable method to convert binary image */
     public static final int THRESH_VALUE = -1;
+
+    private SparseArray<ThresholdFunction> thresholds;
+
+    public Threshold() {
+        thresholds = new SparseArray<>(5);
+
+        thresholds.append(THRESH_MEANS, this::getMeanThreshold);
+        thresholds.append(THRESH_OTSU, this::getOTSUThreshold);
+        thresholds.append(THRESH_TRIANGLE, this::getTriangleThreshold);
+        thresholds.append(THRESH_MEANSHIFT, this::shift);
+    }
 
     /**
      *
@@ -89,86 +103,92 @@ public class Threshold {
      * @param thresh - threshold value you are going to use it if type = 0;
      */
     public void process(ByteProcessor gray, int type, int method, int thresh) {
-        int tvalue = thresh;
-        if(type == THRESH_MEANS) {
-            tvalue = getMeanThreshold(gray);
-        }
-        else if(type == THRESH_OTSU) {
-            tvalue = getOTSUThreshold(gray);
-        }
-        else if(type == THRESH_TRIANGLE) {
-            tvalue = getTriangleThreshold(gray);
-        }
-        else if(type == THRESH_MEANSHIFT) {
-            tvalue = shift(gray);
-        } else if(THRESH_VALUE == type){
-            tvalue = thresh;
+        int thresholdValue;
+        ThresholdFunction thresholdFunction = this.thresholds.get(type);
+
+        if (thresholdFunction != null) {
+            thresholdValue = thresholdFunction.call(gray);
+        } else {
+            thresholdValue = thresh;
         }
 
         byte[] data = gray.getGray();
-        int c = 0;
-        for(int i=0; i<data.length; i++) {
-            c = data[i]&0xff;
-            if(c <= tvalue) {
-                data[i] = (method == METHOD_THRESH_BINARY_INV)?(byte)255 : (byte)0;
+        int c;
+        int andValue = 0xff;
+        byte maxValue = (byte) 255;
+        byte minValue = (byte) 0;
+
+        for(int i = 0; i < data.length; i++) {
+            c = data[i] & andValue;
+
+            // TODO: Same for if and else -> error?
+            if(c <= thresholdValue) {
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? maxValue : minValue);
             } else {
-                data[i] = (method == METHOD_THRESH_BINARY_INV)?(byte)0 : (byte)255;
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? maxValue : minValue);
             }
+
         }
     }
 
     private int getMeanThreshold(ByteProcessor gray) {
+        int meanThreshold;
         byte[] data = gray.getGray();
+
         int sum = 0;
-        for(int i=0; i<data.length; i++) {
-            sum += data[i]&0xff;
+        for (byte aData : data) {
+            sum += aData & 0xff;
         }
-        return sum / data.length;
+
+        meanThreshold = sum / data.length;
+
+        return meanThreshold;
     }
 
     private int getOTSUThreshold(ByteProcessor gray) {
         // 获取直方图
         int[] histogram = new int[256];
         byte[] data = gray.getGray();
-        int c = 0;
-        for(int i=0; i<data.length; i++) {
-            c = data[i]&0xff;
-            histogram[c]++;
-        }
+
+        increaseHistogramFromData(histogram, data);
+
         // 图像二值化 - OTSU 阈值化方法
         double total = data.length;
         double[] variances = new double[256];
-        for(int i=0; i<variances.length; i++)
-        {
-            double bw = 0;
+
+        for(int i = 0; i < variances.length; i++) {
+            double bw;
             double bmeans = 0;
             double bvariance = 0;
             double count = 0;
-            for(int t=0; t<i; t++)
-            {
+
+            for(int t = 0; t < i; t++) {
                 count += histogram[t];
                 bmeans += histogram[t] * t;
             }
+
             bw = count / total;
             bmeans = (count == 0) ? 0 :(bmeans / count);
-            for(int t=0; t<i; t++)
-            {
+
+            for(int t = 0; t < i; t++) {
                 bvariance += (Math.pow((t-bmeans),2) * histogram[t]);
             }
+
             bvariance = (count == 0) ? 0 : (bvariance / count);
+
             double fw = 0;
             double fmeans = 0;
             double fvariance = 0;
             count = 0;
-            for(int t=i; t<histogram.length; t++)
-            {
+
+            for(int t = i; t < histogram.length; t++) {
                 count += histogram[t];
                 fmeans += histogram[t] * t;
             }
+
             fw = count / total;
             fmeans = (count == 0) ? 0 : (fmeans / count);
-            for(int t=i; t<histogram.length; t++)
-            {
+            for(int t = i; t < histogram.length; t++) {
                 fvariance += (Math.pow((t-fmeans),2) * histogram[t]);
             }
             fvariance = (count == 0) ? 0 : (fvariance / count);
@@ -178,9 +198,8 @@ public class Threshold {
         // find the minimum within class variance
         double min = variances[0];
         int threshold = 0;
-        for(int m=1; m<variances.length; m++)
-        {
-            if(min > variances[m]){
+        for(int m=1; m<variances.length; m++) {
+            if(min > variances[m]) {
                 threshold = m;
                 min = variances[m];
             }
@@ -194,87 +213,70 @@ public class Threshold {
         // 获取直方图
         int[] histogram = new int[256];
         byte[] data = gray.getGray();
-        int c = 0;
-        for(int i=0; i<data.length; i++) {
-            c = data[i]&0xff;
-            histogram[c]++;
-        }
+
+        increaseHistogramFromData(histogram, data);
 
         int left_bound = 0;
         int right_bound = 0;
         int max_ind = 0;
         int max = 0;
         int temp;
-        boolean isflipped = false;
-        int i=0, j=0;
         int N = 256;
 
+        boolean isflipped = false;
+
         // 找到最左边零的位置
-        for( i = 0; i < N; i++ )
-        {
-            if( histogram[i] > 0 )
-            {
-                left_bound = i;
-                break;
-            }
-        }
-        // 位置再移动一个步长，即为最左侧零位置
-        if( left_bound > 0 )
-            left_bound--;
+        left_bound = findHistogramLeftBoundIndex(histogram, N);
 
         // 找到最右边零点位置
-        for( i = N-1; i > 0; i-- )
-        {
-            if( histogram[i] > 0 )
-            {
-                right_bound = i;
-                break;
-            }
-        }
-        // 位置再移动一个步长，即为最右侧零位置
-        if( right_bound < N-1 )
-            right_bound++;
+        right_bound = findHistogramRightBoundIndex(histogram, N);
 
-        // 在直方图上寻找最亮的点Hmax
-        for( i = 0; i < N; i++ )
-        {
-            if( histogram[i] > max)
-            {
-                max = histogram[i];
-                max_ind = i;
-            }
+
+        // 位置再移动一个步长，即为最左侧零位置
+        if(left_bound > 0) {
+            left_bound--;
         }
+
+        // 位置再移动一个步长，即为最右侧零位置
+        if(right_bound < N-1) {
+            right_bound++;
+        }
+
+        max_ind = findMaxHistogramIndex(histogram, N);
+        max     = histogram[max_ind];
 
         // 如果最大值落在靠左侧这样就无法满足三角法求阈值，所以要检测是否最大值是否靠近左侧
         // 如果靠近左侧则通过翻转到右侧位置。
-        if( max_ind-left_bound < right_bound-max_ind)
-        {
+        if((max_ind - left_bound) < (right_bound - max_ind)) {
             isflipped = true;
-            i = 0;
-            j = N-1;
-            while( i < j )
-            {
+            int i = 0;
+            int j = N-1;
+
+            while(i < j) {
                 // 左右交换
-                temp = histogram[i]; histogram[i] = histogram[j]; histogram[j] = temp;
-                i++; j--;
+                temp = histogram[i];
+                histogram[i] = histogram[j];
+                histogram[j] = temp;
+
+                i++;
+                j--;
             }
-            left_bound = N-1-right_bound;
-            max_ind = N-1-max_ind;
+
+            left_bound = N - 1 - right_bound;
+            max_ind    = N - 1 - max_ind;
         }
 
         // 计算求得阈值
         double thresh = left_bound;
-        double a;
-        double b; 
+        double a = max;
+        double b = left_bound - max_ind;
         double dist = 0;
         double tempdist;
-        a = max; b = left_bound-max_ind;
-        for( i = left_bound+1; i <= max_ind; i++ )
-        {
+
+        for(int i = left_bound+1; i <= max_ind; i++) {
             // 计算距离 - 不需要真正计算
             tempdist = a*i + b*histogram[i];
-            if( tempdist > dist)
-            {
+            if(tempdist > dist) {
                 dist = tempdist;
                 thresh = i;
             }
@@ -282,50 +284,103 @@ public class Threshold {
         thresh--;
 
         // 对已经得到的阈值T,如果前面已经翻转了，则阈值要用255-T
-        if( isflipped )
-            thresh = N-1-thresh;
+        if (isflipped) {
+            thresh = N - 1 - thresh;
+        }
 
-        return (int)thresh;
+        return (int) thresh;
+    }
+
+    private int findHistogramRightBoundIndex(int[] histogram, int n) {
+        int rightBound = -1;
+
+        for (int i = n-1; i > 0; i--) {
+            if(histogram[i] > 0) {
+                rightBound = i;
+                break;
+            }
+        }
+
+        return rightBound;
+    }
+
+    private int findHistogramLeftBoundIndex(int[] histogram, int n) {
+        int leftBound = -1;
+
+        for (int i = 0; i < n; i++) {
+            if (histogram[i] > 0) {
+                leftBound = i;
+                break;
+            }
+        }
+
+        return leftBound;
     }
 
     private int shift(ByteProcessor gray) {
         // find threshold
         int t = 127;
-        int nt = 0;
-        int m1=0;
-        int m2=0;
-        int sum1=0;
-        int sum2=0;
-        int count1=0;
-        int count2=0;
-//        int count = 0 ;
+        int nt;
+
+        int m1;
+        int m2;
+
+        int sum1   = 0;
+        int sum2   = 0;
+        int count1 = 0;
+        int count2 = 0;
+
         int[] data = gray.toInt(0);
+
         while(true) {
-            for(int i=0; i<data.length; i++) {
+            for(int i = 0; i < data.length; i++) {
                 if(data[i] > t) {
                     sum1 += data[i];
                     count1++;
-                }
-                else {
+                } else {
                     sum2 += data[i];
                     count2++;
                 }
             }
+
             m1 = sum1 / count1;
             m2 = sum2 / count2;
 
-            sum1 = 0;
-            sum2 = 0;
+            sum1   = 0;
+            sum2   = 0;
             count1 = 0;
             count2 = 0;
+
             nt = (m1 + m2) / 2;
+
             if(t == nt) {
                 break;
-            }
-            else {
+            } else {
                 t = nt;
             }
         }
         return t;
+    }
+
+    private void increaseHistogramFromData(int[] histogram, byte[] data) {
+        int index;
+
+        for (byte aData : data) {
+            index = aData & 0xff;
+            histogram[index]++;
+        }
+    }
+
+    private int findMaxHistogramIndex(int[] histogram, int N) {
+        int index = 0;
+        int max = histogram[index];
+
+        for (int i = 1; i < N; i++) {
+            if (histogram[i] > max) {
+                index = i;
+            }
+        }
+
+        return index;
     }
 }

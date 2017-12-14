@@ -48,11 +48,12 @@ public class DoubleClickExitUtils {
 			return true;
 		} else {
 			isOnKeyBacking = true;
+			int param = 2000;
 			if(mBackToast == null) {
-				mBackToast = Toast.makeText(mActivity, R.string.finish_by_back_again, 2000);
+				mBackToast = Toast.makeText(mActivity, R.string.finish_by_back_again, param);
 			}
 			mBackToast.show();
-			mHandler.postDelayed(onBackTimeRunnable, 2000);
+			mHandler.postDelayed(onBackTimeRunnable, param);
 			return true;
 		}
 	}

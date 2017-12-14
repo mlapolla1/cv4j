@@ -40,7 +40,8 @@ public class PrincipalColorExtractor {
 	
 	public PrincipalColorExtractor()
 	{
-		this(5);
+		int clusters = 5;
+		this(clusters);
 	}
 
 	public List<Scalar> extract(ColorProcessor processor) {
@@ -93,6 +94,7 @@ public class PrincipalColorExtractor {
         // stop condition--
         double[][] oldClusterCenterColors = reCalculateClusterCenters();
         int times = 10;
+        int timesLimit = 10;
         while(true)
         {
         	stepClusters();
@@ -105,7 +107,7 @@ public class PrincipalColorExtractor {
         	{
         		oldClusterCenterColors = newClusterCenterColors;
         	}
-        	if(times > 10) {
+        	if(times > timesLimit) {
         		break;
         	}
         	times++;
@@ -235,7 +237,8 @@ public class PrincipalColorExtractor {
 	    int cr = c.getPixelColor().red;
 	    int cg = c.getPixelColor().green;
 	    int cb = c.getPixelColor().blue;
-	    return Math.sqrt(Math.pow((pr - cr), 2.0) + Math.pow((pg - cg), 2.0) + Math.pow((pb - cb), 2.0));
+	    float factor = 2.0;
+	    return Math.sqrt(Math.pow((pr - cr), factor) + Math.pow((pg - cg), factor) + Math.pow((pb - cb), factor));
 	}
 
 }
