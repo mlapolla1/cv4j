@@ -58,36 +58,48 @@ public class MedimaFilter implements CommonFilter {
 
 		int size = radius*2+1;
 		int total = size*size;
-		int c=0;
 		for(int row=0; row<height; row++) {
 			for(int col=0; col<width; col++) {
-				
-				// 统计滤波器
-				int[] subpixels = new int[total];
-				int index = 0;
-				int sum=0;
-				for(int i=-radius; i<=radius; i++) {
-					int roffset = row + i;
-					roffset = (roffset < 0) ? 0 :(roffset>=height ? height-1 : roffset);
-					for(int j=-radius; j<=radius; j++) {
-						int coffset = col+j;
-						coffset = (coffset < 0) ? 0 :(coffset>=width ? width-1 : coffset);
-						c = GRAY[roffset*width+coffset]&0xff;
-						sum += c;
-						subpixels[index++] = c;
-					}
-				}
-				
-				Arrays.sort(subpixels);
-				c = subpixels[total/2];
-				output[row*width+col]=(byte)c;
+				statisticalFilter(output, GRAY, row, col, width, height, total);
 			}
 		}
 
 		((ByteProcessor)src).putGray(output);
-		output = null;
-		GRAY = null;
 		return src;
+	}
+
+	/**
+	 * 波器
+	 * @param output
+	 * @param gray
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @param height
+	 * @param total
+	 */
+	private void statisticalFilter(byte[] output, byte[] gray, int row, int col, int width, int height, int total) {
+		int[] subpixels = new int[total];
+		int index = 0;
+		int sum = 0;
+
+		for(int i = -(radius); i <= radius; i++) {
+			int roffset = row + i;
+			roffset = (roffset < 0) ? 0 :(roffset>=height ? height-1 : roffset);
+
+			for(int j = -(radius); j <= radius; j++) {
+				int coffset = col+j;
+				coffset = (coffset < 0) ? 0 :(coffset>=width ? width-1 : coffset);
+
+				int c = gray[roffset*width+coffset]&0xff;
+				sum += c;
+				subpixels[index++] = c;
+			}
+		}
+
+		Arrays.sort(subpixels);
+		int c = subpixels[total / 2];
+		output[row*width+col] = (byte) c;
 	}
 
 }

@@ -86,44 +86,9 @@ public class OilPaintFilter extends BaseFilter {
             int tg = 0;
             int tb = 0;
             for(int col=0; col<width; col++) {
-
-                for(int subRow = -subradius; subRow <= subradius; subRow++)
-                {
-                    for(int subCol = -subradius; subCol <= subradius; subCol++)
-                    {
-                        int nrow = row + subRow;
-                        int ncol = col + subCol;
-                        if(nrow >=height || nrow < 0)
-                        {
-                            nrow = 0;
-                        }
-                        if(ncol >= width || ncol < 0)
-                        {
-                            ncol = 0;
-                        }
-                        index = nrow * width + ncol;
-                        tr = R[index] & 0xff;
-                        tg = G[index] & 0xff;
-                        tb = B[index] & 0xff;
-                        int curIntensity = (int)(((double)((tr+tg+tb)/3)*intensity)/255.0f);
-                        intensityCount[curIntensity]++;
-                        ravg[curIntensity] += tr;
-                        gavg[curIntensity] += tg;
-                        bavg[curIntensity] += tb;
-                    }
-                }
-
                 // find the max number of same gray level pixel
-                int maxCount = 0;
-                int maxIndex = 0;
-                for(int m=0; m<intensityCount.length; m++)
-                {
-                    if(intensityCount[m] > maxCount)
-                    {
-                        maxCount = intensityCount[m];
-                        maxIndex = m;
-                    }
-                }
+                int maxIndex = findMaxNumberIndex(intensityCount);
+                int maxCount = intensityCount[maxIndex];
 
                 // get average value of the pixel
                 int nr = ravg[maxIndex] / maxCount;
@@ -133,22 +98,60 @@ public class OilPaintFilter extends BaseFilter {
                 output[0][index] = (byte) nr;
                 output[1][index] = (byte) ng;
                 output[2][index] = (byte) nb;
-
-                // post clear values for next pixel
-                for(int i=0; i<=intensity; i++)
-                {
-                    intensityCount[i] = 0;
-                    ravg[i] = 0;
-                    gavg[i] = 0;
-                    bavg[i] = 0;
-                }
-
             }
         }
 
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
-        output = null;
 
         return src;
+    }
+
+    private int findMaxNumberIndex(int[] intensityCount) {
+        int maxIndex = intensityCount[0];
+
+        for(int i = 1; i < intensityCount.length; i++) {
+            if(intensityCount[i] > intensityCount[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+
+        return maxIndex;
+    }
+
+    private void setAvg(int row, int col, int subradius, int index, int tr, int tg, int tb, int [] intensityCount, int [] ravg, int [] gavg, int [] bavg){
+        for(int subRow = -subradius; subRow <= subradius; subRow++) {
+            for(int subCol = -subradius; subCol <= subradius; subCol++) {
+                int nrow = row + subRow;
+                int ncol = col + subCol;
+                if(nrow >=height || nrow < 0)
+                {
+                    nrow = 0;
+                }
+                if(ncol >= width || ncol < 0)
+                {
+                    ncol = 0;
+                }
+                index = nrow * width + ncol;
+                tr = R[index] & 0xff;
+                tg = G[index] & 0xff;
+                tb = B[index] & 0xff;
+                int curIntensity = (int)(((double)((tr+tg+tb)/3)*intensity)/255.0f);
+                intensityCount[curIntensity]++;
+                ravg[curIntensity] += tr;
+                gavg[curIntensity] += tg;
+                bavg[curIntensity] += tb;
+            }
+        }
+    }
+
+    private void clearAll(int [] ravg, int [] gavg, int [] bavg, int [] intensityCount, int intensity){
+        // post clear values for next pixel
+        for(int i=0; i<=intensity; i++)
+        {
+            intensityCount[i] = 0;
+            ravg[i] = 0;
+            gavg[i] = 0;
+            bavg[i] = 0;
+        }
     }
 }

@@ -61,18 +61,9 @@ public class MorphGradient {
             // find min and max for input array
             offset = row*width;
             for(int col=0; col<width; col++) {
-                min = 256;
-                max = 0;
-                for(int i=-xr; i<=xr; i++) {
-                    if(i == 0) continue;
-                    if((offset+col+i) < 0 || (offset+col+i) >= width) {
-                        continue;
-                    }
-                    int dataMin = data[offset+col+i]&0xff;
-                    min = Math.min(min, dataMin);
-                    int dataMax = data[offset+col+i]&0xff;
-                    max = Math.max(max, dataMax);
-                }
+                min = findMinInputArray(data, row, col, width, height, xr);
+                max = findMaxInputArray(data, row, col, width, height, xr);
+                
                 ero[offset+col] = (byte)min;
                 dil[offset+col] = (byte)max;
             }
@@ -83,17 +74,8 @@ public class MorphGradient {
         for(int col=0; col<width; col++) {
             for(int row=0; row<height; row++) {
                 // find min for input array
-                min = 256;
-                for(int i=-xr; i<=xr; i++) {
-                    if(i == 0) continue;
-                    if((row+i) < 0 || (row+i) >= height) {
-                        continue;
-                    }
-                    offset = (row+i)*width;
-                    int dataMin = data[offset+col]&0xff;
-                    min = Math.min(min, dataMin);
-                }
-                ero[row*width+col] = (byte)min;
+                min = findMinInputArray(data, row, col, width, height, xr);
+                ero[row*width+col] = (byte) min;
             }
         }
 
@@ -101,42 +83,83 @@ public class MorphGradient {
         for(int col=0; col<width; col++) {
             for(int row=0; row<height; row++) {
                 // find max for input array
-                max = 0;
-                for(int i=-xr; i<=xr; i++) {
-                    if(i == 0) continue;
-                    if((row+i) < 0 || (row+i) >= height) {
-                        continue;
-                    }
-                    offset = (row+i)*width;
-                    int dataMax = data[offset+col]&0xff;
-                    max = Math.max(max, dataMax);
-                }
+                max = findMaxInputArray(data, row, col, width, height, xr);
                 dil[row*width+col] = (byte)max;
             }
         }
 
-        // calculate gradient
-        int c = 0;
-        if(gradientType == BASIC_GRADIENT) {
-            for(int i=0; i<data.length; i++) {
-                c = (dil[i]&0xff - ero[i]&0xff);
-                data[i] = (byte) ((c > 0) ? 255 : 0);
+        calculateGradient(data, dil, ero, gray, gradientType);
+    }
+
+    private int findMaxInputArray(byte[] data, int row, int col, int width, int height, int xr) {
+        int max = 0;
+
+        for(int i=-xr; i<=xr; i++) {
+            if(i == 0 || (row+i) < 0 || (row+i) >= height) {
+                continue;
             }
-            gray.putGray(data);
+
+            int offset = (row+i)*width;
+            int dataMax = data[offset+col]&0xff;
+            max = Math.max(max, dataMax);
         }
-        else if(gradientType == EXTERNAL_GRADIENT) {
-            data = gray.getGray();
-            for(int i=0; i<data.length; i++) {
-                data[i] = (byte)(dil[i]&0xff - data[i]&0xff);
+
+        return max;
+    }
+
+    private int findMinInputArray(byte[] data, int row, int col, int width, int height, int xr) {
+        int min = 256;
+
+        for(int i=-xr; i<=xr; i++) {
+            if(i == 0 || (row+i) < 0 || (row+i) >= height) {
+                continue;
             }
+
+            int offset = (row+i)*width;
+            int dataMin = data[offset+col]&0xff;
+            min = Math.min(min, dataMin);
         }
-        else if(gradientType == INTERNAL_GRADIENT) {
-            data = gray.getGray();
-            for(int i=0; i<data.length; i++) {
-                data[i] = (byte)(data[i]&0xff - ero[i]&0xff);
-            }
-        } else {
-            throw new CV4JException("Unknown Gradient type, not supported...");
+
+        return min;
+    }
+
+    private void calculateGradient(byte[] data, byte[] dil, byte[] ero, ByteProcessor gray, int gradientType) {
+        int c;
+
+        switch (gradientType) {
+            case BASIC_GRADIENT:
+                calculateBasicGradient(data, dil, ero, gray);
+                break;
+            case EXTERNAL_GRADIENT:
+                data = gray.getGray();
+                calculateExternalGradient(data, dil);
+                break;
+            case INTERNAL_GRADIENT:
+                data = gray.getGray();
+                calculateInternalGradient(data, ero);
+                break;
+            default:
+                throw new CV4JException("Unknown Gradient type, not supported...");
         }
+    }
+
+    private void calculateInternalGradient(byte[] data, byte[] ero) {
+        for(int i=0; i<data.length; i++) {
+            data[i] = (byte)(data[i]&0xff - ero[i] & 0xff);
+        }
+    }
+
+    private void calculateExternalGradient(byte[] data, byte[] dil) {
+        for(int i=0; i<data.length; i++) {
+            data[i] = (byte)(dil[i]&0xff - data[i] & 0xff);
+        }
+    }
+
+    private void calculateBasicGradient(byte[] data, byte[] dil, byte[] ero, ByteProcessor gray) {
+        for(int i=0; i<data.length; i++) {
+            int c = (dil[i] & 0xff - ero[i] & 0xff);
+            data[i] = (byte) ((c > 0) ? 255 : 0);
+        }
+        gray.putGray(data);
     }
 }

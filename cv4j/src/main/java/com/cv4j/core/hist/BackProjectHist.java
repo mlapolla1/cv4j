@@ -30,29 +30,26 @@ public class BackProjectHist {
 
         int width = src.getWidth();
         int height = src.getHeight();
-        byte[] R = ((ColorProcessor)src).getRed();
-        byte[] G = ((ColorProcessor)src).getGreen();
-        byte[] B = ((ColorProcessor)src).getBlue();
+        ColorProcessor colorProcessor = (ColorProcessor) src;
 
-        // 计算直方图
-        int[] iHist = CalcHistogram.calculateNormHist(src, bins);
+        byte[] R = colorProcessor.getRed();
+        byte[] G = colorProcessor.getGreen();
+        byte[] B = colorProcessor.getBlue();
 
         // 计算比率脂肪图 R
-        float[] rHist = new float[iHist.length];
-        for(int i=0; i<iHist.length; i++) {
-            float a = mHist[i];
-            float b = iHist[i];
-            rHist[i] = a / b;
-        }
+        float[] rHist = calculateFatMapRatio(mHist, src, bins);
 
         // 根据像素值查找R，得到分布概率权重
-        int index = 0;
-        int bidx = 0;
-        int tr=0;
-        int tg=0;
-        int tb=0;
+        int index;
+        int bidx;
+
+        int tr;
+        int tg;
+        int tb;
+
         int level = 256 / bins;
-        float[] rimage = new float[width*height];
+
+        float[] rimage = new float[width * height];
         for(int row=0; row<height; row++) {
             for(int col=0; col<width; col++) {
                 index = row * width + col;
@@ -65,7 +62,7 @@ public class BackProjectHist {
         }
 
         // 计算卷积
-        int offset = 0;
+        int offset;
         float sum = 0;
         float[] output = new float[width*height];
         System.arraycopy(rimage, 0, output, 0, output.length);
@@ -90,24 +87,42 @@ public class BackProjectHist {
         // 归一化
         float min = 1000;
         float max = 0;
-        for(int i=0; i<output.length; i++) {
-            min = Math.min(min, output[i]);
-            max = Math.max(max, output[i]);
+        for (float anOutput : output) {
+            min = Math.min(min, anOutput);
+            max = Math.max(max, anOutput);
         }
+
         float delta = max - min;
         for(int i=0; i<output.length; i++) {
             output[i] =  ((output[i] - min)/delta)*255;
         }
 
-        // 阈值二值化显示
-        for(int i=0; i<output.length; i++) {
-            int pv = (int)output[i];
+        thresholdBastardizationDisplay(output, backProj);
 
-            if (pv>10)
+    }
+
+    private void thresholdBastardizationDisplay(float[] output, ByteProcessor backProj) {
+        for(int i = 0; i < output.length; i++) {
+            int pv = (int) output[i];
+
+            if (pv > 10) {
                 pv = 255;
+            }
 
             backProj.getGray()[i] = (byte)pv;
         }
+    }
 
+    private float[] calculateFatMapRatio(int[] mHist, ImageProcessor src, int bins) {
+        int[] iHist = CalcHistogram.calculateNormHist(src, bins);
+        float[] rHist = new float[iHist.length];
+
+        for(int i=0; i<iHist.length; i++) {
+            float a = mHist[i];
+            float b = iHist[i];
+            rHist[i] = a / b;
+        }
+
+        return rHist;
     }
 }

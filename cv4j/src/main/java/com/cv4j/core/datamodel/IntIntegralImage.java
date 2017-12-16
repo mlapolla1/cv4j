@@ -121,13 +121,14 @@ public class IntIntegralImage {
 		int leftcol = col - 1;
 
 		int p1 = image[offset] & 0xff;                  // p(x, y)
-		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);     // p(x-1, y)
-		int p3 = (uprow < 0 ? 0 : sum[offset-width]);   // p(x, y-1);
-		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+//		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);     // p(x-1, y)
+//		int p3 = (uprow < 0 ? 0 : sum[offset-width]);   // p(x, y-1);
+//		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
 
 		float sp2 = (leftcol<0) ? 0:squaresum[offset-1]; // p(x-1, y)
 		float sp3 = (uprow<0) ? 0:squaresum[offset-width]; // p(x, y-1);
 		float sp4 = (uprow<0||leftcol<0) ? 0:squaresum[offset-width-1]; // p(x-1, y-1);
+
 		return (p1 * p1) + sp2 + sp3 - sp4;
 	}
 

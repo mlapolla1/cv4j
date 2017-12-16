@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class Skeleton {
 
 
-	private void extractSkeletonFromDtImage(int[] output, int[] distmap, int width, int height) {
+	private void extractSkeletonFromDtImage(byte[] output, int[] distmap, int width, int height) {
 		int offset;
 		int dis;
 		int p1;
@@ -32,7 +32,7 @@ public class Skeleton {
 		int p4;
 
 		for(int row = 1; row < height-1; row++) {
-			offset = row*width;
+			offset = row * width;
 			for(int col = 1; col < width-1; col++) {
 				dis = distmap[offset+col];
 				p1  = distmap[offset+col-1];
@@ -82,35 +82,8 @@ public class Skeleton {
 			level++;
 		}
 
-		// extract skeleton from DT image
-		int dis = 0;
-		int p1=0;
-		int p2=0;
-		int p3=0;
-		int p4=0;
 		Arrays.fill(output, (byte) 0);
-		for(int row=1; row<height-1; row++) {
-			offset = row*width;
-			for(int col=1; col<width-1; col++) {
-				dis = distmap[offset+col];
-				p1 = distmap[offset+col-1];
-				p2 = distmap[offset+col+1];
-				p3 = distmap[offset-width+col];
-				p4 = distmap[offset+width+col];
-				
-				if(dis == 0) {
-					output[offset+col] = (byte)0;
-				}
-				else {
-					if(dis < p1 || dis < p2 || dis < p3 || dis < p4) {
-						output[offset+col] = (byte)0;
-					}
-					else {
-						output[offset+col] = (byte)255;
-					}
-				}
-			}
-		}
+		extractSkeletonFromDtImage(output, distmap, width, height);
 
 		binary.putGray(output);
 	}

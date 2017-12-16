@@ -42,6 +42,16 @@ public class Threshold {
     /** it is not reasonable method to convert binary image */
     public static final int THRESH_VALUE = -1;
 
+    /**
+     * The count position.
+     */
+    private static final int COUNT_POS = 0;
+
+    /**
+     * The bmeans pos.
+     */
+    private static final int BMEANS_POS = 1;
+
     private SparseArray<ThresholdFunction> thresholds;
 
     public Threshold() {
@@ -157,28 +167,17 @@ public class Threshold {
         double[] variances = new double[256];
 
         for(int i = 0; i < variances.length; i++) {
-            double bw;
-            double bmeans = 0;
-            double bvariance = 0;
-            double count = 0;
 
-            for(int t = 0; t < i; t++) {
-                count += histogram[t];
-                bmeans += histogram[t] * t;
-            }
+            int[] results = calculateCountAndBmeans(histogram, i);
+            int count = results[COUNT_POS];
+            int bmeans = results[BMEANS_POS];
+            double bw = count / total;
 
-            bw = count / total;
-            bmeans = (count == 0) ? 0 :(bmeans / count);
+            double bvariance = calculateBvariance(histogram, i, bmeans, count);
 
-            for(int t = 0; t < i; t++) {
-                bvariance += (Math.pow((t-bmeans),2) * histogram[t]);
-            }
 
-            bvariance = (count == 0) ? 0 : (bvariance / count);
-
-            double fw = 0;
+            double fw;
             double fmeans = 0;
-            double fvariance = 0;
             count = 0;
 
             for(int t = i; t < histogram.length; t++) {
@@ -188,24 +187,74 @@ public class Threshold {
 
             fw = count / total;
             fmeans = (count == 0) ? 0 : (fmeans / count);
-            for(int t = i; t < histogram.length; t++) {
-                fvariance += (Math.pow((t-fmeans),2) * histogram[t]);
-            }
-            fvariance = (count == 0) ? 0 : (fvariance / count);
+
+            double fvariance = calculateFvariance(histogram, i, fmeans, count);
+
             variances[i] = bw * bvariance + fw * fvariance;
         }
 
         // find the minimum within class variance
-        double min = variances[0];
-        int threshold = 0;
-        for(int m=1; m<variances.length; m++) {
-            if(min > variances[m]) {
-                threshold = m;
-                min = variances[m];
-            }
-        }
+        int threshold = findMinPosWithinClassVariance(variances);
+
         // 二值化
         System.out.println("final threshold value : " + threshold);
+        return threshold;
+    }
+
+    private double calculateFvariance(int[] histogram, int i, double fmeans, int count) {
+        int fvariance = 0;
+
+        for(int t = i; t < histogram.length; t++) {
+            fvariance += (Math.pow((t-fmeans),2) * histogram[t]);
+        }
+
+        fvariance = (count == 0) ? 0 : (fvariance / count);
+
+        return fvariance;
+    }
+
+    private double calculateBvariance(int[] histogram, int i, int bmeans, int count) {
+        int bvariance = 0;
+
+        for(int t = 0; t < i; t++) {
+            bvariance += (Math.pow((t-bmeans),2) * histogram[t]);
+        }
+
+        bvariance = (count == 0) ? 0 : (bvariance / count);
+
+        return bvariance;
+    }
+
+    private int[] calculateCountAndBmeans(int[] histogram, int i) {
+        int count = 0;
+        int bmeans = 0;
+
+        for(int t = 0; t < i; t++) {
+            count += histogram[t];
+            bmeans += histogram[t] * t;
+        }
+
+        bmeans = (count == 0) ? 0 : (bmeans / count);
+
+        final int size = 2;
+        int[] results = new int[size];
+        results[COUNT_POS] = count;
+        results[BMEANS_POS] = bmeans;
+
+        return results;
+    }
+
+    private int findMinPosWithinClassVariance(double[] variances) {
+        double min = variances[0];
+        int threshold = 0;
+
+        for(int i = 1; i < variances.length; i++) {
+            if(min > variances[i]) {
+                threshold = i;
+                min = variances[i];
+            }
+        }
+
         return threshold;
     }
 

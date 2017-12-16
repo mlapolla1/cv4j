@@ -84,20 +84,9 @@ public class StrokeAreaFilter extends BaseFilter {
                 double moment = 0.0d;
                 for(int subRow = -semiRow; subRow <= semiRow; subRow++) {
                     for(int subCol = -semiCol; subCol <= semiCol; subCol++) {
-                        newY = row + subRow;
-                        newX = col + subCol;
-                        if(newY < 0) {
-                            newY = 0;
-                        }
-                        if(newX < 0) {
-                            newX = 0;
-                        }
-                        if(newY >= height) {
-                            newY = height-1;
-                        }
-                        if(newX >= width) {
-                            newX = width - 1;
-                        }
+                        newY = valueBetween(row + subRow, 0, height-1);
+                        newX = valueBetween(col + subCol, 0, width-1);
+
                         index2 = newY * width + newX;
                         rgb2[index0] = R[index2] & 0xff; // red
                         rgb2[index1] = G[index2] & 0xff; // green
@@ -116,6 +105,18 @@ public class StrokeAreaFilter extends BaseFilter {
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
         output = null;
         return src;
+    }
+
+    private int valueBetween(int value, int min, int max) {
+        if (value < min) {
+            value = min;
+        }
+
+        if (value > max) {
+            value = max;
+        }
+
+        return value;
     }
 
     public static double colorDiff(int[] rgb1, int[] rgb2) {

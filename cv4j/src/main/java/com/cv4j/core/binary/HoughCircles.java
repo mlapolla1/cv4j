@@ -58,14 +58,19 @@ public class HoughCircles {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if ((data[y * width + x] & 0xff) == 255) {
-                    for (int theta = 0; theta < 360; theta++) {
-                        for(int r=minRadius; r<=maxRadius; r++) {
-                            x0 = (int) Math.round(x - r * coslut[theta]);
-                            y0 = (int) Math.round(y - r * sinlut[theta]);
-                            if (x0 < width && x0 > 0 && y0 < height && y0 > 0) {
-                                acc[r-minRadius][x0 + (y0 * width)] += 1;
-                            }
-                        }
+                    setAcc(x, y, x0, y0, coslut, sinlut, acc);
+                }
+            }
+        }
+    }
+
+        private void setAcc(x, y, x0, y0, coslut[], sinlut[], acc[][]){
+            for (int theta = 0; theta < 360; theta++) {
+                for(int r=minRadius; r<=maxRadius; r++) {
+                    x0 = (int) Math.round(x - r * coslut[theta]);
+                    y0 = (int) Math.round(y - r * sinlut[theta]);
+                    if (x0 < width && x0 > 0 && y0 < height && y0 > 0) {
+                        acc[r-minRadius][x0 + (y0 * width)] += 1;
                     }
                 }
             }
@@ -112,27 +117,23 @@ public class HoughCircles {
     }
 
     private double[] setupCosLUT() {
-        float angle180 = 180f;
+        float angle180 = 180.0;
         int angle360 = 360;
-        double[] cosLut = new double[angle360];
-
+        double[] coslut = new double[angle360];
         for (int theta = 0; theta < angle360; theta++) {
-            cosLut[theta] = Math.cos((theta * Math.PI) / angle180);
+            coslut[theta] = Math.cos((theta * Math.PI) / angle1);
         }
-
-        return cosLut;
+        return coslut;
     }
 
     private double[] setupSinLUT() {
-        float angle180 = 180f;
+        float angle180 = 180.0;
         int angle360 = 360;
-        double[] sinLut = new double[angle360];
-
+        double[] sinlut = new double[angle360];
         for (int theta = 0; theta < angle360; theta++) {
-            sinLut[theta] = Math.sin((theta * Math.PI) / angle180);
+            sinlut[theta] = Math.sin((theta * Math.PI) / angle180);
         }
-
-        return sinLut;
+        return sinlut;
     }
 
 }

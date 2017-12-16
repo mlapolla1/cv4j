@@ -55,39 +55,13 @@ public class PrincipalColorExtractor {
         byte[] B = processor.getBlue();
         
         //Create random points to use a the cluster center
-		Random random = new Random();
-		int index = 0;
-		for (int i = 0; i < numOfCluster; i++)
-		{
-		    int randomNumber1 = random.nextInt(width);
-		    int randomNumber2 = random.nextInt(height);
-		    index = randomNumber2 * width + randomNumber1;
-		    ClusterCenter cc = new ClusterCenter(randomNumber1, randomNumber2, R[index]&0xff, G[index]&0xff, B[index]&0xff);
-		    cc.setcIndex(i);
-		    clusterCenterList.add(cc); 
-		}
-        
-        // create all cluster point
-        for (int row = 0; row < height; ++row)
-        {
-            for (int col = 0; col < width; ++col)
-            {
-            	index = row * width + col;
-            	pointList.add(new ClusterPoint(row, col, R[index]&0xff, G[index]&0xff, B[index]&0xff));
+		createRandomPoints(R, G, B, width, height);
 
-            }
-        }
-        
+        // create all cluster point
+        createClusterPoints(R, G, B, width, height);
+
         // initialize the clusters for each point
-        double[] clusterDisValues = new double[clusterCenterList.size()];
-        for(int i=0; i<pointList.size(); i++)
-        {
-        	for(int j=0; j<clusterCenterList.size(); j++)
-        	{
-        		clusterDisValues[j] = calculateEuclideanDistance(pointList.get(i), clusterCenterList.get(j));
-        	}
-        	pointList.get(i).setClusterIndex(getCloserCluster(clusterDisValues));
-        }
+        double[] clusterDisValues = initializeCluster();
         
         // calculate the old summary
         // assign the points to cluster center
@@ -101,14 +75,13 @@ public class PrincipalColorExtractor {
         {
         	stepClusters();
         	double[][] newClusterCenterColors = reCalculateClusterCenters();
-        	if(isStop(oldClusterCenterColors, newClusterCenterColors))
-        	{        		
+
+        	if(isStop(oldClusterCenterColors, newClusterCenterColors)) {
         		break;
-        	} 
-        	else
-        	{
+        	} else {
         		oldClusterCenterColors = newClusterCenterColors;
         	}
+
         	if(times > timesLimit) {
         		break;
         	}
@@ -118,10 +91,53 @@ public class PrincipalColorExtractor {
         //update the result image
         List<Scalar> colors = new ArrayList<Scalar>();
         for(ClusterCenter cc : clusterCenterList) {
-        	
         	colors.add(cc.getPixelColor());
         }
         return colors;
+	}
+
+	private double[] initializeCluster() {
+		int pointListSize = pointList.size();
+		int clusterCenterListSize = clusterCenterList.size();
+		double[] clusterDisValues = new double[clusterCenterListSize];
+
+		for(int i = 0; i < pointListSize; i++) {
+			ClusterPoint clusterPoint   = pointList.get(i);
+			ClusterCenter clusterCenter = clusterCenterList.get(i);
+
+			for(int j = 0; j < clusterCenterListSize; j++) {
+				clusterDisValues[j] = calculateEuclideanDistance(clusterPoint, clusterCenter);
+			}
+
+			clusterPoint.setClusterIndex(getCloserCluster(clusterDisValues));
+		}
+
+		return clusterDisValues;
+	}
+
+	private void createClusterPoints(byte[] R, byte[] G, byte[] B, int width, int height) {
+		for (int row = 0; row < height; ++row) {
+			for (int col = 0; col < width; ++col) {
+				int index = row * width + col;
+				pointList.add(new ClusterPoint(row, col, R[index]&0xff, G[index]&0xff, B[index]&0xff));
+			}
+		}
+
+	}
+
+	private void createRandomPoints(byte[] R, byte[] G, byte[] B, int width, int height) {
+		Random random = new Random();
+
+		for (int i = 0; i < numOfCluster; i++) {
+			int randomNumber1 = random.nextInt(width);
+			int randomNumber2 = random.nextInt(height);
+			int index = randomNumber2 * width + randomNumber1;
+
+			ClusterCenter cc = new ClusterCenter(randomNumber1, randomNumber2, R[index]&0xff, G[index]&0xff, B[index]&0xff);
+			cc.setcIndex(i);
+			clusterCenterList.add(cc);
+		}
+
 	}
 
 	private boolean isStop(double[][] oldClusterCenterColors, double[][] newClusterCenterColors) {

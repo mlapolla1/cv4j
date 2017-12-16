@@ -24,6 +24,57 @@ import java.util.Arrays;
  */
 public class ChainCode extends CourtEdge {
 
+	/**
+	 * Max RGB value
+	 */
+	private static final short MAX_RGB = 255;
+
+	/**
+	 * Invalid column value.
+	 */
+	private static final short INVALID_COL_VALUE = -2;
+
+	/**
+	 * Column zero.
+	 */
+	private static final short COL0_VALUE = 0;
+
+	/**
+	 * Column one.
+	 */
+	private static final short COL1_VALUE = 1;
+
+	/**
+	 * Column two.
+	 */
+	private static final short COL2_VALUE = 2;
+
+	/**
+	 * Column three.
+	 */
+	private static final short COL3_VALUE = 3;
+
+	/**
+	 * Column four.
+	 */
+	private static final short COL4_VALUE = 4;
+
+	/**
+	 * Column five.
+	 */
+	private static final short COL5_VALUE = 5;
+
+	/**
+	 * Column six.
+	 */
+	private static final short COL6_VALUE = 6;
+
+
+	/**
+	 * Column seven.
+	 */
+	private static final short COL7_VALUE = 7;
+
 	public void process(ByteProcessor binary, int[] codeMap) {
 		super.process(binary);
 		int width = binary.getWidth();
@@ -54,75 +105,129 @@ public class ChainCode extends CourtEdge {
 		}
 
 	}
+	
+	private boolean isMaxRgbAndCodeMapLessZero(int pv, int c) {
+		return (pv == MAX_RGB && c < 0);
+	}
 
-	private int getRelationship(byte[] pixels1, int[] codemap, int row, int col, int width, int height) {
-		int maxRgb = 255;
-		int col0 = 0;
-		int col1 = 1;
-		int col2 = 2;
-		int col3 = 3;
-		int col4 = 4;
-		int col5 = 5;
-		int col6 = 6;
-		int col7 = 7;
-		int invalid = -2;
-		int offset = row*width;
+	private int checkCol0Col1(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+		int offset = row * width;
+
 		if((col+1) < width) {
-			int pv = pixels1[offset+col+1]&0xff;
-			int c = codemap[offset+col+1];
-			if(pv == maxRgb && c < 0 ) {
-				return col0;
+			int pv = pixels1[offset+col+1] & 0xff;
+			int c = codeMap[offset+col+1];
+
+			if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+				return COL0_VALUE;
+			}
+
+			if((row+1) < height) {
+				pv = pixels1[offset+width+col+1] & 0xff;
+				c = codeMap[offset+width+col+1];
+
+				if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+					return COL1_VALUE;
+				}
 			}
 		}
-		if((col+1) < width && (row+1) < height) {
-			int pv = pixels1[offset+width+col+1]&0xff;
-			int c = codemap[offset+width+col+1];
-			if(pv == maxRgb && c < 0 ) {
-				return col1;
-			}
-		}
+
+		return INVALID_COL_VALUE;
+	}
+
+	private int checkCol2Col3(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+		int offset = row * width;
+
 		if((row+1) < height) {
-			int pv = pixels1[offset+width+col]&0xff;
-			int c = codemap[offset+width+col];
-			if(pv == maxRgb && c < 0) {
-				return col2;
+			int pv = pixels1[offset+width+col] & 0xff;
+			int c = codeMap[offset+width+col];
+
+			if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+				return COL2_VALUE;
+			}
+
+			if((col-1) >= 0) {
+				pv = pixels1[offset+width+col-1]&0xff;
+				c = codeMap[offset+width+col-1];
+
+				if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+					return COL3_VALUE;
+				}
 			}
 		}
-		if((col-1) >= 0 && (row+1) < height) {
-			int pv = pixels1[offset+width+col-1]&0xff;
-			int c = codemap[offset+width+col-1];
-			if(pv == maxRgb && c < 0 ) {
-				return col3;
-			}
-		}
+
+		return INVALID_COL_VALUE;
+	}
+
+	private int checkCol4Col5(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+		int offset = row * width;
+
 		if((col-1) >= 0) {
 			int pv = pixels1[offset+col-1]&0xff;
-			int c = codemap[offset+col-1];
-			if(pv == maxRgb && c < 0 ) {
-				return col4;
+			int c = codeMap[offset+col-1];
+
+			if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+				return COL4_VALUE;
+			}
+
+			if((row-1) >= 0) {
+				pv = pixels1[offset-width+col-1] & 0xff;
+				c = codeMap[offset-width+col-1];
+
+				if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+					return COL5_VALUE;
+				}
 			}
 		}
-		if((col-1) >= 0 && (row-1) >= 0) {
-			int pv = pixels1[offset-width+col-1]&0xff;
-			int c = codemap[offset-width+col-1];
-			if(pv == maxRgb && c < 0 ) {
-				return col5;
-			}
-		}
+
+		return INVALID_COL_VALUE;
+	}
+
+	private int checkCol6Col7(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+		int offset = row * width;
+
 		if((row-1) >= 0) {
-			int pv = pixels1[offset-width+col]&0xff;
-			int c = codemap[offset-width+col];
-			if(pv == maxRgb && c < 0 ) {
-				return col6;
+			int pv = pixels1[offset-width+col] & 0xff;
+			int c = codeMap[offset-width+col];
+
+			if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+				return COL6_VALUE;
+			}
+
+			if((row-1) >= 0 && (col+1) < width) {
+				pv = pixels1[offset-width+col+1] & 0xff;
+				c = codeMap[offset-width+col+1];
+
+				if(isMaxRgbAndCodeMapLessZero(pv, c)) {
+					return COL7_VALUE;
+				}
 			}
 		}
-		if((row-1) >= 0 && (col+1) < width) {
-			int pv = pixels1[offset-width+col+1]&0xff;
-			int c = codemap[offset-width+col+1];
-			if(pv == maxRgb && c < 0) {
-				return col7;
-			}
+
+		return INVALID_COL_VALUE;
+	}
+
+	private int getRelationship(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+		int result;
+
+		result = checkCol0Col1(pixels1, codeMap, row, col, width, height);
+		if (result != INVALID_COL_VALUE) {
+			return result;
 		}
-		return invalid; // invalid, stop condition
+
+		result = checkCol2Col3(pixels1, codeMap, row, col, width, height);
+		if (result != INVALID_COL_VALUE) {
+			return result;
+		}
+
+		result = checkCol4Col5(pixels1, codeMap, row, col, width, height);
+		if (result != INVALID_COL_VALUE) {
+			return result;
+		}
+
+		result = checkCol6Col7(pixels1, codeMap, row, col, width, height);
+
+
+
+		return result; // invalid, stop condition
 	}
 }

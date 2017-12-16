@@ -22,6 +22,11 @@ import java.util.Arrays;
  */
 public class ZhangSuenThin {
 
+	/**
+	 * Max RGB value.
+	 */
+	private static final short MAX_RGB = 255;
+
 	public void process(ByteProcessor binary) {
 		int width = binary.getWidth();
 		int height = binary.getHeight();
@@ -58,45 +63,54 @@ public class ZhangSuenThin {
 
 	private boolean step1Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
-		int p1=0;
-		int p2=0;
-		int p3=0;
-		int p4=0;
-		int p5=0;
-		int p6=0;
-		int p7=0;
-		int p8=0;
-		int p9=0;
-		int offset = 0;
+
+		int p1;
+		int p2;
+		int p3;
+		int p4;
+		int p5;
+		int p6;
+		int p7;
+		int p8;
+		int p9;
+
+		int offset;
+
 		for(int row=1; row<height-1; row++) {
-			offset = row*width;
+			offset = row * width;
+
 			for(int col=1; col<width-1; col++) {
-				p1 = input[offset+col]&0xff;
-				if(p1 == 0) continue;
-				p2 = input[offset-width+col]&0xff;
-				p3 = input[offset-width+col+1]&0xff;
-				p4 = input[offset+col+1]&0xff;
-				p5 = input[offset+width+col+1]&0xff;
-				p6 = input[offset+width+col]&0xff;
-				p7 = input[offset+width+col-1]&0xff;
-				p8 = input[offset+col-1]&0xff;
-				p9 = input[offset-width+col-1]&0xff;
+				p1 = calculateP1(input, row, col, width);
+				if(p1 == 0) {
+					continue;
+				}
+
+				p2 = calculateP2(input, row, col, width);
+				p3 = calculateP3(input, row, col, width);
+				p4 = calculateP4(input, row, col, width);
+				p5 = calculateP5(input, row, col, width);
+				p6 = calculateP6(input, row, col, width);
+				p7 = calculateP7(input, row, col, width);
+				p8 = calculateP8(input, row, col, width);
+				p9 = calculateP9(input, row, col, width);
+
 				// match 1 - foreground, 0 - background
-				p1 = (p1 == 255) ? 1 : 0;
-				p2 = (p2 == 255) ? 1 : 0;
-				p3 = (p3 == 255) ? 1 : 0;
-				p4 = (p4 == 255) ? 1 : 0;
-				p5 = (p5 == 255) ? 1 : 0;
-				p6 = (p6 == 255) ? 1 : 0;
-				p7 = (p7 == 255) ? 1 : 0;
-				p8 = (p8 == 255) ? 1 : 0;
-				p9 = (p9 == 255) ? 1 : 0;
+				p1 = normalizeRgbZeroOne(p1);
+				p2 = normalizeRgbZeroOne(p2);
+				p3 = normalizeRgbZeroOne(p3);
+				p4 = normalizeRgbZeroOne(p4);
+				p5 = normalizeRgbZeroOne(p5);
+				p6 = normalizeRgbZeroOne(p6);
+				p7 = normalizeRgbZeroOne(p7);
+				p8 = normalizeRgbZeroOne(p8);
+				p9 = normalizeRgbZeroOne(p9);
 				
-				int con1 = p2+p3+p4+p5+p6+p7+p8+p9;
+				int con1 = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
 				String one = "01";
 
-				StringBuilder sb = new StringBuilder();
-				sb.append(String.valueOf(p2))
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder
+						.append(String.valueOf(p2))
 						.append(String.valueOf(p3))
 						.append(String.valueOf(p4))
 						.append(String.valueOf(p5))
@@ -106,7 +120,7 @@ public class ZhangSuenThin {
 						.append(String.valueOf(p9))
 						.append(String.valueOf(p2));
 
-				String sequence = sb.toString();
+				String sequence = stringBuilder.toString();
 				int index1 = sequence.indexOf(one);
 				int index2 = sequence.lastIndexOf(one);
 				
@@ -125,44 +139,53 @@ public class ZhangSuenThin {
 	
 	private boolean step2Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
-		int p1=0; 
-		int p2=0; 
-		int p3=0;
-		int p4=0;
-		int p5=0;
-		int p6=0;
-		int p7=0;
-		int p8=0;
-		int p9=0;
-		int offset = 0;
+
+		int p1;
+		int p2;
+		int p3;
+		int p4;
+		int p5;
+		int p6;
+		int p7;
+		int p8;
+		int p9;
+
+		int offset;
+
 		for(int row=1; row<height-1; row++) {
 			offset = row*width;
-			for(int col=1; col<width-1; col++) {
-				p1 = input[offset+col]&0xff;
-				if(p1 == 0) continue;
-				p2 = input[offset-width+col]&0xff;
-				p3 = input[offset-width+col+1]&0xff;
-				p4 = input[offset+col+1]&0xff;
-				p5 = input[offset+width+col+1]&0xff;
-				p6 = input[offset+width+col]&0xff;
-				p7 = input[offset+width+col-1]&0xff;
-				p8 = input[offset+col-1]&0xff;
-				p9 = input[offset-width+col-1]&0xff;
-				// match 1 - foreground, 0 - background
-				p1 = (p1 == 255) ? 1 : 0;
-				p2 = (p2 == 255) ? 1 : 0;
-				p3 = (p3 == 255) ? 1 : 0;
-				p4 = (p4 == 255) ? 1 : 0;
-				p5 = (p5 == 255) ? 1 : 0;
-				p6 = (p6 == 255) ? 1 : 0;
-				p7 = (p7 == 255) ? 1 : 0;
-				p8 = (p8 == 255) ? 1 : 0;
-				p9 = (p9 == 255) ? 1 : 0;
-				
-				int con1 = p2+p3+p4+p5+p6+p7+p8+p9;
 
-				StringBuilder sb = new StringBuilder();
-				sb.append(String.valueOf(p2))
+			for(int col=1; col<width-1; col++) {
+				p1 = calculateP1(input, row, col, width);
+				if(p1 == 0) {
+					continue;
+				}
+
+				p2 = calculateP2(input, row, col, width);
+				p3 = calculateP3(input, row, col, width);
+				p4 = calculateP4(input, row, col, width);
+				p5 = calculateP5(input, row, col, width);
+				p6 = calculateP6(input, row, col, width);
+				p7 = calculateP7(input, row, col, width);
+				p8 = calculateP8(input, row, col, width);
+				p9 = calculateP9(input, row, col, width);
+
+				// match 1 - foreground, 0 - background
+				p1 = normalizeRgbZeroOne(p1);
+				p2 = normalizeRgbZeroOne(p2);
+				p3 = normalizeRgbZeroOne(p3);
+				p4 = normalizeRgbZeroOne(p4);
+				p5 = normalizeRgbZeroOne(p5);
+				p6 = normalizeRgbZeroOne(p6);
+				p7 = normalizeRgbZeroOne(p7);
+				p8 = normalizeRgbZeroOne(p8);
+				p9 = normalizeRgbZeroOne(p9);
+				
+				int con1 = (p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9);
+
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder
+						.append(String.valueOf(p2))
 						.append(String.valueOf(p3))
 						.append(String.valueOf(p4))
 						.append(String.valueOf(p5))
@@ -172,12 +195,12 @@ public class ZhangSuenThin {
 						.append(String.valueOf(p9))
 						.append(String.valueOf(p2));
 
-				String sequence = sb.toString();
+				String sequence = stringBuilder.toString();
 				int index1 = sequence.indexOf("01");
 				int index2 = sequence.lastIndexOf("01");
 				
-				int con3 = p2*p4*p8;
-				int con4 = p2*p6*p8;
+				int con3 = (p2 * p4 * p8);
+				int con4 = (p2 * p6 * p8);
 				
 				if((con1 >= 2 && con1 <= 6) && (index1 == index2) && con3 == 0 && con4 == 0) {
 					flagmap[offset+col] = 1;
@@ -187,6 +210,132 @@ public class ZhangSuenThin {
 			}
 		}
 		return stop;
+	}
+
+	/**
+	 * Calculation of p1
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p1
+	 */
+	private int calculateP1(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+col] & 0xff;
+	}
+
+	/**
+	 * Calculation of p2
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p2
+	 */
+	private int calculateP2(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset-width+col+1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p3
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p3
+	 */
+	private int calculateP3(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset-width+col+1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p4
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p4
+	 */
+	private int calculateP4(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+col+1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p5
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p5
+	 */
+	private int calculateP5(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+width+col+1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p6
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p6
+	 */
+	private int calculateP6(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+width+col] & 0xff;
+	}
+
+	/**
+	 * Calculation of p7
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p7
+	 */
+	private int calculateP7(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+width+col-1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p8
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p8
+	 */
+	private int calculateP8(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset+col-1] & 0xff;
+	}
+
+	/**
+	 * Calculation of p9
+	 * @param input
+	 * @param row
+	 * @param col
+	 * @param width
+	 * @return p9
+	 */
+	private int calculateP9(byte[] input, int row, int col, int width) {
+		int offset = width * row;
+		return input[offset-width+col-1] & 0xff;
+	}
+
+	/**
+	 * Given a RGB value, normalize it to 1 if it's MAX_RGB, otherwise 0.
+	 * @param rgbValue The RGB value.
+	 * @return         The normalized RGB into 1 or 0.
+	 */
+	private int normalizeRgbZeroOne(int rgbValue) {
+		return (rgbValue == MAX_RGB ? 1 : 0);
 	}
 
 }

@@ -165,10 +165,8 @@ public class CalcHistogram {
     private int[] getHistogram(byte[] data, int bins, int[] range) {
         int dr = range[1] - range[0];
         int[] hist = new int[dr];
-        int length = data.length;
-        for(int i=0; i<length; i++) {
-            hist[data[i]&0xff]++;
-        }
+
+        increaseHistogramFromData(hist, data);
 
         double numOfGap = dr/bins;
         int[] wh = new int[bins];
@@ -201,6 +199,12 @@ public class CalcHistogram {
             }
         }
         return wh;
+    }
+
+    private void increaseHistogramFromData(int[] hist, byte[] data) {
+        for (byte aData : data) {
+            hist[aData & 0xff]++;
+        }
     }
 
 }
