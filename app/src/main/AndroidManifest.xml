@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SelectFilterActivity"
+            android:name=".activity.filter.SelectFilterActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -32,7 +32,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.UseFilterWithRxActivity"
+            android:name=".activity.filter.UseFilterWithRxActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -40,11 +40,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.GridViewFilterActivity"
+            android:name=".activity.filter.GridViewFilterActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ColorFilterActivity"
+            android:name=".activity.filter.ColorFilterActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -56,7 +56,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CoinsActivity"
+            android:name=".activity.Example.CoinsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -64,11 +64,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.LineDetectionActivity"
+            android:name=".activity.Detect.LineDetectionActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.DetectQRActivity"
+            android:name=".activity.Detect.DetectQRActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -76,23 +76,23 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PaintActivity"
+            android:name=".activity.Example.PaintActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.HistogramEqualizationActivity"
+            android:name=".activity.Histogram.HistogramEqualizationActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.HistogramDemoActivity"
+            android:name=".activity.Histogram.HistogramDemoActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CompareHistActivity"
+            android:name=".activity.Hist.CompareHistActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ProjectHistActivity"
+            android:name=".activity.Hist.ProjectHistActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
@@ -100,7 +100,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SubImageActivity"
+            android:name=".activity.Example.SubImageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity

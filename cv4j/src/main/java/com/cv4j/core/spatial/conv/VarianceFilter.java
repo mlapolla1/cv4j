@@ -16,7 +16,7 @@
 package com.cv4j.core.spatial.conv;
 
 import com.cv4j.core.datamodel.ColorProcessor;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
 import com.cv4j.image.util.TaskUtils;
 import com.cv4j.image.util.Tools;

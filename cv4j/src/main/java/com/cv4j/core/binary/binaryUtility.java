@@ -1,7 +1,7 @@
 package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
-import com.cv4j.core.datamodel.IntIntegralImage;
+import com.cv4j.core.datamodel.number.IntIntegralImage;
 import com.cv4j.core.datamodel.Size;
 
 public class binaryUtility {

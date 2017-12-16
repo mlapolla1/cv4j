@@ -11,8 +11,8 @@ import android.widget.ImageView;
 
 import com.cv4j.app.R;
 import com.cv4j.app.app.BaseFragment;
-import com.cv4j.core.filters.OilPaintFilter;
-import com.cv4j.core.filters.StrokeAreaFilter;
+import com.cv4j.core.filters.effect.OilPaintFilter;
+import com.cv4j.core.filters.effect.StrokeAreaFilter;
 import com.cv4j.rxjava.RxImageData;
 import com.safframework.injectview.Injector;
 import com.safframework.injectview.annotations.InjectView;

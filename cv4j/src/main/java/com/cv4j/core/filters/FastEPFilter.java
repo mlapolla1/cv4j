@@ -15,8 +15,8 @@
  */
 package com.cv4j.core.filters;
 
-import com.cv4j.core.datamodel.ImageProcessor;
-import com.cv4j.core.datamodel.IntIntegralImage;
+import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.datamodel.number.IntIntegralImage;
 import com.cv4j.image.util.Tools;
 
 /**

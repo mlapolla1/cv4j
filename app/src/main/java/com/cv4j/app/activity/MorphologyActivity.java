@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.binary.ConnectedAreaLabel;
-import com.cv4j.core.binary.MorphOpen;
+import com.cv4j.core.binary.morph.MorphOpen;
 import com.cv4j.core.binary.Threshold;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.CV4JImage;

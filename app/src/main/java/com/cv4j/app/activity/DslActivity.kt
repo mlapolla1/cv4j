@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
 import com.cv4j.app.R
-import com.cv4j.core.filters.NatureFilter
+import com.cv4j.core.filters.effect.NatureFilter
 import com.cv4j.rxjava.cv4j
 import thereisnospon.codeview.CodeView
 import thereisnospon.codeview.CodeViewTheme

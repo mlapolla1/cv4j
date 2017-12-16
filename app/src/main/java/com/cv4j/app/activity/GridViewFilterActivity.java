@@ -36,14 +36,6 @@ public class GridViewFilterActivity extends BaseActivity {
     @InjectExtra(key = "Title")
     String title;
 
-    private static RecycledViewPool myPool = new RecycledViewPool();
-
-    static {
-        final int maxRecycledViews1 = 0;
-        final int maxRecycledViews2 = 10;
-        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +63,12 @@ public class GridViewFilterActivity extends BaseActivity {
         recyclerview.setLayoutManager(manager);
         recyclerview.setAdapter(new GridViewFilterAdapter(list,bitmap));
         recyclerview.addItemDecoration(new DividerGridItemDecoration(GridViewFilterActivity.this));
+
+        RecycledViewPool myPool = new RecycledViewPool();
+        final int maxRecycledViews1 = 0;
+        final int maxRecycledViews2 = 10;
+        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
+
         recyclerview.setRecycledViewPool(myPool);
     }
 

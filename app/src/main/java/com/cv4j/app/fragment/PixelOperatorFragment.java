@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.cv4j.app.R;
 import com.cv4j.app.activity.PixelOperatorActivity;
 import com.cv4j.app.activity.PrincipalColorExtractorActivity;
-import com.cv4j.app.activity.SubImageActivity;
+import com.cv4j.app.activity.Example.SubImageActivity;
 import com.cv4j.app.app.BaseFragment;
 import com.safframework.injectview.Injector;
 import com.safframework.injectview.annotations.InjectView;

@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cv4j.app.R;
-import com.cv4j.app.activity.CoinsActivity;
+import com.cv4j.app.activity.Example.CoinsActivity;
 import com.cv4j.app.activity.ContourAnalysisActivity;
-import com.cv4j.app.activity.DetectQRActivity;
-import com.cv4j.app.activity.LineDetectionActivity;
+import com.cv4j.app.activity.Detect.DetectQRActivity;
+import com.cv4j.app.activity.Detect.LineDetectionActivity;
 import com.cv4j.app.activity.MorphologyActivity;
 import com.cv4j.app.app.BaseFragment;
 import com.safframework.injectview.Injector;

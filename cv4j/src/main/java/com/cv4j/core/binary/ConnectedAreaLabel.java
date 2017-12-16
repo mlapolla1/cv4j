@@ -167,19 +167,19 @@ public class ConnectedAreaLabel {
                 labels[currlabel] = currlabel;
                 currlabel++;
             } else {
-                Arrays.sort(twoLabels);
-                int smallestLabel = twoLabels[0];
-                if (twoLabels[0] < 0) {
-                    smallestLabel = twoLabels[1];
-                }
-                pixels[offset] = smallestLabel;
-
-                something1(labels, twoLabels, smallestLabel);
+                something1(pixels, labels, twoLabels, offset);
             }
         }
     }
 
-    private void something1(int[] labels, int[] twoLabels, int smallestLabel) {
+    private void something1(int[] pixels, int[] labels, int[] twoLabels, int offset) {
+        Arrays.sort(twoLabels);
+        int smallestLabel = twoLabels[0];
+        if (twoLabels[0] < 0) {
+            smallestLabel = twoLabels[1];
+        }
+        pixels[offset] = smallestLabel;
+
         for (int twoLabel : twoLabels) {
             if (twoLabel < 0) {
                 continue;

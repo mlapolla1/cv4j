@@ -19,6 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.cv4j.core.datamodel.image.ImageData;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.exception.CV4JException;
 import com.cv4j.image.util.IOUtils;
 
@@ -27,7 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
+
 /**
  * The CV4JImage class of DataModel
  */

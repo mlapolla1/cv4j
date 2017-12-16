@@ -15,6 +15,7 @@
  */
 package com.cv4j.core.binary;
 
+import com.cv4j.core.binary.Contour.CourtEdge;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.exception.CV4JException;
 

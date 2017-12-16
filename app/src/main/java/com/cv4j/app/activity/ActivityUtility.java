@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class ActivityUtility {
 
-	public void subInitData(CV4JImage cv4JImage, int[] mask) {
+	public Bitmap subInitData(CV4JImage cv4JImage, int[] mask) {
 
         SparseIntArray colors = new SparseIntArray();
         Random random = new Random();
@@ -37,6 +37,6 @@ public class ActivityUtility {
                 }
             }
         }
-
+        return newBitmap;
 	}
 }

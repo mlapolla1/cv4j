@@ -18,11 +18,11 @@ package com.cv4j.image.util;
 import android.util.Log;
 
 import com.cv4j.core.binary.ConnectedAreaLabel;
-import com.cv4j.core.binary.MorphOpen;
+import com.cv4j.core.binary.morph.MorphOpen;
 import com.cv4j.core.binary.Threshold;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.CV4JImage;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
 import com.cv4j.core.datamodel.Size;
 

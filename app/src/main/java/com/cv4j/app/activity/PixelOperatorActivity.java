@@ -19,7 +19,6 @@ package com.cv4j.app.activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
@@ -28,7 +27,7 @@ import android.widget.ImageView;
 import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.datamodel.CV4JImage;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
 import com.cv4j.core.pixels.Operator;
 import com.cv4j.core.pixels.OperatorFunction;
@@ -37,8 +36,6 @@ import com.cv4j.exception.CV4JException;
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;
-
-import java.util.concurrent.Callable;
 
 /**
  * Created by tony on 2017/11/5.

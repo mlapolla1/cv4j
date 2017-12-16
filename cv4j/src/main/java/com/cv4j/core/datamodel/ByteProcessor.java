@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 package com.cv4j.core.datamodel;
+
+import com.cv4j.core.datamodel.image.ImageData;
+import com.cv4j.core.datamodel.image.ImageProcessor;
+
 /**
  * The ByteProcessor class of DataModel
  */

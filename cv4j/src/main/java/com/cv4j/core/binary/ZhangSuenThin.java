@@ -64,149 +64,79 @@ public class ZhangSuenThin {
 	private boolean step1Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
 
-		int p1;
-		int p2;
-		int p3;
-		int p4;
-		int p5;
-		int p6;
-		int p7;
-		int p8;
-		int p9;
-
-		int offset;
-
 		for(int row=1; row<height-1; row++) {
-			offset = row * width;
-
 			for(int col=1; col<width-1; col++) {
-				p1 = calculateP1(input, row, col, width);
-				if(p1 == 0) {
-					continue;
-				}
-
-				p2 = calculateP2(input, row, col, width);
-				p3 = calculateP3(input, row, col, width);
-				p4 = calculateP4(input, row, col, width);
-				p5 = calculateP5(input, row, col, width);
-				p6 = calculateP6(input, row, col, width);
-				p7 = calculateP7(input, row, col, width);
-				p8 = calculateP8(input, row, col, width);
-				p9 = calculateP9(input, row, col, width);
-
-				// match 1 - foreground, 0 - background
-				p1 = normalizeRgbZeroOne(p1);
-				p2 = normalizeRgbZeroOne(p2);
-				p3 = normalizeRgbZeroOne(p3);
-				p4 = normalizeRgbZeroOne(p4);
-				p5 = normalizeRgbZeroOne(p5);
-				p6 = normalizeRgbZeroOne(p6);
-				p7 = normalizeRgbZeroOne(p7);
-				p8 = normalizeRgbZeroOne(p8);
-				p9 = normalizeRgbZeroOne(p9);
-				
-				int con1 = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-				String one = "01";
-
-				StringBuilder stringBuilder = new StringBuilder();
-				stringBuilder
-						.append(String.valueOf(p2))
-						.append(String.valueOf(p3))
-						.append(String.valueOf(p4))
-						.append(String.valueOf(p5))
-						.append(String.valueOf(p6))
-						.append(String.valueOf(p7))
-						.append(String.valueOf(p8))
-						.append(String.valueOf(p9))
-						.append(String.valueOf(p2));
-
-				String sequence = stringBuilder.toString();
-				int index1 = sequence.indexOf(one);
-				int index2 = sequence.lastIndexOf(one);
-				
-				int con3 = p2*p4*p6;
-				int con4 = p4*p6*p8;
-				
-				if((con1 >= 2 && con1 <= 6) && (index1 == index2) && con3 == 0 && con4 == 0) {
-					flagmap[offset+col] = 1;
-					stop = false;
-				}
-
+				stop = something(flagmap, input, row, col, width, height, stop);
 			}
 		}
+
 		return stop;
 	}
-	
+
+	private boolean something(int[] flagmap, byte[] input, int row, int col, int width, int height, boolean stop) {
+		int offset = row * width;
+
+		int p1 = calculateP1(input, row, col, width);
+		if(p1 == 0) {
+			return stop;
+		}
+
+		int p2 = calculateP2(input, row, col, width);
+		int p3 = calculateP3(input, row, col, width);
+		int p4 = calculateP4(input, row, col, width);
+		int p5 = calculateP5(input, row, col, width);
+		int p6 = calculateP6(input, row, col, width);
+		int p7 = calculateP7(input, row, col, width);
+		int p8 = calculateP8(input, row, col, width);
+		int p9 = calculateP9(input, row, col, width);
+
+		// match 1 - foreground, 0 - background
+		p1 = normalizeRgbZeroOne(p1);
+		p2 = normalizeRgbZeroOne(p2);
+		p3 = normalizeRgbZeroOne(p3);
+		p4 = normalizeRgbZeroOne(p4);
+		p5 = normalizeRgbZeroOne(p5);
+		p6 = normalizeRgbZeroOne(p6);
+		p7 = normalizeRgbZeroOne(p7);
+		p8 = normalizeRgbZeroOne(p8);
+		p9 = normalizeRgbZeroOne(p9);
+
+		int con1 = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+		String one = "01";
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder
+				.append(String.valueOf(p2))
+				.append(String.valueOf(p3))
+				.append(String.valueOf(p4))
+				.append(String.valueOf(p5))
+				.append(String.valueOf(p6))
+				.append(String.valueOf(p7))
+				.append(String.valueOf(p8))
+				.append(String.valueOf(p9))
+				.append(String.valueOf(p2));
+
+		String sequence = stringBuilder.toString();
+		int index1 = sequence.indexOf(one);
+		int index2 = sequence.lastIndexOf(one);
+
+		int con3 = p2*p4*p6;
+		int con4 = p4*p6*p8;
+
+		if((con1 >= 2 && con1 <= 6) && (index1 == index2) && con3 == 0 && con4 == 0) {
+			flagmap[offset+col] = 1;
+			stop = false;
+		}
+
+		return stop;
+	}
+
 	private boolean step2Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;
 
-		int p1;
-		int p2;
-		int p3;
-		int p4;
-		int p5;
-		int p6;
-		int p7;
-		int p8;
-		int p9;
-
-		int offset;
-
 		for(int row=1; row<height-1; row++) {
-			offset = row*width;
-
 			for(int col=1; col<width-1; col++) {
-				p1 = calculateP1(input, row, col, width);
-				if(p1 == 0) {
-					continue;
-				}
-
-				p2 = calculateP2(input, row, col, width);
-				p3 = calculateP3(input, row, col, width);
-				p4 = calculateP4(input, row, col, width);
-				p5 = calculateP5(input, row, col, width);
-				p6 = calculateP6(input, row, col, width);
-				p7 = calculateP7(input, row, col, width);
-				p8 = calculateP8(input, row, col, width);
-				p9 = calculateP9(input, row, col, width);
-
-				// match 1 - foreground, 0 - background
-				p1 = normalizeRgbZeroOne(p1);
-				p2 = normalizeRgbZeroOne(p2);
-				p3 = normalizeRgbZeroOne(p3);
-				p4 = normalizeRgbZeroOne(p4);
-				p5 = normalizeRgbZeroOne(p5);
-				p6 = normalizeRgbZeroOne(p6);
-				p7 = normalizeRgbZeroOne(p7);
-				p8 = normalizeRgbZeroOne(p8);
-				p9 = normalizeRgbZeroOne(p9);
-				
-				int con1 = (p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9);
-
-				StringBuilder stringBuilder = new StringBuilder();
-				stringBuilder
-						.append(String.valueOf(p2))
-						.append(String.valueOf(p3))
-						.append(String.valueOf(p4))
-						.append(String.valueOf(p5))
-						.append(String.valueOf(p6))
-						.append(String.valueOf(p7))
-						.append(String.valueOf(p8))
-						.append(String.valueOf(p9))
-						.append(String.valueOf(p2));
-
-				String sequence = stringBuilder.toString();
-				int index1 = sequence.indexOf("01");
-				int index2 = sequence.lastIndexOf("01");
-				
-				int con3 = (p2 * p4 * p8);
-				int con4 = (p2 * p6 * p8);
-				
-				if((con1 >= 2 && con1 <= 6) && (index1 == index2) && con3 == 0 && con4 == 0) {
-					flagmap[offset+col] = 1;
-					stop = false;
-				}
-
+				stop = something(flagmap, input, row, col, width, height, stop);
 			}
 		}
 		return stop;

@@ -28,7 +28,7 @@ import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.datamodel.ColorProcessor;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Scalar;
 import com.cv4j.core.pixels.PrincipalColorExtractor;
 import com.safframework.injectview.annotations.InjectExtra;

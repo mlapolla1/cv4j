@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
 
-        Fragment mContent;
+        Fragment mContent = null;
         doubleClickExitHelper = new DoubleClickExitUtils(this);
 
         if (mContent == null) {

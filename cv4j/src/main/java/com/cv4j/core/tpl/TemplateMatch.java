@@ -17,8 +17,8 @@ package com.cv4j.core.tpl;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
-import com.cv4j.core.datamodel.FloatProcessor;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.number.FloatProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Point;
 import com.cv4j.image.util.Tools;
 

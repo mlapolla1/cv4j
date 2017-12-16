@@ -17,7 +17,7 @@ package com.cv4j.core.hist;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 
 /**
  * BackProjectHist.

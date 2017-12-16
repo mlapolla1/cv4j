@@ -15,6 +15,8 @@
  */
 package com.cv4j.core.datamodel;
 
+import com.cv4j.core.datamodel.image.ImageData;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.exception.CV4JException;
 /**
  * The ColorProcessor class of DataModel

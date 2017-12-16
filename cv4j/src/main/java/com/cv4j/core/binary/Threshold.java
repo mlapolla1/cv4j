@@ -19,7 +19,7 @@ import android.util.SparseArray;
 
 import com.cv4j.core.binary.functions.ThresholdFunction;
 import com.cv4j.core.datamodel.ByteProcessor;
-import com.cv4j.core.datamodel.IntIntegralImage;
+import com.cv4j.core.datamodel.number.IntIntegralImage;
 /**
  * The Threshold class
  */

@@ -17,18 +17,22 @@ package com.cv4j.core.datamodel.lut;
 
 import android.util.SparseArray;
 
-import static com.cv4j.core.filters.ColorFilter.AUTUMN_STYLE;
-import static com.cv4j.core.filters.ColorFilter.BONE_STYLE;
-import static com.cv4j.core.filters.ColorFilter.COOL_STYLE;
-import static com.cv4j.core.filters.ColorFilter.HOT_STYLE;
-import static com.cv4j.core.filters.ColorFilter.HSV_STYLE;
-import static com.cv4j.core.filters.ColorFilter.JET_STYLE;
-import static com.cv4j.core.filters.ColorFilter.OCEAN_STYLE;
-import static com.cv4j.core.filters.ColorFilter.PINK_STYLE;
-import static com.cv4j.core.filters.ColorFilter.RAINBOW_STYLE;
-import static com.cv4j.core.filters.ColorFilter.SPRING_STYLE;
-import static com.cv4j.core.filters.ColorFilter.SUMMER_STYLE;
-import static com.cv4j.core.filters.ColorFilter.WINTER_STYLE;
+import com.cv4j.core.datamodel.lut.warm.AutumnLUT;
+import com.cv4j.core.datamodel.lut.warm.HotLUT;
+import com.cv4j.core.datamodel.lut.warm.SpringLUT;
+
+import static com.cv4j.core.filters.image.ColorFilter.AUTUMN_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.BONE_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.COOL_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.HOT_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.HSV_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.JET_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.OCEAN_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.PINK_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.RAINBOW_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.SPRING_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.SUMMER_STYLE;
+import static com.cv4j.core.filters.image.ColorFilter.WINTER_STYLE;
 /**
  * The LUT class
  */
@@ -44,6 +48,8 @@ public class LUT {
      * Initialization of the class LUT.
      */
     private static void init() {
+        initialized = true;
+
         luts = new SparseArray<int[][]>(12);
         luts.append(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
         luts.append(BONE_STYLE, BoneLUT.BONE_LUT);
@@ -71,5 +77,9 @@ public class LUT {
         }
 
         return lutStyle;
+    }
+
+    public static boolean isInitialized() {
+        return initialized;
     }
 }

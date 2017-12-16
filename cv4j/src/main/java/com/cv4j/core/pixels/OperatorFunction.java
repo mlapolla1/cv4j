@@ -1,6 +1,6 @@
 package com.cv4j.core.pixels;
 
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 
 /**
  * Created by michelelapolla on 12/13/17.
