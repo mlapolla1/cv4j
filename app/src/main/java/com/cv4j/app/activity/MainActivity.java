@@ -35,7 +35,6 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
 
     private MenuManager menuManager;
-    private Fragment mContent;
     private DoubleClickExitUtils doubleClickExitHelper;
     private SparseArray<MenuManager.MenuType> menuArray;
 
@@ -71,6 +70,7 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
 
+        Fragment mContent;
         doubleClickExitHelper = new DoubleClickExitUtils(this);
 
         if (mContent == null) {

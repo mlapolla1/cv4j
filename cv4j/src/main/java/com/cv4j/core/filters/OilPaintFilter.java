@@ -23,15 +23,25 @@ import com.cv4j.core.datamodel.ImageProcessor;
  */
 public class OilPaintFilter extends BaseFilter {
 
+    /**
+     * Default radius value.
+     */
+    private static final int RADIUS_DEFAULT = 15;
+
+    /**
+     * Default intensity value.
+     */
+    private static final int INTENSITY_DEFAULT = 40;
+
     private int radius = 15; // default value
     private int intensity = 40; // default value
 
     public OilPaintFilter() {
-        this(radius, intensity);
+        this(RADIUS_DEFAULT, INTENSITY_DEFAULT);
     }
 
     public OilPaintFilter(int radius, int graylevel) {
-        this.radius = radius;
+        this.radius    = radius;
         this.intensity = graylevel;
     }
 

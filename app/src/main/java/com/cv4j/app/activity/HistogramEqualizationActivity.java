@@ -89,10 +89,10 @@ public class HistogramEqualizationActivity extends BaseActivity {
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         int point1 = 0;
-        int pont2 = 0;
+        int point2 = 0;
         canvas.drawRect(point1,point2,histNumber,histNumber,paint);
 
-        int histNumberFloat = 512.0f
+        float histNumberFloat = 512.0f;
         float step = histNumberFloat/bins;
         int xoffset;
         int yoffset;

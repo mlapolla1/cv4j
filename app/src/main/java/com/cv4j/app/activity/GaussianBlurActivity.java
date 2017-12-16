@@ -96,7 +96,7 @@ public class GaussianBlurActivity extends BaseActivity {
         Allocation allIn = Allocation.createFromBitmap(rs, image);
         Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
         //Set the radius of the blur: 0 < radius <= 25
-        int radius = 20.0f;
+        int radius = 20;
         blurScript.setRadius(radius);
         //Perform the Renderscript
         blurScript.setInput(allIn);

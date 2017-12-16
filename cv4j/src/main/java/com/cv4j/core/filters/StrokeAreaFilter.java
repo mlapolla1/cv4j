@@ -25,14 +25,16 @@ import static com.cv4j.image.util.Tools.clamp;
  */
 public class StrokeAreaFilter extends BaseFilter {
 
-    // default value, optional value 30, 15, 10, 5, 2
-    private double size = 10;
+    /**
+     * Default size value.
+     */
+    private static final int SIZE_DEFAULT = 15;
 
-    private final static double d02 = 150*150;
+    // default value, optional value 30, 15, 10, 5, 2
+    private double size;
 
     public StrokeAreaFilter() {
-        int size = 15;
-        this(size);
+        this(SIZE_DEFAULT);
     }
 
     public StrokeAreaFilter(int strokeSize) {
@@ -52,8 +54,7 @@ public class StrokeAreaFilter extends BaseFilter {
 
         byte[][] output = new byte[3][R.length];
 
-        int index = 0;
-        int index2 = 0;
+        int index;
         int semiRow = (int)(size/2);
         int semiCol = (int)(size/2);
         int newX;
@@ -118,13 +119,17 @@ public class StrokeAreaFilter extends BaseFilter {
     }
 
     public static double colorDiff(int[] rgb1, int[] rgb2) {
+        final double d02 = 150*150;
+
         // (1-(d/d0)^2)^2
         double d2;
         double r2;
+
         d2 = colorDistance(rgb1, rgb2);
 
-        if (d2 >= d02)
+        if (d2 >= d02) {
             return 0.0;
+        }
 
         r2 = d2 / d02;
 

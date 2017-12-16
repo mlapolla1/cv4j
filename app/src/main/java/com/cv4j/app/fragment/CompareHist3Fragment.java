@@ -85,7 +85,7 @@ public class CompareHist3Fragment extends BaseFragment {
         String distance = "巴氏距离:";
         String covariance = "协方差:";
         String correlation = "相关性因子:";
-        String newline = "\r\n";
+        String newLine = "\r\n";
         sb.append(distance)
           .append(sum1 / sumLength)
           .append(newLine)

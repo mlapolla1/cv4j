@@ -32,8 +32,6 @@ import java.util.concurrent.ExecutorService;
 public class VarianceFilter extends BaseFilter {
 
 	private int radius;
-	private ExecutorService mExecutor;
-	private CompletionService<Void> service;
 
 	public VarianceFilter() {
 		radius = 1;
@@ -48,7 +46,8 @@ public class VarianceFilter extends BaseFilter {
 	}
 
 	public ImageProcessor doFilter(ImageProcessor src) {
-
+		ExecutorService mExecutor;
+		CompletionService<Void> service;
 		int numOfPixels = width * height;
 		byte[][] output = new byte[3][numOfPixels];
 

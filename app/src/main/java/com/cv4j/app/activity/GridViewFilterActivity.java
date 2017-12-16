@@ -36,12 +36,11 @@ public class GridViewFilterActivity extends BaseActivity {
     @InjectExtra(key = "Title")
     String title;
 
-    private List<String> list = new ArrayList<>();
-
     private static RecycledViewPool myPool = new RecycledViewPool();
-    int maxRecycledViews1 = 0;
-    int maxRecycledViews1 = 10;
+
     static {
+        final int maxRecycledViews1 = 0;
+        final int maxRecycledViews2 = 10;
         myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
     }
 
@@ -63,6 +62,7 @@ public class GridViewFilterActivity extends BaseActivity {
         Resources res = getResources();
         String[] filterNames = res.getStringArray(R.array.filterNames);
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_mm);
+        List<String> list = new ArrayList<>();
 
         list.addAll(Arrays.asList(filterNames));
         int gridLayoutManagerNumber = 3;

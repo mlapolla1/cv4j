@@ -31,15 +31,6 @@ public class SpitalConvFragment extends BaseFragment {
     @InjectView(R.id.recyclerview)
     GridRecyclerView recyclerview;
 
-    private List<String> list = new ArrayList<>();
-    
-    private static RecycledViewPool myPool = new RecycledViewPool();
-    int maxRecycledViews1 = 0;
-    int maxRecycledViews1 = 10;
-    static {
-        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_spital_conv, container, false);
@@ -51,9 +42,13 @@ public class SpitalConvFragment extends BaseFragment {
     }
 
     private void initData() {
-
         Resources res = getResources();
         Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_spital_conv);
+        List<String> list = new ArrayList<>();
+        RecycledViewPool myPool = new RecycledViewPool();
+        int maxRecycledViews1 = 0;
+        int maxRecycledViews2 = 10;
+        myPool.setMaxRecycledViews(maxRecycledViews1, maxRecycledViews2);
 
         String[] filterNames = res.getStringArray(R.array.spatialConvNames);
         if (Preconditions.isNotBlank(filterNames)) {

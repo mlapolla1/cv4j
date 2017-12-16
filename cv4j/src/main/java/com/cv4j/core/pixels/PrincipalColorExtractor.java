@@ -26,22 +26,24 @@ import com.cv4j.core.datamodel.Scalar;
  * The principal color extractor.
  */
 public class PrincipalColorExtractor {
+	/**
+	 * The default number of clusters.
+	 */
+	private static final int NUM_CLUSTERS_DEFAULT = 5;
+
 	private List<ClusterCenter> clusterCenterList;
 	private List<ClusterPoint> pointList;
 	
 	private int numOfCluster;
 	
-	public PrincipalColorExtractor(int clusters)
-	{
+	public PrincipalColorExtractor(int clusters) {
 		this.numOfCluster = clusters;
-		pointList = new ArrayList<ClusterPoint>();
-		clusterCenterList = new ArrayList<ClusterCenter>();
+		this.pointList = new ArrayList<>();
+		this.clusterCenterList = new ArrayList<>();
 	}
 	
-	public PrincipalColorExtractor()
-	{
-		int clusters = 5;
-		this(clusters);
+	public PrincipalColorExtractor() {
+		this(NUM_CLUSTERS_DEFAULT);
 	}
 
 	public List<Scalar> extract(ColorProcessor processor) {
@@ -229,16 +231,18 @@ public class PrincipalColorExtractor {
 	 * @param c
 	 * @return distance value
 	 */
-	private double calculateEuclideanDistance(ClusterPoint p, ClusterCenter c) 
-	{
+	private double calculateEuclideanDistance(ClusterPoint p, ClusterCenter c) {
 	    int pr = p.getPixelColor().red;
 	    int pg = p.getPixelColor().green;
 	    int pb = p.getPixelColor().blue;
 	    int cr = c.getPixelColor().red;
 	    int cg = c.getPixelColor().green;
 	    int cb = c.getPixelColor().blue;
-	    float factor = 2.0;
-	    return Math.sqrt(Math.pow((pr - cr), factor) + Math.pow((pg - cg), factor) + Math.pow((pb - cb), factor));
+
+	    float factor = 2f;
+	    double euclideanDistance = Math.sqrt(Math.pow((pr - cr), factor) + Math.pow((pg - cg), factor) + Math.pow((pb - cb), factor));
+
+		return euclideanDistance;
 	}
 
 }

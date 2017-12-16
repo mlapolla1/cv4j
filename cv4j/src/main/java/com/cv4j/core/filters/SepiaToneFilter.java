@@ -26,24 +26,24 @@ public class SepiaToneFilter extends BaseFilter {
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
 
-        int total = width*height;
-		int r=0;
-		int g=0;
-		int b=0;
+        int total = width * height;
+		int r;
+		int g;
+		int b;
         for(int i=0; i<total; i++) {
 			r = R[i] & 0xff;
 			g = G[i] & 0xff;
 			b = B[i] & 0xff;
 
-			int r1 = 0.393;
-			int r2 = 349;
-			int r3 = 272;
-			int g1 = 0.769;
-			int g2 = 0.686;
-			int g3 = 0.534;
-			int b1 = 0.189;
-			int b2 = 0.168;
-			int b3 = 0.131;
+			float r1 = 0.393f;
+			int   r2 = 349;
+			int   r3 = 272;
+			float g1 = 0.769f;
+			float g2 = 0.686f;
+			float g3 = 0.534f;
+			float b1 = 0.189f;
+			float b2 = 0.168f;
+			float b3 = 0.131f;
 			r = (int) colorBlend(noise(), (r * r1) + (g * g1) + (b * b1), r);
 			g = (int) colorBlend(noise(), (r * r2) + (g * g2) + (b * b2), g);
 			b = (int) colorBlend(noise(), (r * r3) + (g * g3) + (b * b3), b);
@@ -56,8 +56,8 @@ public class SepiaToneFilter extends BaseFilter {
 	}
 	
 	private double noise() {
-		float noiseFactor = 0.5;
-		return Math.random()*noiseFactor + noiseFactor;
+		float noiseFactor = 0.5f;
+		return (Math.random() * noiseFactor) + noiseFactor;
 	}
 	
 	private double colorBlend(double scale, double dest, double src) {

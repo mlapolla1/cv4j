@@ -41,12 +41,6 @@ import com.safframework.injectview.annotations.InjectView;
 
 public class BackProjectFragment extends BaseFragment {
 
-    @InjectView(R.id.target_image)
-    ImageView targetImage;
-
-    @InjectView(R.id.sample_image)
-    ImageView sampleImage;
-
     @InjectView(R.id.result)
     ImageView result;
 
@@ -66,10 +60,17 @@ public class BackProjectFragment extends BaseFragment {
         BackFragment bf = new BackFragment();
         bf.initData(res);
 
-        int bins = 16;
+
+
+        ColorProcessor colorProcessor  = bf.getColorProcessor();
+        ColorProcessor sampleProcessor = bf.getSampleProcessor();
+        ByteProcessor  byteProcessor   = bf.getByteProcessor();
+
+        final int bins = 16;
 
         BackProjectHist backProjectHist = new BackProjectHist();
-        backProjectHist.backProjection(colorProcessor,byteProcessor, CalcHistogram.calculateNormHist(sampleProcessor,bins),bins);
+        int[] normHistogram = CalcHistogram.calculateNormHist(sampleProcessor, bins);
+        backProjectHist.backProjection(colorProcessor, byteProcessor, normHistogram, bins);
 
         result.setImageBitmap(byteProcessor.getImage().toBitmap());
     }

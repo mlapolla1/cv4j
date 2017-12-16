@@ -87,24 +87,24 @@ public class PrincipalColorExtractorActivity extends BaseActivity {
 
         PrincipalColorExtractor extractor = new PrincipalColorExtractor();
         List<Scalar> scalars = extractor.extract((ColorProcessor)imageProcessor);
-        int scalar0 = 0;
-        Scalar scalar0 = scalars.get(scalar0);
+        int scalar0Value = 0;
+        Scalar scalar0 = scalars.get(scalar0Value);
         result0.setBackgroundColor(Color.rgb(scalar0.red, scalar0.green, scalar0.blue));
 
-        int scalar1 = 1;
-        Scalar scalar1 = scalars.get(scalar1);
+        int scalar1Value = 1;
+        Scalar scalar1 = scalars.get(scalar1Value);
         result1.setBackgroundColor(Color.rgb(scalar1.red, scalar1.green, scalar1.blue));
 
-        int scalar2 = 2;
-        Scalar scalar2 = scalars.get(scalar2);
+        int scalar2Value = 2;
+        Scalar scalar2 = scalars.get(scalar2Value);
         result2.setBackgroundColor(Color.rgb(scalar2.red, scalar2.green, scalar2.blue));
 
-        int scalar3 = 3;
-        Scalar scalar3 = scalars.get(scalar3);
+        int scalar3Value = 3;
+        Scalar scalar3 = scalars.get(scalar3Value);
         result3.setBackgroundColor(Color.rgb(scalar3.red, scalar3.green, scalar3.blue));
 
-        int scalar4 = 4;
-        Scalar scalar4 = scalars.get(scalar4);
+        int scalar4Value = 4;
+        Scalar scalar4 = scalars.get(scalar4Value);
         result4.setBackgroundColor(Color.rgb(scalar4.red, scalar4.green, scalar4.blue));
     }
 }

@@ -99,7 +99,7 @@ public class ContourAnalysisActivity extends BaseActivity {
 
                 int c = mask[row*width+col];
                 if (c>=0) {
-                    newBitmap.setPixel(col,row,colors.get(c));
+                    newBitmap.setPixel(col,row, colors.get(c));
                 }
             }
         }

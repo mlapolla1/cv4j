@@ -75,7 +75,7 @@ public class EqualHist {
 
     private int getNewintensityRate(int[] grayHis, double total, int index) {
         double sum = 0;
-        float maxRgb = 255.0;
+        float maxRgb = 255f;
         for(int i=0; i<=index; i++) {
             sum += ((double)grayHis[i])/total;
         }

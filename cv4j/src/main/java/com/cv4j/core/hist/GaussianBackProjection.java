@@ -30,6 +30,7 @@ public class GaussianBackProjection {
         if(src.getChannels() == 1 || model.getChannels() == 1) {
             throw new CV4JException("did not support image type : single-channel...");
         }
+
         float[] R = model.toFloat(0);
         float[] G = model.toFloat(1);
         int r = 0;
@@ -39,9 +40,10 @@ public class GaussianBackProjection {
         int mw = model.getWidth();
         int mh = model.getHeight();
         int index = 0;
-        indexb = 2;
-        indexg = 1;
-        indexr = 0;
+        int indexb = 2;
+        int indexg = 1;
+        int indexr = 0;
+
         for (int row = 0; row < mh; row++) {
             for (int col = 0; col < mw; col++) {
                 index = row*mw + col;

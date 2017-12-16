@@ -22,7 +22,6 @@ public class ByteProcessor implements ImageProcessor {
     private int width;
     private int height;
     private byte[] GRAY;
-    private int[] hist;
     private ImageData image;
 
     public ByteProcessor(int width, int height) {
@@ -32,6 +31,7 @@ public class ByteProcessor implements ImageProcessor {
     }
     
     public ByteProcessor(byte[] data, int width, int height) {
+        int[] hist;
         this.width = width;
         this.height = height;
         this.GRAY = data;
@@ -83,8 +83,9 @@ public class ByteProcessor implements ImageProcessor {
     public int[] getPixels() {
         int size = width * height;
         int[] pixels = new int[size];
-        for (int i=0; i < size; i++)
+        for (int i=0; i < size; i++){
             pixels[i] = 0xff000000 | ((GRAY[i]&0xff)<<16) | ((GRAY[i]&0xff)<<8) | GRAY[i]&0xff;
+        }
         return pixels;
     }
     public ImageData getImage() {
@@ -95,16 +96,18 @@ public class ByteProcessor implements ImageProcessor {
     @Override
     public float[] toFloat(int index) {
         float[] data = new float[GRAY.length];
-        for(int i=0; i<data.length; i++)
+        for(int i=0; i<data.length; i++){
             data[i] = GRAY[i]&0xff;
+        }
         return data;
     }
 
     @Override
     public int[] toInt(int index) {
         int[] data = new int[GRAY.length];
-        for(int i=0; i<data.length; i++)
+        for(int i=0; i<data.length; i++){
             data[i] = GRAY[i]&0xff;
+        }
         return data;
     }
 

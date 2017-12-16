@@ -37,8 +37,6 @@ public class CompareHistActivity extends BaseActivity {
     @InjectExtra(key = "Title")
     String title;
 
-    private List<Fragment> mList = new ArrayList();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +46,7 @@ public class CompareHistActivity extends BaseActivity {
     }
 
     private void initData() {
+        List<Fragment> mList = new ArrayList<>();
 
         toolbar.setTitle("< "+title);
 

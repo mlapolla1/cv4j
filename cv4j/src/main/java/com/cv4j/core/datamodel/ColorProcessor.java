@@ -112,8 +112,9 @@ public class ColorProcessor implements ImageProcessor {
     public int[] getPixels() {
         int size = width * height;
         int[] pixels = new int[size];
-        for (int i=0; i < size; i++)
+        for (int i=0; i < size; i++){
             pixels[i] = 0xff000000 | ((R[i]&0xff)<<16) | ((G[i]&0xff)<<8) | B[i]&0xff;
+        }
 
         return pixels;
     }
@@ -131,22 +132,25 @@ public class ColorProcessor implements ImageProcessor {
         if(index == 0) {
             float[] data = new float[R.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = R[i]&0xff;
+            }
             return data;
         }
         else if(index == 1) {
             float[] data = new float[G.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = G[i]&0xff;
+            }
             return data;
         }
         else if(index == 2) {
             float[] data = new float[B.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = B[i]&0xff;
+            }
             return data;
         } else {
             throw new CV4JException("invalid argument...");
@@ -159,22 +163,25 @@ public class ColorProcessor implements ImageProcessor {
         if(index == 0) {
             int[] data = new int[R.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = R[i]&0xff;
+            }
             return data;
         }
         else if(index == 1) {
             int[] data = new int[G.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = G[i]&0xff;
+            }
             return data;
         }
         else if(index == 2) {
             int[] data = new int[B.length];
             int length = data.length;
-            for(int i=0; i<length; i++)
+            for(int i=0; i<length; i++){
                 data[i] = B[i]&0xff;
+            }
             return data;
         } else {
             throw new CV4JException("invalid argument...");

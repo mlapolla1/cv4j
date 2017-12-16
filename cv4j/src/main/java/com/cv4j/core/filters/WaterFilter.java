@@ -25,10 +25,6 @@ import com.cv4j.image.util.Tools;
 public class WaterFilter extends BaseFilter {
 
 	private float wavelength = 16;
-	private final float amplitude = 10;
-	private final float phase = 0;
-	private final float centreX = 0.5f;
-	private final float centreY = 0.5f;
 	private float radius = 50;
 	private float radius2 = 0;
 	private float icentreX;
@@ -52,7 +48,8 @@ public class WaterFilter extends BaseFilter {
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
-
+		final float centreX = 0.5f;
+		final float centreY = 0.5f;
 		int total = width*height;
 		int[] inPixels = src.getPixels();
 		byte[][] output = new byte[3][total];
@@ -119,6 +116,8 @@ public class WaterFilter extends BaseFilter {
 	}
 
 	protected void generateWaterRipples(int x, int y, float[] out) {
+		final float amplitude = 10;
+		final float phase = 0;
 		float dx = x-icentreX;
 		float dy = y-icentreY;
 		float distance2 = dx*dx + dy*dy;

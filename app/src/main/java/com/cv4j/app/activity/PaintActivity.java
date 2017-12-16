@@ -35,8 +35,6 @@ public class PaintActivity extends BaseActivity {
     @InjectExtra(key = "Title")
     String title;
 
-    private List<Fragment> mList = new ArrayList();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +44,7 @@ public class PaintActivity extends BaseActivity {
     }
 
     private void initData() {
-
+        List<Fragment> mList = new ArrayList();
         toolbar.setTitle("< "+title);
         int instance0 = 0;
         int instance1 = 1;

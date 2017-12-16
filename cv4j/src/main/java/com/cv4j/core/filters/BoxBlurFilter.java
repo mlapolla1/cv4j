@@ -49,8 +49,9 @@ public class BoxBlurFilter extends BaseFilter {
         // the value scope will be 0 to 255, and number of 0 is table size
         // will get means from index not calculate result again since 
         // color value must be  between 0 and 255.
-        for ( int i = 0; i < 256*tableSize; i++ )
+        for ( int i = 0; i < 256*tableSize; i++ ){
             divide[i] = i/tableSize; 
+        }
 
         int inIndex = 0;
 

@@ -87,8 +87,9 @@ public class FloatProcessor implements ImageProcessor {
     @Override
     public int[] toInt(int index) {
         int[] data = new int[GRAY.length];
-        for(int i=0; i<data.length; i++)
+        for(int i=0; i<data.length; i++){
             data[i] = (int)GRAY[i];
+        }
         return data;
     }
 

@@ -67,7 +67,7 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
     public void onBindViewHolder(final SpitalConvAdapter.ViewHolder holder, int position) {
 
         if (position == 0) {
-            holder.image.setImageBitmap(mBitmap);
+            holder.getImage().setImageBitmap(mBitmap);
         } else {
             String filterName = mList.get(position);
             if (Preconditions.isNotBlank(filterName)) {
@@ -75,11 +75,11 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
                 RxImageData.bitmap(mBitmap)
 //                        .placeHolder(R.drawable.test_spital_conv)
                         .addFilter(filter)
-                        .into(holder.image);
+                        .into(holder.getImage());
             }
         }
 
-        holder.text.setText(map.get(position));
+        holder.getText().setText(map.get(position));
     }
 
     private CommonFilter getFilter(String filterName) {
@@ -104,21 +104,35 @@ public class SpitalConvAdapter extends RecyclerView.Adapter<SpitalConvAdapter.Vi
     public int getItemCount() {
         return mList!=null?mList.size():0;
     }
+
     /**
-     * A ViewHolder describes an item view and metadata about its place within the RecyclerView. 
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        /**
+         * Image view.
+         */
         private ImageView image;
 
+        /**
+         * Text view.
+         */
         private TextView text;
 
         public ViewHolder(ViewGroup parent, @LayoutRes int resId) {
             super(LayoutInflater.from(parent.getContext()).inflate(resId, parent, false));
 
-            image = (ImageView)itemView.findViewById(R.id.image);
+            this.image = itemView.findViewById(R.id.image);
+            this.text  = itemView.findViewById(R.id.text);
+        }
 
-            text = (TextView)itemView.findViewById(R.id.text);
+        public ImageView getImage() {
+            return image;
+        }
+
+        public TextView getText() {
+            return text;
         }
     }
 }

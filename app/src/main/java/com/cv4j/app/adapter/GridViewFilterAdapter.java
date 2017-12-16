@@ -40,19 +40,19 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
         String filterName = mList.get(position);
 
         if (position == 0) {
-            holder.image.setImageBitmap(mBitmap);
+            holder.getImage().setImageBitmap(mBitmap);
         } else {
 
             if (Preconditions.isNotBlank(filterName)) {
                 CommonFilter filter = getFilter(filterName);
                 RxImageData.bitmap(mBitmap)
                         .addFilter(filter)
-                        .into(holder.image);
+                        .into(holder.getImage());
             }
 
         }
 
-        holder.text.setText(filterName);
+        holder.getText().setText(filterName);
     }
 
     private CommonFilter getFilter(String filterName) {
@@ -77,21 +77,35 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
     public int getItemCount() {
         return mList!=null?mList.size():0;
     }
+
     /**
-     * A ViewHolder describes an item view and metadata about its place within the RecyclerView. 
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        /**
+         * Image view.
+         */
         private ImageView image;
 
+        /**
+         * Text view.
+         */
         private TextView text;
 
         public ViewHolder(ViewGroup parent, @LayoutRes int resId) {
             super(LayoutInflater.from(parent.getContext()).inflate(resId, parent, false));
 
-            image = (ImageView)itemView.findViewById(R.id.image);
+            this.image = (ImageView)itemView.findViewById(R.id.image);
+            this.text = (TextView)itemView.findViewById(R.id.text);
+        }
 
-            text = (TextView)itemView.findViewById(R.id.text);
+        public ImageView getImage() {
+            return image;
+        }
+
+        public TextView getText() {
+            return text;
         }
     }
 }

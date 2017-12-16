@@ -39,11 +39,13 @@ public class BeautySkinFilter implements CommonFilter {
         byte[] R = new byte[length];
         byte[] G = new byte[length];
         byte[] B = new byte[length];
+
         int index0 = 0;
-        System.arraycopy(src.toByte(index0), 0, R, 0, R.length);
         int index1 = 1;
-        System.arraycopy(src.toByte(index1), 0, G, 0, G.length);
         int index2 = 2;
+
+        System.arraycopy(src.toByte(index0), 0, R, 0, R.length);
+        System.arraycopy(src.toByte(index1), 0, G, 0, G.length);
         System.arraycopy(src.toByte(index2), 0, B, 0, B.length);
 
         FastEPFilter epFilter = new FastEPFilter();
@@ -55,7 +57,7 @@ public class BeautySkinFilter implements CommonFilter {
         int r = 0;
         int g = 0;
         int b = 0;
-        byte maxRgb = 255;
+        byte maxRgb = (byte) 255;
         for (int i = 0; i < R.length; i++) {
             r = R[i] & 0xff;
             g = G[i] & 0xff;
@@ -70,11 +72,8 @@ public class BeautySkinFilter implements CommonFilter {
         for (int i = 0; i < mask.length; i++) {
             int c = mask[i] & 0xff;
             if (c > 0) {
-                int index0 = 0;
                 src.toByte(index0)[i] = R[i];
-                int index1 = 1;
                 src.toByte(index1)[i] = G[i];
-                int index2 = 2;
                 src.toByte(index2)[i] = B[i];
             }
         }
@@ -84,6 +83,7 @@ public class BeautySkinFilter implements CommonFilter {
             r = R[i] & 0xff;
             g = G[i] & 0xff;
             b = B[i] & 0xff;
+
             c = (int) (0.299 * r + 0.587 * g + 0.114 * b);
             mask[i] = (byte) c;
         }
@@ -103,7 +103,7 @@ public class BeautySkinFilter implements CommonFilter {
         ii.setImage(mask);
         ii.process(width, height);
         byte[] blurmask = new byte[mask.length];
-        int offset = 0;
+        int offset;
         int swx = 5;
         int swy = 5;
         for (int row = 1; row < height - 1; row++) {
@@ -116,29 +116,21 @@ public class BeautySkinFilter implements CommonFilter {
         }
 
         // alpha blend
-        mask = null;
-        ii = null;
-        float w = 0.0f;
-        int wc = 0;
+        float w;
+        int wc;
         for (int i = 0; i < blurmask.length; i++) {
             wc = blurmask[i] & 0xff;
             w = wc / 255.0f;
 
-            int index0 = 0;
             r = (int) ((R[i] & 0xff) * w + (src.toByte(index0)[i] & 0xff) * (1.0f - w));
-            int index1 = 1;
             g = (int) ((G[i] & 0xff) * w + (src.toByte(index1)[i] & 0xff) * (1.0f - w));
-            int index2 = 2;
             b = (int) ((B[i] & 0xff) * w + (src.toByte(index2)[i] & 0xff) * (1.0f - w));
 
             src.toByte(index0)[i] = (byte) r;
             src.toByte(index1)[i] = (byte) g;
             src.toByte(index2)[i] = (byte) b;
         }
-        R = null;
-        G = null;
-        B = null;
-        blurmask = null;
+
         return src;
     }
 }

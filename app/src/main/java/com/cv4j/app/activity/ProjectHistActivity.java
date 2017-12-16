@@ -36,8 +36,6 @@ public class ProjectHistActivity extends BaseActivity {
     @InjectExtra(key = "Title")
     String title;
 
-    private List<Fragment> mList = new ArrayList();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +45,7 @@ public class ProjectHistActivity extends BaseActivity {
     }
 
     private void initData() {
+        List<Fragment> mList = new ArrayList();
         toolbar.setTitle("< "+title);
 
         mList.add(new BackProjectFragment());

@@ -35,30 +35,37 @@ public class GeoMoments {
         measures.setCp(getCenterPoint(pixelList));
 
         int pm11 = 1;
-        int qm11 = 1;
+        int q11 = 1;
         double m11 = centralMoments(pixelList, pm11, q11);
+
         int pm02 = 0;
         int qm02 = 2;
         double m02 = centralMoments(pixelList, pm02, qm02);
+
         int pm20 = 2;
         int qm20 = 0;
         double m20 = centralMoments(pixelList, pm20, qm20);
+
         double m112 = m11 * m11;
         int power = 2;
         double dd = Math.pow((m20-m02), power);
+
         double m112x4 = 4*m112;
         double sum1 = Math.sqrt(dd + m112x4);
+
         double sum2 = m02 + m20;
         double a1 = sum2 + sum1;
         double a2 = sum2 - sum1;
 
-        double pi4 = Math.PI/4.0;
+        double pi4 = Math.PI / 4.0;
         double half = 2.0;
         double ra = Math.sqrt((power*a1)/Math.abs(pixelList.size()));
         double rb = Math.sqrt((power*a2)/Math.abs(pixelList.size()));
         double angle = ((m20 - m02) == 0) ? pi4 : Math.atan((power*m11)/(m20 - m02))/half;
+
         measures.setAngle(angle);
-        measures.setRoundness(rb == 0? Double.MAX_VALUE : ra/rb);
+        measures.setRoundness(rb == 0 ? Double.MAX_VALUE : (ra / rb));
+
         return measures;
     }
 

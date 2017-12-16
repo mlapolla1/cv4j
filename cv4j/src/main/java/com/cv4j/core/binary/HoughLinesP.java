@@ -34,7 +34,6 @@ public class HoughLinesP {
 	private int accSize;
 	private int width;
 	private int height;
-	private int accThreshold;
 
 	public HoughLinesP() {
 		setupCosLUT();
@@ -50,7 +49,7 @@ public class HoughLinesP {
 		int value;
 		int value_pos;
 		int max_value = findAccMaxValue(acc, rmax);
-		float maxRgb = 255.0;
+		float maxRgb = 255f;
 		int ex = 16;
 		int oct = 8;
 		for (int r = 0; r < rmax; r++) {
@@ -160,10 +159,11 @@ public class HoughLinesP {
 	 * @return
 	 */
 	public void process(ByteProcessor binary, int sizeAcc, int minGap, int minAcc, List<Line> rows) {
+		int accThreshold;
 		this.width        = binary.getWidth();
 		this.height       = binary.getHeight();
 		this.accSize      = sizeAcc; // 前K=accSize个累积值
-		this.accThreshold = minAcc;// 最小累积值
+		accThreshold = minAcc;// 最小累积值
 		
 		int rmax  = (int) Math.sqrt(width * width + height * height);
 		int[] acc = new int[rmax * DEGREE_180]; // 0 ~ 180角度范围

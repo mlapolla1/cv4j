@@ -33,6 +33,17 @@ public class DoubleClickExitUtils {
 	 * Activity onKeyDown事件
 	 */
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		final Runnable onBackTimeRunnable = new Runnable() {
+		
+			@Override
+			public void run() {
+				isOnKeyBacking = false;
+				if(mBackToast != null){
+					mBackToast.cancel();
+				}
+			}
+		};
+		
 		if(keyCode != KeyEvent.KEYCODE_BACK) {
 			return false;
 		}
@@ -48,24 +59,15 @@ public class DoubleClickExitUtils {
 			return true;
 		} else {
 			isOnKeyBacking = true;
-			int param = 2000;
+			final int param = 2000;
+
 			if(mBackToast == null) {
-				mBackToast = Toast.makeText(mActivity, R.string.finish_by_back_again, param);
+				mBackToast = Toast.makeText(mActivity, R.string.finish_by_back_again, Toast.LENGTH_LONG);
 			}
+
 			mBackToast.show();
 			mHandler.postDelayed(onBackTimeRunnable, param);
 			return true;
 		}
 	}
-	
-	private final Runnable onBackTimeRunnable = new Runnable() {
-		
-		@Override
-		public void run() {
-			isOnKeyBacking = false;
-			if(mBackToast != null){
-				mBackToast.cancel();
-			}
-		}
-	};
 }

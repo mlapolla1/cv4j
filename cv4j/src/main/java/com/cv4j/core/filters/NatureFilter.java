@@ -195,7 +195,7 @@ public class NatureFilter extends BaseFilter {
 				break;
 
 			case FREEZE_STYLE:
-				freezeFactor = 1.5;
+				float freezeFactor = 1.5f;
 				pixel[index1] = Tools.clamp((int)Math.abs((tr - tg - tb) * freezeFactor));
 				pixel[index2] = Tools.clamp((int)Math.abs((tg - tb - pixel[index1]) * freezeFactor));
 				pixel[index3] = Tools.clamp((int)Math.abs((tb - pixel[index1] - pixel[index2]) * freezeFactor));
@@ -203,7 +203,7 @@ public class NatureFilter extends BaseFilter {
 				break;
 
 			case LAVA_STYLE:
-				int lavaFactor = lavaFactor;
+				int lavaFactor = 128;
 				pixel[index1] = gray;
 				pixel[index2] = Math.abs(tb - lavaFactor);
 				pixel[index3] = Math.abs(tb - lavaFactor);
@@ -250,7 +250,7 @@ public class NatureFilter extends BaseFilter {
 
 			case WATER_STYLE:
 				pixel[index1] = Tools.clamp(gray - tg - tb);
-				pixel[v2] = Tools.clamp(gray - pixel[index1] - tb);
+				pixel[index2] = Tools.clamp(gray - pixel[index1] - tb);
 				pixel[index3] = Tools.clamp(gray - pixel[index1] - pixel[index2]);
 
 				break;

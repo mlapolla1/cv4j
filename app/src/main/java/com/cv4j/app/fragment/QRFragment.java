@@ -123,7 +123,7 @@ public class QRFragment extends BaseFragment {
         Canvas canvas = new Canvas(bm);
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-        float width = 10.0;
+        float width = 10f;
         paint.setStrokeWidth((float) width);
         paint.setStyle(Paint.Style.STROKE);
 

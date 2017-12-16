@@ -56,7 +56,7 @@ public class GammaFilter extends BaseFilter {
 	}
 
 	private void setupGammaLut() {
-		float maxRgb = 255.0;
+		float maxRgb = 255f;
 		float length = 256;
 		for (int i = 0; i < length; i++) {
 			lut[i] = (int) (Math.exp(Math.log(i / maxRgb) * gamma) * maxRgb);

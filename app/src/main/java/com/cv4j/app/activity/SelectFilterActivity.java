@@ -42,8 +42,6 @@ public class SelectFilterActivity extends BaseActivity {
 
     private Bitmap bitmap;
 
-    private List<String> list = new ArrayList<>();
-
     private ArrayAdapter adapter;
 
     @Override
@@ -60,6 +58,7 @@ public class SelectFilterActivity extends BaseActivity {
     }
 
     private void initData() {
+        List<String> list = new ArrayList<>();
         Resources res = getResources();
 
         String[] filterNames = res.getStringArray(R.array.filterNames);

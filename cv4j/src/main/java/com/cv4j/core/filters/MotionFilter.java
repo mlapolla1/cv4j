@@ -24,10 +24,28 @@ import com.cv4j.image.util.Tools;
  */
 public class MotionFilter extends BaseFilter  {
 
+	/**
+	 * Index position of count;
+	 */
+	private static final int COUNT_POS = 0;
+
+	/**
+	 * Index position of tr;
+	 */
+	private static final int TR_POS = 1;
+
+	/**
+	 * Index position of tg;
+	 */
+	private static final int TG_POS = 2;
+
+	/**
+	 * Index position of tb;
+	 */
+	private static final int TB_POS = 3;
+
 	private float distance = 10;// default;
-	private final float onePI = (float)Math.PI;
 	private float angle = 0.0f;
-	private final float zoom = 0.4f;
 
 	public float getDistance() {
 		return distance;
@@ -45,8 +63,15 @@ public class MotionFilter extends BaseFilter  {
 		this.angle = angle;
 	}
 
-	private void motionBlurIterationPixels(int iteration, int row, int col, int cx, int cy, float sinAngle, float coseAngle) {
+	private int[] motionBlurIterationPixels(int iteration, int row, int col, int cx, int cy, float sinAngle, float cosAngle) {
 		// iterate the source pixels according to distance
+		final float zoom = 0.4f;
+
+		int count = 0;
+		int tr = 0;
+		int tg = 0;
+		int tb = 0;
+
 		for(int i=0; i < iteration; i++) {
 			int newX = col;
 			int newY = row;
@@ -54,7 +79,7 @@ public class MotionFilter extends BaseFilter  {
 			// calculate the operator source pixel
 			if(distance > 0) {
 				newY = (int) Math.floor(newY + (i * sinAngle));
-				newX = (int) Math.floor(newX + (i * coseAngle));
+				newX = (int) Math.floor(newX + (i * cosAngle));
 			}
 			float f = (float) (i / iteration);
 
@@ -74,16 +99,27 @@ public class MotionFilter extends BaseFilter  {
 
 			// blur the pixels, here
 			count++;
-			int idx = newY*width+newX;
+
+			int idx = (newY * width) + newX;
 			tr += R[idx] & 0xff;
 			tg += G[idx] & 0xff;
 			tb += B[idx] & 0xff;
 		}
+
+		final int numResults = 4;
+		int[] results = new int[numResults];
+		results[COUNT_POS] = count;
+		results[TR_POS] = tr;
+		results[TG_POS] = tg;
+		results[TB_POS] = tb;
+
+		return results;
 	}
 	
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
-
+		final float onePI = (float)Math.PI;
+		final float zoom = 0.4f;
 		int total = width * height;
 		byte[][] output = new byte[3][total];
 
@@ -94,9 +130,7 @@ public class MotionFilter extends BaseFilter  {
         // calculate the triangle geometry value
         float degree180 = 180.0f;
         float sinAngle = (float)Math.sin(angle/degree180 * onePI);
-        float coseAngle = (float)Math.cos(angle/degree180 * onePI);
-        float sinAngle = (float) Math.sin(angle/180.0f * onePI);
-        float cosAngle = (float) Math.cos(angle/180.0f * onePI);
+        float cosAngle = (float)Math.cos(angle/degree180 * onePI);
         
         // calculate the distance, same as box blur
         float imageRadius = (float) Math.sqrt(cx*cx + cy*cy);
@@ -112,8 +146,12 @@ public class MotionFilter extends BaseFilter  {
 				int newX;
         		int newY;
         		
-        		motionBlurIterationPixels((int) maxDistance, row, col, cx, cy, sinAngle, cosAngle);
-        		
+        		int[] mbip = motionBlurIterationPixels((int) maxDistance, row, col, cx, cy, sinAngle, cosAngle);
+        		count += mbip[COUNT_POS];
+				tr += mbip[TR_POS];
+				tg += mbip[TG_POS];
+				tb += mbip[TB_POS];
+
         		// fill the destination pixel with final RGB value
         		if (count == 0) {
 					output[0][index] = R[index];
@@ -132,7 +170,7 @@ public class MotionFilter extends BaseFilter  {
         	}
         }
 		((ColorProcessor) src).putRGB(R, G, B);
-		output = null;
+
 		return src;
 	}
 

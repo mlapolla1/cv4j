@@ -40,12 +40,6 @@ import com.safframework.injectview.annotations.InjectView;
 
 public class GaussianBackFragment extends BaseFragment {
 
-    @InjectView(R.id.target_image)
-    ImageView targetImage;
-
-    @InjectView(R.id.sample_image)
-    ImageView sampleImage;
-
     @InjectView(R.id.result)
     ImageView result;
 
@@ -59,14 +53,17 @@ public class GaussianBackFragment extends BaseFragment {
     }
 
     private void initData() {
-
         Resources res = getResources();
 
         BackFragment bf = new BackFragment();
         bf.initData(res);
 
+        ColorProcessor colorProcessor  = bf.getColorProcessor();
+        ColorProcessor sampleProcessor = bf.getSampleProcessor();
+        ByteProcessor  byteProcessor   = bf.getByteProcessor();
+
         GaussianBackProjection gaussianBackProjection = new GaussianBackProjection();
-        gaussianBackProjection.backProjection(colorProcessor,sampleProcessor,byteProcessor);
+        gaussianBackProjection.backProjection(colorProcessor, sampleProcessor, byteProcessor);
 
         result.setImageBitmap(byteProcessor.getImage().toBitmap());
     }

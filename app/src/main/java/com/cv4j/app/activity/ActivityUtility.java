@@ -1,8 +1,16 @@
 package com.cv4j.app.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.util.SparseIntArray;
+
+import com.cv4j.core.datamodel.CV4JImage;
+
+import java.util.Random;
+
 public class ActivityUtility {
 
-	public void subInitData(cv4JImage cv4JImage, int[] mask) {
+	public void subInitData(CV4JImage cv4JImage, int[] mask) {
 
         SparseIntArray colors = new SparseIntArray();
         Random random = new Random();
@@ -13,7 +21,7 @@ public class ActivityUtility {
         for (int i = 0;i<size;i++) {
             int c = mask[i];
             if (c>=0) {
-                colors.put(c,Color.argb(255, random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                colors.put(c, Color.argb(255, random.nextInt(255),random.nextInt(255),random.nextInt(255)));
             }
         }
 

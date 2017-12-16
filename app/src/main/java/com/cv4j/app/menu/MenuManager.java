@@ -21,6 +21,7 @@ import com.cv4j.app.fragment.TemplateMatchFragment;
 public class MenuManager {
 
     private static MenuManager instance = null;
+
     private FragmentManager fragmentManager;
     private MenuType curType;
 
@@ -105,12 +106,9 @@ public class MenuManager {
 
     /**
      * Return menu type
-     *
-     * @param type
      * @return MenuType
      */
     public MenuType getCurType() {
-
         return curType;
     }
 
