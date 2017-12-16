@@ -89,24 +89,30 @@ public class VarianceFilter extends BaseFilter {
 		int b = 0;
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-
 				// 统计滤波器 -方差
-				int[] subpixels = new int[total];
-				int index = 0;
-				for (int i = -radius; i <= radius; i++) {
-					int roffset = row + i;
-					roffset = (roffset < 0) ? 0 : (roffset >= height ? height - 1 : roffset);
-					for (int j = -radius; j <= radius; j++) {
-						int coffset = col + j;
-						coffset = (coffset < 0) ? 0 : (coffset >= width ? width - 1 : coffset);
-						subpixels[index] = input[roffset * width + coffset] & 0xff;
-						index++;
-					}
-				}
+				int[] subpixels = createSubPixels(input, row, col, total);
 				r = calculateVar(subpixels); // red
 				output[row * width + col] = (byte)Tools.clamp(r);
 			}
 		}
+	}
+
+	private int[] createSubPixels(byte[] input, int row, int col, int total) {
+		int[] subpixels = new int[total];
+		int index = 0;
+
+		for (int i = -radius; i <= radius; i++) {
+			int roffset = row + i;
+			roffset = (roffset < 0) ? 0 : (roffset >= height ? height - 1 : roffset);
+			for (int j = -radius; j <= radius; j++) {
+				int coffset = col + j;
+				coffset = (coffset < 0) ? 0 : (coffset >= width ? width - 1 : coffset);
+				subpixels[index] = input[roffset * width + coffset] & 0xff;
+				index++;
+			}
+		}
+
+		return subpixels;
 	}
 
 	private int calculateVar(int[] data) {

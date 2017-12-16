@@ -22,7 +22,7 @@ import com.cv4j.core.datamodel.number.IntIntegralImage;
 import com.cv4j.core.datamodel.Size;
 import com.cv4j.core.filters.CommonFilter;
 import com.cv4j.core.filters.FastEPFilter;
-import com.cv4j.core.filters.GradientFilter;
+import com.cv4j.core.filters.gradients.GradientFilter;
 
 import java.util.Arrays;
 

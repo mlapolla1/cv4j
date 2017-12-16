@@ -237,8 +237,8 @@ public class HoughLinesP {
 		lines.addAll(lineMap.values());
 	}
 
-	private void shiftUp(int[] results, int accSize, int add, int dim) {
-		int i = (accSize - add) * dim;
+	private void shiftUp(int[] results, int sizeAcc, int add, int dim) {
+		int i = (sizeAcc - add) * dim;
 		while ((i >= 0) && (results[i + dim] > results[i])) {
 			for (int j = 0; j < dim; j++) {
 				int temp = results[i + j];
