@@ -55,7 +55,8 @@ public class Threshold {
     private SparseArray<ThresholdFunction> thresholds;
 
     public Threshold() {
-        thresholds = new SparseArray<>(5);
+        int dim = 5;
+        thresholds = new SparseArray<>(dim);
 
         thresholds.append(THRESH_MEANS, this::getMeanThreshold);
         thresholds.append(THRESH_OTSU, this::getOTSUThreshold);
@@ -75,7 +76,7 @@ public class Threshold {
     public void adaptiveThresh(ByteProcessor gray, int type, int blockSize, int constant, int method) {
         int width = gray.getWidth();
         int height = gray.getHeight();
-
+        int doubleOp = 2;
         // 图像灰度化
 
         // per-calculate integral image
@@ -86,19 +87,19 @@ public class Threshold {
         int yr = blockSize;
         int xr = blockSize;
         int index = 0;
-        int size = (yr * 2 + 1)*(xr * 2 + 1);
+        int size = (yr * doubleOp + 1)*(xr * doubleOp + 1);
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 index = row * width + col;
 
                 // 计算均值
-                int sr = grayii.getBlockSum(col, row, (yr * 2 + 1), (xr * 2 + 1));
+                int sr = grayii.getBlockSum(col, row, (yr * doubleOp + 1), (xr * doubleOp + 1));
                 int mean = sr / size;
                 int pixel = binary_data[index]&0xff;
-
+                int maxRGB = 255;
                 // 二值化
                 if(pixel > (mean-constant)) {
-                    binary_data[row * width + col] = (byte)255;
+                    binary_data[row * width + col] = (byte)maxRGB;
                 } else {
                     binary_data[row * width + col] = (byte)0;
                 }
@@ -157,14 +158,15 @@ public class Threshold {
 
     private int getOTSUThreshold(ByteProcessor gray) {
         // 获取直方图
-        int[] histogram = new int[256];
+        int dim = 256;
+        int[] histogram = new int[dim];
         byte[] data = gray.getGray();
 
         increaseHistogramFromData(histogram, data);
 
         // 图像二值化 - OTSU 阈值化方法
         double total = data.length;
-        double[] variances = new double[256];
+        double[] variances = new double[dim];
 
         for(int i = 0; i < variances.length; i++) {
 
@@ -203,9 +205,9 @@ public class Threshold {
 
     private double calculateFvariance(int[] histogram, int i, double fmeans, int count) {
         int fvariance = 0;
-
+        int power = 2;
         for(int t = i; t < histogram.length; t++) {
-            fvariance += (Math.pow((t-fmeans),2) * histogram[t]);
+            fvariance += (Math.pow((t-fmeans),power) * histogram[t]);
         }
 
         fvariance = (count == 0) ? 0 : (fvariance / count);
@@ -215,9 +217,9 @@ public class Threshold {
 
     private double calculateBvariance(int[] histogram, int i, int bmeans, int count) {
         int bvariance = 0;
-
+        int power = 2;
         for(int t = 0; t < i; t++) {
-            bvariance += (Math.pow((t-bmeans),2) * histogram[t]);
+            bvariance += (Math.pow((t-bmeans),power) * histogram[t]);
         }
 
         bvariance = (count == 0) ? 0 : (bvariance / count);
@@ -260,7 +262,8 @@ public class Threshold {
 
     private int getTriangleThreshold(ByteProcessor gray) {
         // 获取直方图
-        int[] histogram = new int[256];
+        int maxRGB = 256;
+        int[] histogram = new int[maxRGB];
         byte[] data = gray.getGray();
 
         increaseHistogramFromData(histogram, data);
@@ -399,8 +402,8 @@ public class Threshold {
             sum2   = 0;
             count1 = 0;
             count2 = 0;
-
-            nt = (m1 + m2) / 2;
+            int ratio = 2;
+            nt = (m1 + m2) / ratio;
 
             if(t == nt) {
                 break;

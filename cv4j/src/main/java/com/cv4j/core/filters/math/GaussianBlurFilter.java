@@ -129,10 +129,10 @@ public class GaussianBlurFilter extends BaseFilter {
         }
 
         this.kernel = new float[kRadius];
-
+        
         for (int i=0; i<kRadius; i++){               // Gaussian function
             this.kernel[i] = (float)(Math.exp(expFactor*i*i/sigmaValue/sigmaValue));
-            this.kernel[i] = (float)(Math.exp(-0.5*i*i/sigmaValue/sigmaValue));
+            this.kernel[i] = (float)(Math.exp(expFactor*i*i/sigmaValue/sigmaValue));
         }
 
         double sum;                                 // sum over all kernel elements for normalization

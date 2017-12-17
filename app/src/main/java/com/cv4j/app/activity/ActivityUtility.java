@@ -18,10 +18,11 @@ public class ActivityUtility {
         int height = cv4JImage.getProcessor().getHeight();
         int width = cv4JImage.getProcessor().getWidth();
         int size = height * width;
+        int maxRGB = 255;
         for (int i = 0;i<size;i++) {
             int c = mask[i];
             if (c>=0) {
-                colors.put(c, Color.argb(255, random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                colors.put(c, Color.argb(maxRGB, random.nextInt(maxRGB),random.nextInt(maxRGB),random.nextInt(maxRGB)));
             }
         }
 

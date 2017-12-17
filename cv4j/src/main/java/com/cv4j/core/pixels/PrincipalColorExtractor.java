@@ -142,10 +142,13 @@ public class PrincipalColorExtractor {
 
 	private boolean isStop(double[][] oldClusterCenterColors, double[][] newClusterCenterColors) {
 		boolean stop = false;
+		int col0 = 0;
+		int col1 = 1;
+		int col2 = 2;
 		for (int i = 0; i < oldClusterCenterColors.length; i++) {
-			if (oldClusterCenterColors[i][0] == newClusterCenterColors[i][0] &&
-					oldClusterCenterColors[i][1] == newClusterCenterColors[i][1] &&
-					oldClusterCenterColors[i][2] == newClusterCenterColors[i][2]) {
+			if (oldClusterCenterColors[i][col0] == newClusterCenterColors[i][col0] &&
+					oldClusterCenterColors[i][col1] == newClusterCenterColors[i][col1] &&
+					oldClusterCenterColors[i][col2] == newClusterCenterColors[i][col2]) {
 				stop = true;
 				break;
 			}
@@ -196,7 +199,8 @@ public class PrincipalColorExtractor {
             int tr = pointList.get(i).getPixelColor().red;
             int tg = pointList.get(i).getPixelColor().green;
             int tb = pointList.get(i).getPixelColor().blue;
-            ta = 255;
+            int maxRGB = 255;
+            ta = maxRGB;
 			redSums[cIndex] += tr;
 			greenSum[cIndex] += tg;
 			blueSum[cIndex] += tb;

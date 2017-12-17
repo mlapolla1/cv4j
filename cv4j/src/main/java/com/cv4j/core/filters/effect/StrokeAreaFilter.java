@@ -67,16 +67,17 @@ public class StrokeAreaFilter extends BaseFilter {
 
     @Override
     public ImageProcessor doFilter(ImageProcessor src) {
-
-        byte[][] output = new byte[3][R.length];
+        int dimRow = 3;
+        byte[][] output = new byte[dimIndex1][R.length];
 
         int index;
-        int semiRow = (int)(size/2);
-        int semiCol = (int)(size/2);
+        int ratio = 2;
+        int semiRow = (int)(size/ratio);
+        int semiCol = (int)(size/ratio);
 
         // initialize the color RGB array with zero...
-        int[] rgb = new int[3];
-        int[] rgb2 = new int[3];
+        int[] rgb = new int[dimRow];
+        int[] rgb2 = new int[dimRow];
         for(int i=0; i<rgb.length; i++) {
             rgb[i] = rgb2[i] = 0;
         }
@@ -91,16 +92,19 @@ public class StrokeAreaFilter extends BaseFilter {
 
                 /* adjust region to fit in source image */
                 // color difference and moment Image
+                Double maxRGB = 255.0d;
                 double moment = fitRegionInSourceImage(rgb, rgb2, semiRow, semiCol, row, col);
                 // calculate the output pixel value.
-                int outPixelValue = clamp((int) (255.0d * moment / (size*size)));
+                int outPixelValue = clamp((int) (maxRGB * moment / (size*size)));
                 output[INDEX0][index] = (byte)outPixelValue;
                 output[INDEX1][index] = (byte)outPixelValue;
                 output[INDEX2][index] = (byte)outPixelValue;
             }
         }
-
-        ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
+        int index0 = 0;
+        int index1 = 1;
+        int index2 = 2;
+        ((ColorProcessor) src).putRGB(output[index0], output[index1], output[index2]);
         output = null;
         return src;
     }
@@ -142,7 +146,7 @@ public class StrokeAreaFilter extends BaseFilter {
         // (1-(d/d0)^2)^2
         double d2;
         double r2;
-
+        double minus = 1.0d;
         d2 = colorDistance(rgb1, rgb2);
 
         if (d2 >= d02) {
@@ -151,7 +155,7 @@ public class StrokeAreaFilter extends BaseFilter {
 
         r2 = d2 / d02;
 
-        return ((1.0d - r2) * (1.0d - r2));
+        return ((minus - r2) * (minus - r2));
     }
 
     public static double colorDistance(int[] rgb1, int[] rgb2) {

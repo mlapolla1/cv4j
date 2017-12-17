@@ -114,8 +114,8 @@ public class NatureFilter extends BaseFilter {
 	public NatureFilter(int style) {
 		this.style = style;
 		buildFogLookupTable();
-
-		styles = new SparseArray<>(8);
+		int dim = 8;
+		styles = new SparseArray<>(dim);
 		styles.append(ATMOSPHERE_STYLE, this::calculateAtmosphereStyle);
 		styles.append(BURN_STYLE, this::calculateBurnStyle);
 		styles.append(FOG_STYLE, this::calculateFogStyle);

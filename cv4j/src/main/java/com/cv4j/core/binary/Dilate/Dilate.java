@@ -32,7 +32,8 @@ public class Dilate {
      */
 	public void process(ByteProcessor binary, Size structureElement)
 	{
-		process(binary, structureElement, 1);
+		int numberIteration = 1;
+		process(binary, structureElement, numberIteration);
 	}
 
 	/**
@@ -42,7 +43,8 @@ public class Dilate {
 	 * @param iteration - 1 as default, better less than 10, for the sake of time consume
      */
 	public void process(ByteProcessor binary, Size structureElement, int iteration){
+		int maxRGB = 255;
 		binaryUtility bU = new binaryUtility();
-		bU.process(binary, structureElement, iteration, 255);
+		bU.process(binary, structureElement, iteration, maxRGB);
 	}
 }

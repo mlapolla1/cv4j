@@ -122,8 +122,10 @@ public class ZhangSuenThin {
 
 		int con3 = p2*p4*p6;
 		int con4 = p4*p6*p8;
+		int limitDown = 2;
+		int limitUp = 6;
 
-		if((con1 >= 2 && con1 <= 6) && (index1 == index2) && con3 == 0 && con4 == 0) {
+		if((con1 >= limitDown && con1 <= limitUp) && (index1 == index2) && con3 == 0 && con4 == 0) {
 			flagmap[offset+col] = 1;
 			stop = false;
 		}

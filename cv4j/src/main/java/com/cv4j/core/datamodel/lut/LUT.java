@@ -49,8 +49,8 @@ public class LUT {
      */
     private static void init() {
         initialized = true;
-
-        luts = new SparseArray<int[][]>(12);
+        ind dimLut = 12;
+        luts = new SparseArray<int[][]>(dimLut);
         luts.append(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
         luts.append(BONE_STYLE, BoneLUT.BONE_LUT);
         luts.append(COOL_STYLE, CoolLUT.COOL_LUT);

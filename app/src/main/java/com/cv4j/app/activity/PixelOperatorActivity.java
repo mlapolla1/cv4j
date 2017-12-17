@@ -137,8 +137,8 @@ public class PixelOperatorActivity extends BaseActivity {
 
         CV4JImage cv4jImage2 = new CV4JImage(bitmap2);
         ImageProcessor imageProcessor2 = cv4jImage2.getProcessor();
-
-        operationsTwoImages = new SparseArray<>(8);
+        int dimTwoImages = 8;
+        operationsTwoImages = new SparseArray<>(dimTwoImages);
         operationsTwoImages.append(ADD, Operator::add);
         operationsTwoImages.append(SUBTRACT, Operator::subtract);
         operationsTwoImages.append(MULTIPLE, Operator::multiple);
