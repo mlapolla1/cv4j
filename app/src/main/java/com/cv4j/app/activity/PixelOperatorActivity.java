@@ -114,79 +114,169 @@ public class PixelOperatorActivity extends BaseActivity {
     public static final int SUB_IMAGE = 10;
 
 
+    /**
+     * Creation of the app.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pixel_operator);
 
+        initViews();
         initData();
     }
 
+    private void initViews() {
+        final String toolbarTitle = "< " + this.title;
+        this.toolbar.setTitle(toolbarTitle);
+    }
+
     private void initData() {
-        toolbar.setTitle("< " + title);
-        Resources res = getResources();
+        initOperationsTwoImages();
 
-        final Bitmap bitmap1 = BitmapFactory.decodeResource(res, R.drawable.pixel_test_1);
-        image1.setImageBitmap(bitmap1);
+        ImageProcessor imageProcessor1 = initImage1();
+        ImageProcessor imageProcessor2 = initImage2();
 
-        final Bitmap bitmap2 = BitmapFactory.decodeResource(res, R.drawable.pixel_test_2);
-        image2.setImageBitmap(bitmap2);
+        ImageProcessor imageProcessor = executeOperationByType(this.type, imageProcessor1, imageProcessor2);
 
-        CV4JImage cv4jImage1 = new CV4JImage(bitmap1);
-        ImageProcessor imageProcessor1 = cv4jImage1.getProcessor();
+        if (imageProcessor != null) {
+            final int   width  = imageProcessor.getWidth();
+            final int   height = imageProcessor.getHeight();
+            final int[] pixels = imageProcessor.getPixels();
 
-        CV4JImage cv4jImage2 = new CV4JImage(bitmap2);
-        ImageProcessor imageProcessor2 = cv4jImage2.getProcessor();
-        int dimTwoImages = 8;
-        operationsTwoImages = new SparseArray<>(dimTwoImages);
-        operationsTwoImages.append(ADD, Operator::add);
-        operationsTwoImages.append(SUBTRACT, Operator::subtract);
-        operationsTwoImages.append(MULTIPLE, Operator::multiple);
-        operationsTwoImages.append(DIVISION, Operator::division);
-        operationsTwoImages.append(BITWISE_AND, Operator::bitwise_and);
-        operationsTwoImages.append(BITWISE_OR, Operator::bitwise_or);
+            CV4JImage resultCV4JImage = new CV4JImage(width, height, pixels);
 
+            Bitmap bitmap = resultCV4JImage.getProcessor().getImage().toBitmap();
+            this.result.setImageBitmap(bitmap);
+        }
+    }
+
+    private ImageProcessor executeOperationByType(int type, ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
+        ImageProcessor imageProcessor;
         OperatorFunction operator = operationsTwoImages.get(type);
-        ImageProcessor imageProcessor = null;
+
         if (operator != null) {
-            operator.call(imageProcessor1, imageProcessor2);
+            imageProcessor  = operator.call(imageProcessor1, imageProcessor2);
         } else {
             switch (type) {
                 case BITWISE_NOT:
-                    imageProcessor = Operator.bitwise_not(imageProcessor1);
+                    imageProcessor = calculateBitwiseNot(imageProcessor1);
                     break;
-
                 case ADD_WEIGHT:
-                    float weight1 = 2.0f;
-                    float weight2 = 1.0f;
-                    int gamma = 4;
-                    imageProcessor = Operator.addWeight(imageProcessor1,weight1,imageProcessor2,weight2,gamma);
+                    imageProcessor = calculateAddWeight(imageProcessor1, imageProcessor2);
                     break;
-
                 case SUB_IMAGE:
-                    Rect rect = new Rect();
-                    rect.x = 0;
-                    rect.y = 0;
-                    rect.width = 300;
-                    rect.height = 300;
-
-                    try {
-                        imageProcessor = Operator.subImage(imageProcessor1, rect);
-                    } catch (CV4JException e) {
-                        System.out.println("CV4J error on sub image operator.");
-                    }
+                    imageProcessor = calculateSubImage(imageProcessor1);
                     break;
 
                 default:
-                    imageProcessor = Operator.add(imageProcessor1,imageProcessor2);
+                    imageProcessor = calculateAdd(imageProcessor1, imageProcessor2);
                     break;
             }
         }
 
-        if (imageProcessor != null) {
-            CV4JImage resultCV4JImage = new CV4JImage(imageProcessor.getWidth(), imageProcessor.getHeight(), imageProcessor.getPixels());
-            result.setImageBitmap(resultCV4JImage.getProcessor().getImage().toBitmap());
+        return imageProcessor;
+    }
+
+    /**
+     * Add operation.
+     * @param imageProcessor1 The first image processor.
+     * @param imageProcessor2 The second image processor.
+     * @return                The result of the add operation.
+     */
+    private ImageProcessor calculateAdd(ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
+        return Operator.add(imageProcessor1,imageProcessor2);
+    }
+
+    /**
+     * Sub image calculation.
+     * @param imageProcessor1 The image processor.
+     * @return                The result of the sub image operation.
+     */
+    private ImageProcessor calculateSubImage(ImageProcessor imageProcessor1) {
+        ImageProcessor imageProcessor = null;
+
+        Rect rect = new Rect();
+
+        rect.x      = 0;
+        rect.y      = 0;
+        rect.width  = 300;
+        rect.height = 300;
+
+        try {
+            imageProcessor = Operator.subImage(imageProcessor1, rect);
+        } catch (CV4JException e) {
+            System.out.println("CV4J error on sub image operator.");
         }
+
+        return imageProcessor;
+    }
+
+    /**
+     * Bitwise not calculation.
+     * @param imageProcessor1 The image processor.
+     * @return                The result of the bitwise not operation.
+     */
+    private ImageProcessor calculateBitwiseNot(ImageProcessor imageProcessor1) {
+        return Operator.bitwise_not(imageProcessor1);
+    }
+
+    /**
+     * Add weight calculation.
+     * @param imageProcessor1 The first image processor.
+     * @param imageProcessor2 The second image processor.
+     * @return                The result of the add weight operation.
+     */
+    private ImageProcessor calculateAddWeight(ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
+        final float weight1 = 2.0f;
+        final float weight2 = 1.0f;
+        final int gamma = 4;
+
+        return Operator.addWeight(imageProcessor1, weight1, imageProcessor2, weight2, gamma);
+    }
+
+    /**
+     * Initialization of operationsTwoImages variable.
+     */
+    private void initOperationsTwoImages() {
+        final int dimTwoImages = 8;
+        operationsTwoImages = new SparseArray<>(dimTwoImages);
+
+        operationsTwoImages.put(ADD, Operator::add);
+        operationsTwoImages.put(SUBTRACT, Operator::subtract);
+        operationsTwoImages.put(MULTIPLE, Operator::multiple);
+        operationsTwoImages.put(DIVISION, Operator::division);
+        operationsTwoImages.put(BITWISE_AND, Operator::bitwise_and);
+        operationsTwoImages.put(BITWISE_OR, Operator::bitwise_or);
+    }
+
+    /**
+     * Initialization of image2.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initImage2() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.pixel_test_2);
+
+        this.image2.setImageBitmap(bitmap);
+
+        CV4JImage cv4JImage = new CV4JImage(bitmap);
+        return cv4JImage.getProcessor();
+    }
+
+    /**
+     * Initialization of image1.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initImage1() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.pixel_test_1);
+
+        this.image1.setImageBitmap(bitmap);
+
+        CV4JImage cv4JImage = new CV4JImage(bitmap);
+        return cv4JImage.getProcessor();
     }
 
     @OnClick(id= R.id.toolbar)

@@ -36,65 +36,116 @@ public class HistogramDemoActivity extends BaseActivity {
 
     @InjectExtra(key = "Title")
     String title;
+    private int[] colors;
 
+    /**
+     * Creation of the app.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_histogram_demo);
 
+        initViews();
         initData();
     }
 
-    private void initData() {
+    /**
+     * Initialization of the views.
+     */
+    private void initViews() {
+        final String toolbarTitle = "< " + this.title;
+        this.toolbar.setTitle(toolbarTitle);
+    }
 
-        toolbar.setTitle("< "+title);
-        Resources res = getResources();
+    /**
+     * Initialization of the data.
+     */
+    private void initData() {
+        final Resources res = getResources();
         final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_hist2);
         image0.setImageBitmap(bitmap);
 
         CV4JImage cv4jImage = new CV4JImage(bitmap);
-        image1.setImageBitmap(drawHist(cv4jImage.getProcessor(),new Paint()));
+        Paint paint = new Paint();
+        final Bitmap histBitmap = drawHist(cv4jImage.getProcessor(), paint);
+        image1.setImageBitmap(histBitmap);
     }
 
+    /**
+     * Draw the histogram.
+     * @param imageProcessor The image processor.
+     * @param paint          The paint object.
+     * @return               The drawed histogram.
+     */
     private Bitmap drawHist(ImageProcessor imageProcessor, Paint paint) {
+        final int maxRgb = 255;
+        final int bins = 127;
+
+        final int width = imageProcessor.getWidth();
+        final int height = imageProcessor.getHeight();
+        final int channels = imageProcessor.getChannels();
+
+        int[][] hist = new int[channels][bins];
 
         CalcHistogram calcHistogram = new CalcHistogram();
-        int bins = 127;
-        int[][] hist = new int[imageProcessor.getChannels()][bins];
-        calcHistogram.calcRGBHist(imageProcessor,bins,hist,true);
-        Bitmap bm = Bitmap.createBitmap(imageProcessor.getWidth(),imageProcessor.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawRect(0,0,imageProcessor.getWidth(),imageProcessor.getHeight(),paint);
+        calcHistogram.calcRGBHist(imageProcessor, bins, hist, true);
 
-        float step = imageProcessor.getWidth()/127;
-        int xoffset;
-        int yoffset;
-        int channels = imageProcessor.getChannels();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = createCanvas(imageProcessor, paint, bitmap);
 
-        int h = imageProcessor.getHeight();
-        int color1 = 77;
-        int color2 = 255;
-        int color3 = 0;
-        int[] colors = new int[]{Color.argb(color1,color2,color3,color3),Color.argb(color1,color3,color2,color3),Color.argb(color1,color3,color3,color2)};
-        for (int i=0;i<channels;i++) {
+        float step = width / bins;
+        int[] colors = getColors();
 
+        for (int i = 0; i < channels; i++) {
             paint.setColor(colors[i]);
-            for (int j=0;j<bins;j++) {
 
-                xoffset = (int)(j*step);
-                yoffset = hist[i][j]*h/255;
-                canvas.drawRect(xoffset,h-yoffset,xoffset+step,h,paint);
+            for (int j = 0; j < bins; j++) {
+                int xOffset = (int) (j * step);
+                int yOffset = hist[i][j] * height / maxRgb;
+                canvas.drawRect(xOffset, height - yOffset, xOffset + step, height, paint);
             }
         }
 
-        return bm;
+        return bitmap;
+    }
+
+    /**
+     * Create the canvas.
+     * @param imageProcessor The image processor
+     * @param paint          The paint object.
+     * @param bitmap         The bitmap
+     * @return               The canvas.
+     */
+    private Canvas createCanvas(ImageProcessor imageProcessor, Paint paint, Bitmap bitmap) {
+        Canvas canvas = new Canvas(bitmap);
+
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+        canvas.drawRect(0,0,imageProcessor.getWidth(),imageProcessor.getHeight(),paint);
+
+        return canvas;
     }
 
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
 
         finish();
+    }
+
+    public int[] getColors() {
+        final int color1 = 77;
+        final int color2 = 255;
+        final int color3 = 0;
+
+        int[] colors = new int[] {
+                Color.argb(color1, color2, color3, color3),
+                Color.argb(color1, color3, color2, color3),
+                Color.argb(color1, color3, color3, color2)
+        };
+
+        return colors;
     }
 }

@@ -66,46 +66,112 @@ public class TemplateMatchFragment extends BaseFragment {
         return v;
     }
 
+    /**
+     * Data initialization.
+     */
     private void initData() {
+        final ImageProcessor targetImageProcessor   = initTargetImage();
+        final ImageProcessor templateImageProcessor = initTemplateImage();
 
-        Resources res = getResources();
-        final Bitmap bitmap1 = BitmapFactory.decodeResource(res, R.drawable.test_tpl_target);
-        targetImage.setImageBitmap(bitmap1);
+        Point[] points = getPoints(targetImageProcessor, templateImageProcessor);
 
-        Bitmap bitmap2 = BitmapFactory.decodeResource(res, R.drawable.tpl);
-        templateImage.setImageBitmap(bitmap2);
-
-        CV4JImage targetCV4J = new CV4JImage(bitmap1);
-        final ImageProcessor targetImageProcessor = targetCV4J.convert2Gray().getProcessor();
-
-        CV4JImage templateCV4J = new CV4JImage(bitmap2);
-        final ImageProcessor templateProcessor = templateCV4J.convert2Gray().getProcessor();
-
-        TemplateMatch2 match = new TemplateMatch2();
-
-        FloatProcessor floatProcessor = match.match(targetImageProcessor,templateProcessor,TemplateMatch.TM_CCORR_NORMED);
-        Point[] points = Tools.getMinMaxLoc(floatProcessor.getGray(),floatProcessor.getWidth(),floatProcessor.getHeight());
-
-
-        Point resultPoint = null;
-        if (points!=null) {
+        Point resultPoint;
+        if (points != null) {
             resultPoint = points[0];
 
-            Bitmap resultBitmap = bitmap1.copy(Bitmap.Config.ARGB_8888, true);
-            Canvas canvas = new Canvas(resultBitmap);
+            final Resources res = getResources();
+            final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_tpl_target);
+            Canvas canvas = new Canvas(bitmap);
 
-            Rect rect = new Rect();
-            int sx = resultPoint.x + templateProcessor.getWidth()/2;
-            int sy = resultPoint.y - templateProcessor.getHeight()/2;
-            rect.set(sx,sy,sx+templateProcessor.getWidth(),sy+templateProcessor.getHeight());
+            Rect  rect  = createRect(templateImageProcessor, resultPoint);
+            Paint paint = createPaint();
 
-            Paint paint = new Paint();
-            paint.setStyle(Paint.Style.STROKE);
-            float width = 4f;
-            paint.setStrokeWidth((float) width);
-            paint.setColor(Color.RED);
-            canvas.drawRect(rect,paint);
-            resultImage.setImageBitmap(resultBitmap);
+            canvas.drawRect(rect, paint);
+
+            this.resultImage.setImageBitmap(bitmap);
         }
+    }
+
+    /**
+     * Creation of a paint object.
+     * @return The paint object.
+     */
+    private Paint createPaint() {
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+
+        final float width = 4f;
+        paint.setStrokeWidth(width);
+
+        paint.setColor(Color.RED);
+
+        return paint;
+    }
+
+    /**
+     * Creation of a rect object.
+     * @param templateImageProcessor The template image processor.
+     * @param resultPoint            The point
+     * @return                       The rect object.
+     */
+    private Rect createRect(ImageProcessor templateImageProcessor, Point resultPoint) {
+        Rect rect = new Rect();
+
+        final int width  = templateImageProcessor.getWidth();
+        final int height = templateImageProcessor.getHeight();
+
+        final int sx = resultPoint.x + (width / 2);
+        final int sy = resultPoint.y - (height / 2);
+
+        rect.set(sx, sy, sx+width, sy+height);
+
+        return rect;
+    }
+
+    /**
+     * Return the points.
+     * @param targetImageProcessor   The target image processor.
+     * @param templateImageProcessor The template image processor.
+     * @return                       The points.
+     */
+    private Point[] getPoints(ImageProcessor targetImageProcessor, ImageProcessor templateImageProcessor) {
+        TemplateMatch2 match = new TemplateMatch2();
+        FloatProcessor floatProcessor = match.match(targetImageProcessor, templateImageProcessor, TemplateMatch.TM_CCORR_NORMED);
+
+        final float[] gray   = floatProcessor.getGray();
+        final int     width  = floatProcessor.getWidth();
+        final int     height = floatProcessor.getHeight();
+
+        return Tools.getMinMaxLoc(gray, width, height);
+    }
+
+    /**
+     * Initialization of the templateImage.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initTemplateImage() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.tpl);
+
+        this.templateImage.setImageBitmap(bitmap);
+
+        CV4JImage templateCV4J = new CV4JImage(bitmap);
+        return templateCV4J.convert2Gray().getProcessor();
+    }
+
+    /**
+     * Inizialization of targetImage.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initTargetImage() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_tpl_target);
+
+        this.targetImage.setImageBitmap(bitmap);
+
+        CV4JImage cv4JImage = new CV4JImage(bitmap);
+
+        return cv4JImage.getProcessor();
     }
 }

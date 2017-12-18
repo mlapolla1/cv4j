@@ -68,7 +68,7 @@ public class StrokeAreaFilter extends BaseFilter {
     @Override
     public ImageProcessor doFilter(ImageProcessor src) {
         int dimRow = 3;
-        byte[][] output = new byte[dimIndex1][R.length];
+        byte[][] output = new byte[dimRow][R.length];
 
         int index;
         int ratio = 2;

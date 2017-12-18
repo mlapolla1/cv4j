@@ -96,6 +96,10 @@ public class MenuManager {
         return instance;
     }
 
+    public static boolean isInstanceNull() {
+        return instance == null;
+    }
+
     /**
      * Return menu type
      * @return MenuType

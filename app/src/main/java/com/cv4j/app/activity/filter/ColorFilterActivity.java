@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
@@ -47,7 +48,7 @@ public class ColorFilterActivity extends BaseActivity {
 
     private Bitmap bitmap;
 
-    private Map colorStyles = new HashMap();
+    private SparseArray<String> colorStyles;
 
     private RxImageData rxImageData;
 
@@ -60,76 +61,126 @@ public class ColorFilterActivity extends BaseActivity {
         initData();
     }
 
+    /**
+     * Initialize the views.
+     */
     private void initViews() {
-        toolbar.setTitle("< "+title);
+        final String toolbarTitle = "< " + this.title;
+        this.toolbar.setTitle(toolbarTitle);
     }
 
+    /**
+     * Initialize the data.
+     */
     private void initData() {
+        initRxImageData();
+        initColorStyles();
 
-        Resources res = getResources();
-        bitmap = BitmapFactory.decodeResource(res, R.drawable.test_color_filter);
-
-        rxImageData = RxImageData.bitmap(bitmap);
-        rxImageData.addFilter(new ColorFilter()).isUseCache(false).into(image);
-
-        colorStyles.put(ColorFilter.AUTUMN_STYLE," 秋天风格 ");
-        colorStyles.put(ColorFilter.BONE_STYLE," 硬朗风格 ");
-        colorStyles.put(ColorFilter.COOL_STYLE," 凉爽风格 ");
-        colorStyles.put(ColorFilter.HOT_STYLE," 热带风格 ");
-        colorStyles.put(ColorFilter.HSV_STYLE," 色彩空间变换风格 ");
-        colorStyles.put(ColorFilter.JET_STYLE," 高亮风格 ");
-        colorStyles.put(ColorFilter.OCEAN_STYLE," 海洋风格 ");
-        colorStyles.put(ColorFilter.PINK_STYLE," 粉色风格 ");
-        colorStyles.put(ColorFilter.RAINBOW_STYLE," 彩虹风格 ");
-        colorStyles.put(ColorFilter.SPRING_STYLE," 春天风格 ");
-        colorStyles.put(ColorFilter.SUMMER_STYLE," 夏天风格 ");
-        colorStyles.put(ColorFilter.WINTER_STYLE," 冬天风格 ");
-
-        int len = colorStyles.size();
-        for (int i = 0; i < len; i++) {
-            LinearLayout.LayoutParams linearLp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            LinearLayout myLinear = new LinearLayout(this);
-            int top = 5;
-            int right = 0;
-            int bottom = 5;
-            int left = 20;
-            linearLp.setMargins(top, right, bottom, left);
-            myLinear.setOrientation(LinearLayout.HORIZONTAL);
-            myLinear.setTag(i);
-            linear.addView(myLinear, linearLp);
-
-            LinearLayout.LayoutParams textViewLp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            TextView textView = new TextView(this);
-            textView.setText(colorStyles.get(i) + "");
-            textView.setGravity(Gravity.CENTER);
-            myLinear.addView(textView, textViewLp);
-
-            myLinear.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    Toast.makeText(ColorFilterActivity.this, colorStyles.get((int)v.getTag())+"", Toast.LENGTH_SHORT).show();
-
-                    ColorFilter colorFilter = new ColorFilter();
-                    colorFilter.setStyle((int)v.getTag());
-
-                    rxImageData.recycle();
-                    rxImageData = rxImageData.bitmap(bitmap);
-                    rxImageData.addFilter(colorFilter).isUseCache(false).into(image);
-                }
-            });
+        int colorStylesLength = colorStyles.size();
+        for (int i = 0; i < colorStylesLength; i++) {
+            initializeLinearLayout(i);
         }
     }
 
+    /**
+     * Initialization of a linear layout.
+     * @param index The index of the linear layout.
+     */
+    private void initializeLinearLayout(int index) {
+        final int left = 5;
+        final int top = 0;
+        final int right = 5;
+        final int bottom = 20;
+
+        LinearLayout.LayoutParams linearLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearLp.setMargins(left, top, right, bottom);
+
+        LinearLayout myLinear = new LinearLayout(this);
+        myLinear.setOrientation(LinearLayout.HORIZONTAL);
+        myLinear.setTag(index);
+        this.linear.addView(myLinear, linearLp);
+
+        LinearLayout.LayoutParams textViewLp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        TextView textView = new TextView(this);
+        textView.setText(this.colorStyles.get(index));
+        textView.setGravity(Gravity.CENTER);
+
+        myLinear.addView(textView, textViewLp);
+
+        setLinearLayoutClickListener(myLinear);
+    }
+
+    /**
+     * Set a click listener on a linear layout.
+     * @param myLinear The linear layout.
+     */
+    private void setLinearLayoutClickListener(LinearLayout myLinear) {
+        myLinear.setOnClickListener(view -> {
+            final String tagString  = (String) view.getTag();
+            final int tagNumber     = Integer.valueOf(tagString);
+            final String colorStyle = colorStyles.get(tagNumber);
+
+            Toast.makeText(ColorFilterActivity.this, colorStyle, Toast.LENGTH_SHORT).show();
+
+            ColorFilter colorFilter = new ColorFilter();
+            colorFilter.setStyle(tagNumber);
+
+            this.rxImageData.recycle();
+            this.rxImageData = RxImageData.bitmap(bitmap);
+
+            this.rxImageData.addFilter(colorFilter);
+            this.rxImageData.isUseCache(false);
+            this.rxImageData.into(image);
+        });
+    }
+
+    /**
+     * Initialize rxImageData.
+     */
+    private void initRxImageData() {
+        final Resources res = getResources();
+        this.bitmap = BitmapFactory.decodeResource(res, R.drawable.test_color_filter);
+
+        this.rxImageData = RxImageData.bitmap(bitmap);
+
+        final ColorFilter colorFilter = new ColorFilter();
+        this.rxImageData.addFilter(colorFilter);
+        this.rxImageData.isUseCache(false);
+        this.rxImageData.into(image);
+    }
+
+    /**
+     * Initialize color styles.
+     */
+    private void initColorStyles() {
+        colorStyles = new SparseArray<>(12);
+
+        colorStyles.put(ColorFilter.AUTUMN_STYLE, " 秋天风格 ");
+        colorStyles.put(ColorFilter.BONE_STYLE, " 硬朗风格 ");
+        colorStyles.put(ColorFilter.COOL_STYLE, " 凉爽风格 ");
+        colorStyles.put(ColorFilter.HOT_STYLE, " 热带风格 ");
+        colorStyles.put(ColorFilter.HSV_STYLE, " 色彩空间变换风格 ");
+        colorStyles.put(ColorFilter.JET_STYLE, " 高亮风格 ");
+        colorStyles.put(ColorFilter.OCEAN_STYLE, " 海洋风格 ");
+        colorStyles.put(ColorFilter.PINK_STYLE, " 粉色风格 ");
+        colorStyles.put(ColorFilter.RAINBOW_STYLE, " 彩虹风格 ");
+        colorStyles.put(ColorFilter.SPRING_STYLE, " 春天风格 ");
+        colorStyles.put(ColorFilter.SUMMER_STYLE, " 夏天风格 ");
+        colorStyles.put(ColorFilter.WINTER_STYLE, " 冬天风格 ");
+    }
+
+    /**
+     * Finish when toolbar is clicked.
+     */
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
-
         finish();
     }
 
+    /**
+     * On app destoy.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -43,58 +43,89 @@ public class CompareHist3Fragment extends BaseFragment {
         return v;
     }
 
+    /**
+     * Data initialization.
+     */
     private void initData() {
-        Resources res = getResources();
-        final Bitmap bitmap1 = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist1);
-        final Bitmap bitmap2 = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist2);
+        ImageProcessor imageProcessor1 = initImage0();
+        ImageProcessor imageProcessor2 = initImage1();
 
-        image0.setImageBitmap(bitmap1);
-        image1.setImageBitmap(bitmap2);
-
-        CV4JImage cv4jImage1 = new CV4JImage(bitmap1);
-        ImageProcessor imageProcessor1 = cv4jImage1.getProcessor();
-
-        CV4JImage cv4jImage2 = new CV4JImage(bitmap2);
-        ImageProcessor imageProcessor2 = cv4jImage2.getProcessor();
-
-        int[][] source = null;
-        int[][] target = null;
+        final int bins = 256;
+        int[][] source = new int[imageProcessor1.getChannels()][bins];
+        int[][] target = new int[imageProcessor2.getChannels()][bins];
 
         CalcHistogram calcHistogram = new CalcHistogram();
-        int bins = 256;
-        source = new int[imageProcessor1.getChannels()][bins];
-        calcHistogram.calcRGBHist(imageProcessor1,bins,source,true);
+        calcHistogram.calcRGBHist(imageProcessor1, bins, source, true);
+        calcHistogram.calcRGBHist(imageProcessor2, bins, target, true);
 
-        target = new int[imageProcessor2.getChannels()][bins];
-        calcHistogram.calcRGBHist(imageProcessor2,bins,target,true);
+        StringBuilder stringBuilder = compareHistograms(source, target);
 
+        String compareHistogramsString = stringBuilder.toString();
+        this.result.setText(compareHistogramsString);
+    }
+
+    /**
+     * Compare histograms.
+     * @param source The source histogram.
+     * @param target The target histogram.
+     * @return       The comparation.
+     */
+    private StringBuilder compareHistograms(int[][] source, int[][] target) {
         CompareHist compareHist = new CompareHist();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         double sum1 = 0;
         double sum2 = 0;
         double sum3 = 0;
 
-        int sumLength = 3;
+        final int sumLength = 3;
         for (int i = 0; i < sumLength; i++) {
             sum1 += compareHist.bhattacharyya(source[i],target[i]);
             sum2 += compareHist.covariance(source[i],target[i]);
             sum3 += compareHist.ncc(source[i],target[i]);
         }
 
-        String distance = "巴氏距离:";
-        String covariance = "协方差:";
-        String correlation = "相关性因子:";
-        String newLine = "\r\n";
-        sb.append(distance)
-          .append(sum1 / sumLength)
-          .append(newLine)
-          .append(covariance)
-          .append(sum2 / sumLength)
-          .append(newLine)
-          .append(correlation)
-          .append(sum3 / sumLength);
+        final String separator = "巴氏距离:";
+        final String newLine   = "\r\n";
 
-        result.setText(sb.toString());
+        stringBuilder
+                .append(separator)
+                .append(sum1 / sumLength)
+                .append(newLine)
+                .append(separator)
+                .append(sum2 / sumLength)
+                .append(newLine)
+                .append(separator)
+                .append(sum3 / sumLength);
+
+        return stringBuilder;
+    }
+
+    /**
+     * Initialization of image1.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initImage1() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist2);
+
+        this.image1.setImageBitmap(bitmap);
+
+        CV4JImage cv4jImage = new CV4JImage(bitmap);
+        return cv4jImage.getProcessor();
+    }
+
+    /**
+     * Initialazion of image0.
+     * @return The image processor of the image.
+     */
+    private ImageProcessor initImage0() {
+        final Resources res = getResources();
+        final Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_compare_hist1);
+
+        this.image0.setImageBitmap(bitmap);
+
+        CV4JImage cv4JImage = new CV4JImage(bitmap);
+        return cv4JImage.getProcessor();
     }
 }

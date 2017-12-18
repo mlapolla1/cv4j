@@ -24,9 +24,6 @@ import com.cv4j.core.datamodel.ImageProcessor
 import com.cv4j.core.filters.CommonFilter
 import com.safframework.utils.RxJavaUtils
 import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.annotations.NotNull
 import java.util.*
 

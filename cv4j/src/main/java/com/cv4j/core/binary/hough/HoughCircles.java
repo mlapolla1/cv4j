@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.cv4j.core.binary.hough;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Vec3i;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,37 +44,14 @@ public class HoughCircles {
         // initialize the polar coordinates space/Hough Space
         int numOfR = (maxRadius - minRadius) + 1;
         int[][] acc = new int[numOfR][width * height];
-        for(int i=0; i<numOfR; i++) {
-            Arrays.fill(acc[i], 0);
-        }
 
-        int x0;
-        int y0;
-//        double t;
+        resetAcc(acc, numOfR);
+
         double[] coslut = setupCosLUT();
         double[] sinlut = setupSinLUT();
 
         // convert to hough space and calculate accumulate
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if ((data[y * width + x] & 0xff) == 255) {
-                    setAcc(x, y, x0, y0, coslut, sinlut, acc);
-                }
-            }
-        }
-    }
-
-        private void setAcc(x, y, x0, y0, coslut[], sinlut[], acc[][]){
-            for (int theta = 0; theta < 360; theta++) {
-                for(int r=minRadius; r<=maxRadius; r++) {
-                    x0 = (int) Math.round(x - r * coslut[theta]);
-                    y0 = (int) Math.round(y - r * sinlut[theta]);
-                    if (x0 < width && x0 > 0 && y0 < height && y0 > 0) {
-                        acc[r-minRadius][x0 + (y0 * width)] += 1;
-                    }
-                }
-            }
-        }
+        calculateAccumulate(data, acc, coslut, sinlut, width, height, minRadius, maxRadius);
 
         // find maximum for each space
         int[] tempCircle = new int[3];
@@ -87,25 +64,21 @@ public class HoughCircles {
                     int value = (acc[i][x + (y * width)] & 0xff);
 
                     // if its higher than current value, swap it
-                    if (maxonly) {
-                        if(value > tempCircle[0]) {
-                            tempCircle[0] = value; //radius?
-                            tempCircle[1] = x; // center.x
-                            tempCircle[2] = y; // center.y
-                        }
-                    }else {
-                        if(value > accumulate) { // filter by threshold
-                            Vec3i vec3i = new Vec3i();
-                            vec3i.x = x;
-                            vec3i.y = y;
-                            vec3i.z = value;
-                            circles.add(vec3i);
-                        }
+                    if (maxonly && value > tempCircle[0]) {
+                        tempCircle[0] = value; //radius?
+                        tempCircle[1] = x; // center.x
+                        tempCircle[2] = y; // center.y
+                    } else if(value > accumulate) { // filter by threshold
+                        Vec3i vec3i = new Vec3i();
+                        vec3i.x = x;
+                        vec3i.y = y;
+                        vec3i.z = value;
+                        circles.add(vec3i);
                     }
                 }
             }
 
-            if(maxonly) {
+           if(maxonly) {
                 Vec3i vec3i = new Vec3i();
                 vec3i.x = tempCircle[1];
                 vec3i.y = tempCircle[2];
@@ -113,28 +86,59 @@ public class HoughCircles {
                 circles.add(vec3i);
             }
         }
+    }
 
+    private void calculateAccumulate(byte[] data, int[][] acc, double[] cosLut, double[] sinLut, int width, int height, int minRadius, int maxRadius) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                something(data, acc, cosLut, sinLut, x, y, width, height, minRadius, maxRadius);
+            }
+        }
+    }
+
+    private void resetAcc(int[][] acc, int numOfR) {
+        for(int i = 0; i < numOfR; i++) {
+            Arrays.fill(acc[i], 0);
+        }
     }
 
     private double[] setupCosLUT() {
-        float angle180 = 180.0;
+        float angle180 = 180f;
         int angle360 = 360;
-        double[] coslut = new double[angle360];
+        double[] cosLut = new double[angle360];
+
         for (int theta = 0; theta < angle360; theta++) {
-            coslut[theta] = Math.cos((theta * Math.PI) / angle1);
+            cosLut[theta] = Math.cos((theta * Math.PI) / angle180);
         }
-        return coslut;
+
+        return cosLut;
     }
 
     private double[] setupSinLUT() {
-        float angle180 = 180.0;
+        float angle180 = 180f;
         int angle360 = 360;
-        double[] sinlut = new double[angle360];
+        double[] sinLut = new double[angle360];
+
         for (int theta = 0; theta < angle360; theta++) {
-            sinlut[theta] = Math.sin((theta * Math.PI) / angle180);
+            sinLut[theta] = Math.sin((theta * Math.PI) / angle180);
         }
-        return sinlut;
+
+        return sinLut;
+    }
+
+    private void something(byte[] data, int[][] acc, double[] cosLut, double[] sinLut, int x, int y, int width, int height, int minRadius, int maxRadius) {
+        if ((data[y * width + x] & 0xff) == 255) {
+            for (int theta = 0; theta < 360; theta++) {
+                for(int r=minRadius; r<=maxRadius; r++) {
+                    int x0 = (int) Math.round(x - r * cosLut[theta]);
+                    int y0 = (int) Math.round(y - r * sinLut[theta]);
+
+                    if (x0 < width && x0 > 0 && y0 < height && y0 > 0) {
+                        acc[r-minRadius][x0 + (y0 * width)] += 1;
+                    }
+                }
+            }
+        }
     }
 
 }
-
