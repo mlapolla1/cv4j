@@ -53,7 +53,16 @@ public class EmbossFilter extends BaseFilter {
 		byte[][] output = new byte[3][R.length];
 		for ( int y = 1; y < height-1; y++ ) {
 			offset = y*width;
-			for ( int x = 1; x < width-1; x++ ) {
+			setOutput(r, g, b, r1, g1, b1, r2, g2, b2, out, output, offset);
+		}
+		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
+		output = null;
+		return src;
+	}
+
+
+	private void setOutput(int r, int g, int b, int r1, int g1, int b1, int r2, int g2, int b2, boolean out, byte [][] output, int offset){
+		for ( int x = 1; x < width-1; x++ ) {
 				r1 = R[offset] & 0xff;
 				g1 = G[offset] & 0xff;
 				b1 = B[offset] & 0xff;
@@ -80,12 +89,7 @@ public class EmbossFilter extends BaseFilter {
 				output[2][offset] = (byte)b;
 				offset++;
 			}
-		}
-		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
-		output = null;
-		return src;
 	}
-
 	/**
 	 * 
 	 * @param out

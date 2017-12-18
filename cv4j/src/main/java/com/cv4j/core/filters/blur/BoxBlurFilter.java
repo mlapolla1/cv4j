@@ -44,12 +44,13 @@ public class BoxBlurFilter extends BaseFilter {
     private void blur( byte[][] in, byte[][] out, int width, int height, int radius ) {
         int widthMinus1 = width-1;
         int tableSize = 2*radius+1;
-        int divide[] = new int[256*tableSize];
+        int maxRGB = 256;
+        int divide[] = new int[maxRGB*tableSize];
 
         // the value scope will be 0 to 255, and number of 0 is table size
         // will get means from index not calculate result again since 
         // color value must be  between 0 and 255.
-        for ( int i = 0; i < 256*tableSize; i++ ){
+        for ( int i = 0; i < maxRGB*tableSize; i++ ){
             divide[i] = i/tableSize; 
         }
 
@@ -71,34 +72,38 @@ public class BoxBlurFilter extends BaseFilter {
             }
 
             // 每一列，每一个像素
-            for ( int x = 0; x < width; x++ ) {
-                // 赋值到输出像素
-                out[0][outIndex] = (byte)divide[tr];
-                out[1][outIndex] = (byte)divide[tg];
-                out[2][outIndex] = (byte)divide[tb];
-
-                // 移动盒子一个像素距离
-                int i1 = x+radius+1;
-                // 检测是否达到边缘
-                if ( i1 > widthMinus1 )
-                    i1 = widthMinus1;
-                // 将要移出的一个像素
-                int i2 = x-radius;
-                if ( i2 < 0 )
-                    i2 = 0;
-
-                // 计算移除与移进像素之间的差值，更新像素和
-                tr += (in[0][inIndex+i1]&0xff)-(in[0][inIndex+i2]&0xff);
-                tg += (in[1][inIndex+i1]&0xff)-(in[1][inIndex+i2]&0xff);
-                tb += (in[2][inIndex+i1]&0xff)-(in[2][inIndex+i2]&0xff);
-
-                // 继续到下一行
-                outIndex += height;
-            }
+            outIndex = setOut(outIndex, tr, tg, tb, radius, widthMinus1, height, out);
             // 继续到下一行
             inIndex += width;
         }
     }
+
+    private int setOut(int outIndex, int tr, int tg, int tb, int radius, int widthMinus1, int height, byte[][] out){
+        for ( int x = 0; x < width; x++ ) {
+            // 赋值到输出像素
+            out[0][outIndex] = (byte)divide[tr];
+            out[1][outIndex] = (byte)divide[tg];
+            out[2][outIndex] = (byte)divide[tb];
+
+            // 移动盒子一个像素距离
+            int i1 = x+radius+1;
+            // 检测是否达到边缘
+            if ( i1 > widthMinus1 ) {
+                i1 = widthMinus1;
+            }
+            // 将要移出的一个像素
+            int i2 = x-radius;
+            if ( i2 < 0 ) {
+                i2 = 0;
+            }
+
+            // 继续到下一行
+            outIndex += height;
+        }
+        return outIndex;
+    }
+
+
         
 	public void setHRadius(int hRadius) {
 		this.hRadius = hRadius;

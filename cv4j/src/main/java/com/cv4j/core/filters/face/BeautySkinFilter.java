@@ -66,20 +66,8 @@ public class BeautySkinFilter implements CommonFilter {
         ISkinDetection skinDetector = new DefaultSkinDetection();
         byte[] mask = new byte[length];
         Arrays.fill(mask, (byte) 0);
-        int r;
-        int g;
-        int b;
 
-        byte maxRgb = (byte) 255;
-        for (int i = 0; i < R.length; i++) {
-            r = R[i] & 0xff;
-            g = G[i] & 0xff;
-            b = B[i] & 0xff;
-
-            if (!skinDetector.isSkin(r, g, b)) {
-                mask[i] = maxRgb;
-            }
-        }
+        setMask(R, G, B, skinDetector, mask);
 
         Erode erode = new Erode();
         int size = 5;
@@ -93,6 +81,43 @@ public class BeautySkinFilter implements CommonFilter {
             }
         }
 
+        setMask(R, G, B, mask);
+
+        setMask(R.length, mask, width, height);
+
+        // 遮罩层模糊
+        byte[] blurmask = createBlurMask(mask, width, height);
+
+        // alpha blend
+        alphaBlend(src, blurmask, R, G, B);
+
+        return src;
+    }
+
+    private void setMask(byte [] R, byte [] G, byte [] B, ISkinDetection skinDetector, byte[] mask){
+        int r;
+        int g;
+        int b;
+
+        byte maxRgb = (byte) 255;
+
+
+        for (int i = 0; i < R.length; i++) {
+            r = R[i] & 0xff;
+            g = G[i] & 0xff;
+            b = B[i] & 0xff;
+
+            if (!skinDetector.isSkin(r, g, b)) {
+                mask[i] = maxRgb;
+            }
+        }
+    }
+
+    private void setMask(byte [] R, byte [] G, byte [] B, byte[] mask){
+        int r;
+        int g;
+        int b;
+
         int c;
         for (int i = 0; i < R.length; i++) {
             r = R[i] & 0xff;
@@ -102,23 +127,17 @@ public class BeautySkinFilter implements CommonFilter {
             c = (int) (0.299 * r + 0.587 * g + 0.114 * b);
             mask[i] = (byte) c;
         }
+    }
 
+    private void setMask(int length, byte [] mask, int width, int height){
         GradientFilter gradientFilter = new GradientFilter();
         int[] gradient = gradientFilter.gradient(new ByteProcessor(mask, width, height));
         Arrays.fill(mask, (byte) 0);
-        for (int i = 0; i < R.length; i++) {
+        for (int i = 0; i < length; i++) {
             if (gradient[i] > 35) {
                 mask[i] = (byte) 255;
             }
         }
-
-        // 遮罩层模糊
-        byte[] blurmask = createBlurMask(mask, width, height);
-
-        // alpha blend
-        alphaBlend(src, blurmask, R, G, B);
-
-        return src;
     }
 
     private byte[] createBlurMask(byte[] mask, int width, int height) {

@@ -39,7 +39,7 @@ public class CarveFilter extends BaseFilter{
 	public ImageProcessor doFilter(ImageProcessor src) {
 
 		byte[][] output = new byte[3][R.length];
-
+		int halfRGB = 129;
         int index = 0;
         for(int row=1; row<height-1; row++) {
         	int ta = 0;
@@ -63,15 +63,15 @@ public class CarveFilter extends BaseFilter{
                 // calculate new RGB value 
                 if(isCarve)
                 {
-	                tr = ar - br + 128;
-	                tg = ag - bg + 128;
-	                tb = ab - bb + 128; 
+	                tr = ar - br + halfRGB;
+	                tg = ag - bg + halfRGB;
+	                tb = ab - bb + halfRGB; 
                 }
                 else
                 {
-	                tr = br - ar + 128;
-	                tg = bg - ag + 128;
-	                tb = bb - ab + 128; 
+	                tr = br - ar + halfRGB;
+	                tg = bg - ag + halfRGB;
+	                tb = bb - ab + halfRGB; 
                 }
 				output[0][index] = (byte)Tools.clamp(tr);
 				output[1][index] = (byte)Tools.clamp(tg);
