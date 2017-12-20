@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cv4j.core.filters;
+package com.cv4j.core.filters.blur;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.filters.BaseFilter;
 import com.cv4j.image.util.Tools;
 /**
  * The BloxBlurFilter class.
@@ -72,13 +73,13 @@ public class BoxBlurFilter extends BaseFilter {
             }
 
             // 每一列，每一个像素
-            outIndex = setOut(outIndex, tr, tg, tb, radius, widthMinus1, height, out);
+            outIndex = setOut(divide, outIndex, tr, tg, tb, radius, widthMinus1, height, out);
             // 继续到下一行
             inIndex += width;
         }
     }
 
-    private int setOut(int outIndex, int tr, int tg, int tb, int radius, int widthMinus1, int height, byte[][] out){
+    private int setOut(int[] divide, int outIndex, int tr, int tg, int tb, int radius, int widthMinus1, int height, byte[][] out){
         for ( int x = 0; x < width; x++ ) {
             // 赋值到输出像素
             out[0][outIndex] = (byte)divide[tr];

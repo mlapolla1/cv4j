@@ -52,21 +52,49 @@ public class ProjectionHist {
         float ystep = height / 5.0f;
         int index = 0;
         if(direction == X_DIRECTION) {
-            xstep = width / bins;
-            for (float x = 0; x < width; x += xstep) {
-                if ((xstep + x) - width > 1)
-                    continue;
-                output[index] = getWeightBlackNumber(data, width, height, x, 0, xstep, height);
-                index++;
-            }
+            calculateProjectionXDirection(width, height, bins, index, xstep, data, output);
         } else {
             // calculate X Projection
-            ystep = height / bins;
-            for (float y = 0; y < height; y += ystep) {
-                if ((y + ystep) - height > 1) continue;
-                output[index] = getWeightBlackNumber(data, width, height, 0, y, width, ystep);
-                index++;
-            }
+            calculateProjectionYDirection(width, height, bins, index, ystep, data, output);
+        }
+    }
+
+    /**
+     * Calculate the projection of X direction
+     * @param width
+     * @param height
+     * @param bins
+     * @param index
+     * @param xstep
+     * @param data
+     * @param output projection of X direction
+     */
+    private void calculateProjectionXDirection(int width, int height, int bins, int index, float xstep, byte[] data, double[] output) {
+        xstep = width / bins;
+        for (float x = 0; x < width; x += xstep) {
+            if ((xstep + x) - width > 1)
+                continue;
+            output[index] = getWeightBlackNumber(data, width, height, x, 0, xstep, height);
+            index++;
+        }
+    }
+
+    /**
+     * Calculate the projection of Y direction
+     * @param width
+     * @param height
+     * @param bins
+     * @param index
+     * @param ystep
+     * @param data
+     * @param output projection of Y direction
+     */
+    private void calculateProjectionYDirection(int width, int height, int bins, int index, float ystep, byte[] data, double[] output) {
+        ystep = height / bins;
+        for (float y = 0; y < height; y += ystep) {
+            if ((y + ystep) - height > 1) continue;
+            output[index] = getWeightBlackNumber(data, width, height, 0, y, width, ystep);
+            index++;
         }
     }
 
@@ -112,6 +140,36 @@ public class ProjectionHist {
         int weight = numberOfBlackPixels(data, ny, nh, nx, nw, ww);
 
         // 计算小数部分黑色像素权重加和
+        weightNum = calculateFractionalBlackPixelWeightSum(data, width, height, fx, fy, fw, fh,
+                nx, ny, nw, nh, ww, weight);
+
+        return weightNum;
+    }
+
+    /**
+     * Calculate the fractional black pixel weight sum
+     * 计算小数部分黑色像素权重加和
+     * @param data
+     * @param width
+     * @param height
+     * @param fx
+     * @param fy
+     * @param fw
+     * @param fh
+     * @param nx
+     * @param ny
+     * @param nw
+     * @param nh
+     * @param ww
+     * @param weight fractional black pixel weight sum
+     * @return
+     */
+    private float calculateFractionalBlackPixelWeightSum(byte[] data, float width, float height,
+                                                         float fx, float fy, float fw, float fh,
+                                                         int nx, int ny, int nw, int nh, int ww,
+                                                         int weight) {
+        float weightNum;
+
         float w1 = calculateW1(data, width, fx, nx, ny, nh, ww);
         float w2 = calculateW2(data, height, fy, ny, nx, nw, ww);
         float w3 = calculateW3(data, width, fw, nw, ny, nh, ww);

@@ -15,8 +15,6 @@
  */
 package com.cv4j.core.binary;
 
-import android.annotation.SuppressLint;
-
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Rect;
 
@@ -90,34 +88,42 @@ public class ConnectedAreaLabel {
 
     private int _process(ByteProcessor binary, int[] labelMask, List<Rect> rectangles,
                          boolean drawBounding) {
-        int width = binary.getWidth();
-        int height = binary.getHeight();
+        int width   = binary.getWidth();
+        int height  = binary.getHeight();
         byte[] data = binary.getGray();
-        int p1;
-        int p2;
-        int p3;
+
         int yMin = 1;
         int xMin = 1;
-        int offset = 0;
-        int[] labels = new int[(width * height) / 2];
-        Arrays.fill(labels, -1);
-        int[] pixels = new int[width * height];
-        Arrays.fill(pixels, -1);
-        int ul = -1;
-        int ll = -1;
-        int currlabel = 0;
+
+        int[] labels = initLabels(width, height);
+        int[] pixels = initPixels(width, height);
         int[] twoLabels = new int[2];
 
+        int currLabel = 0;
+
         for (int row = yMin; row < height; row++) {
-            offset = row * width + xMin;
+            int offset = row * width + xMin;
             for (int col = xMin; col < width; col++) {
-                something(data, pixels, labels, offset, labelMask, width, height, twoLabels, currlabel);
+                calculateArrays(data, pixels, labels, offset, width, twoLabels, currLabel);
                 offset++;
+                currLabel++;
             }
         }
 
-        int[] labelSet = new int[currlabel];
-        System.arraycopy(labels, 0, labelSet, 0, currlabel);
+        int[] labelSet = createLabelSet(labels, currLabel);
+
+        // 2. second pass
+        // aggregation the pixels with same label index
+        Map<Integer, List<PixelNode>> aggregationMap = makeAggregationMap(pixels, labelSet, width, height);
+
+        return assignLabels(aggregationMap, labelMask, drawBounding, rectangles);
+    }
+
+    private int[] createLabelSet(int[] labels, int currLabel) {
+        int[] labelSet = new int[currLabel];
+
+        System.arraycopy(labels, 0, labelSet, 0, currLabel);
+
         for (int i = 2; i < labelSet.length; i++) {
             int curLabel = labelSet[i];
             int preLabel = labelSet[curLabel];
@@ -128,23 +134,46 @@ public class ConnectedAreaLabel {
             labelSet[i] = curLabel;
         }
 
-        // 2. second pass
-        // aggregation the pixels with same label index
-        @SuppressLint("UseSparseArrays")
-        Map<Integer, List<PixelNode>> aggregationMap = new HashMap<>();
-        aggregatePixelsWithSameLabelIndex(pixels, labelSet, aggregationMap, width, height);
-
-
-        // assign labels
-        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
-        Arrays.fill(labelMask, -1);
-        List<PixelNode> pixelList = null;
-        int number = assignLabels(keys, aggregationMap, pixelList, labelMask, drawBounding, rectangles);
-
-        return number;
+        return labelSet;
     }
 
-    private void something(byte[] data, int[] ints, int[] pixels, int i, int[] labels, int offset, int width, int[] twoLabels, int currlabel) {
+    /**
+     * Initialize pixels array.
+     * @param width
+     * @param height
+     * @return       The pixels array.
+     */
+    private int[] initPixels(int width, int height) {
+        int[] pixels = new int[width * height];
+        Arrays.fill(pixels, -1);
+
+        return pixels;
+    }
+
+    /**
+     * Initialize labels array.
+     * @param width
+     * @param height
+     * @return       The labels array.
+     */
+    private int[] initLabels(int width, int height) {
+        int[] labels = new int[(width * height) / 2];
+        Arrays.fill(labels, -1);
+
+        return labels;
+    }
+
+    /**
+     * Calculate arrays.
+     * @param data
+     * @param pixels
+     * @param labels
+     * @param offset
+     * @param width
+     * @param twoLabels
+     * @param currlabel
+     */
+    private void calculateArrays(byte[] data, int[] pixels, int[] labels, int offset, int width, int[] twoLabels, int currlabel) {
         int p1 = data[offset] & 0xff;
         int p2 = data[offset - 1] & 0xff; // left
         int p3 = data[offset - width] & 0xff; // upper
@@ -165,14 +194,20 @@ public class ConnectedAreaLabel {
             if (ll < 0 && ul < 0) {
                 pixels[offset] = currlabel;
                 labels[currlabel] = currlabel;
-                currlabel++;
             } else {
-                something1(pixels, labels, twoLabels, offset);
+                smallestLabel(pixels, labels, twoLabels, offset);
             }
         }
     }
 
-    private void something1(int[] pixels, int[] labels, int[] twoLabels, int offset) {
+    /**
+     * Smallest label.
+     * @param pixels
+     * @param labels
+     * @param twoLabels
+     * @param offset
+     */
+    private void smallestLabel(int[] pixels, int[] labels, int[] twoLabels, int offset) {
         Arrays.sort(twoLabels);
         int smallestLabel = twoLabels[0];
         if (twoLabels[0] < 0) {
@@ -194,7 +229,16 @@ public class ConnectedAreaLabel {
         }
     }
 
-    private void aggregatePixelsWithSameLabelIndex(int[] pixels, int[] labelSet, Map<Integer, List<PixelNode>> aggregationMap, int width, int height) {
+    /**
+     * Aggregate pixels with same label index.
+     * @param pixels
+     * @param labelSet
+     * @param width
+     * @param height
+     */
+    private Map<Integer, List<PixelNode>> makeAggregationMap(int[] pixels, int[] labelSet, int width, int height) {
+        Map<Integer, List<PixelNode>> aggregationMap = new HashMap<>();
+
         for (int i = 0; i < height; i++) {
             int offset = i * width;
             List<PixelNode> pixelList;
@@ -223,20 +267,24 @@ public class ConnectedAreaLabel {
                 pixelList.add(pn);
             }
         }
+
+        return aggregationMap;
     }
 
     /**
      * Assign labels.
-     * @param keys
      * @param aggregationMap
-     * @param pixelList
      * @param labelMask
      * @param drawBounding
      * @param rectangles
      * @return
      */
-    private int assignLabels(Integer[] keys, Map<Integer, List<PixelNode>> aggregationMap, List<PixelNode> pixelList, int[] labelMask, boolean drawBounding, List<Rect> rectangles) {
+    private int assignLabels(Map<Integer, List<PixelNode>> aggregationMap, int[] labelMask, boolean drawBounding, List<Rect> rectangles) {
         int number = 0;
+
+        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
+        Arrays.fill(labelMask, -1);
+        List<PixelNode> pixelList;
 
         for (Integer key : keys) {
             pixelList = aggregationMap.get(key);
@@ -260,6 +308,11 @@ public class ConnectedAreaLabel {
         return number;
     }
 
+    /**
+     * Bounding rect.
+     * @param pixelList The pixel list.
+     * @return          The rect.
+     */
     private Rect boundingRect(List<PixelNode> pixelList) {
         int minX = 10000;
         int maxX = 0;

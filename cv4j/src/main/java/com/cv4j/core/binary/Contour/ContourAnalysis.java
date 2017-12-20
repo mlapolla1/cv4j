@@ -30,26 +30,45 @@ import java.util.Map;
 public class ContourAnalysis {
 
     public void process(ByteProcessor binary, int[] labels, List<MeasureData> measureDataList) {
-        int width = binary.getWidth();
+        int width  = binary.getWidth();
         int height = binary.getHeight();
-        int offset = 0;
-        Map<Integer, List<PixelNode>> aggregationMap = new HashMap<Integer, List<PixelNode>>();
-        for (int i = 0; i < height; i++)
-        {
+
+        Map<Integer, List<PixelNode>> aggregationMap = makeAggregationMap(labels, width, height);
+        assignLabels(aggregationMap, measureDataList);
+    }
+
+    private void assignLabels(Map<Integer, List<PixelNode>> aggregationMap, List<MeasureData> measureDataList) {
+        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
+        List<PixelNode> pixelList;
+        GeoMoments moments = new GeoMoments();
+
+        for(Integer key : keys) {
+            pixelList = aggregationMap.get(key);
+            measureDataList.add(moments.calculate(pixelList));
+        }
+    }
+
+    private Map<Integer, List<PixelNode>> makeAggregationMap(int[] labels, int width, int height) {
+        Map<Integer, List<PixelNode>> aggregationMap = new HashMap<>();
+        int offset;
+
+        for (int i = 0; i < height; i++) {
             offset = i * width;
-            List<PixelNode> pixelList = null;
-            PixelNode pn = null;
-            for (int j = 0; j < width; j++)
-            {
+            List<PixelNode> pixelList;
+            PixelNode pn;
+
+            for (int j = 0; j < width; j++) {
                 int pixelLabel = labels[offset+j];
+
                 // skip background
                 if(pixelLabel < 0) {
                     continue;
                 }
+
                 // label each area
                 pixelList = aggregationMap.get(pixelLabel);
                 if(pixelList == null) {
-                    pixelList = new ArrayList<PixelNode>();
+                    pixelList = new ArrayList<>();
                     aggregationMap.put(pixelLabel, pixelList);
                 }
                 pn = new PixelNode();
@@ -60,13 +79,6 @@ public class ContourAnalysis {
             }
         }
 
-        // assign labels
-        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
-        List<PixelNode> pixelList = null;
-        GeoMoments moments = new GeoMoments();
-        for(Integer key : keys) {
-            pixelList = aggregationMap.get(key);
-            measureDataList.add(moments.calculate(pixelList));
-        }
+        return aggregationMap;
     }
 }

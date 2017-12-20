@@ -46,6 +46,11 @@ public class PrincipalColorExtractor {
 		this(NUM_CLUSTERS_DEFAULT);
 	}
 
+    /**
+     * Extract the color
+     * @param processor
+     * @return
+     */
 	public List<Scalar> extract(ColorProcessor processor) {
 		// initialization the pixel data
         int width = processor.getWidth();
@@ -62,7 +67,22 @@ public class PrincipalColorExtractor {
 
         // initialize the clusters for each point
         double[] clusterDisValues = initializeCluster();
+
+        //calculate the old summary
+        calculateOldSummary();
         
+        //update the result image
+        List<Scalar> colors = new ArrayList<Scalar>();
+        for(ClusterCenter cc : clusterCenterList) {
+        	colors.add(cc.getPixelColor());
+        }
+        return colors;
+	}
+
+    /**
+     * Calculate the old summary
+     */
+	private void calculateOldSummary() {
         // calculate the old summary
         // assign the points to cluster center
         // calculate the new cluster center
@@ -73,28 +93,21 @@ public class PrincipalColorExtractor {
         int timesLimit = 10;
         while(true)
         {
-        	stepClusters();
-        	double[][] newClusterCenterColors = reCalculateClusterCenters();
+            stepClusters();
+            double[][] newClusterCenterColors = reCalculateClusterCenters();
 
-        	if(isStop(oldClusterCenterColors, newClusterCenterColors)) {
-        		break;
-        	} else {
-        		oldClusterCenterColors = newClusterCenterColors;
-        	}
+            if(isStop(oldClusterCenterColors, newClusterCenterColors)) {
+                break;
+            } else {
+                oldClusterCenterColors = newClusterCenterColors;
+            }
 
-        	if(times > timesLimit) {
-        		break;
-        	}
-        	times++;
+            if(times > timesLimit) {
+                break;
+            }
+            times++;
         }
-        
-        //update the result image
-        List<Scalar> colors = new ArrayList<Scalar>();
-        for(ClusterCenter cc : clusterCenterList) {
-        	colors.add(cc.getPixelColor());
-        }
-        return colors;
-	}
+    }
 
 	private double[] initializeCluster() {
 		int pointListSize = pointList.size();
@@ -193,37 +206,58 @@ public class PrincipalColorExtractor {
 		double[] blueSum = new double[numOfCluster];
 		for(int i=0; i<pointList.size(); i++)
 		{
-			int cIndex = (int)pointList.get(i).getClusterIndex();
-			clusterCenterList.get(cIndex).addPoints();
-    		int ta = pointList.get(i).getPixelColor().alpha;
-            int tr = pointList.get(i).getPixelColor().red;
-            int tg = pointList.get(i).getPixelColor().green;
-            int tb = pointList.get(i).getPixelColor().blue;
-            int maxRGB = 255;
-            ta = maxRGB;
-			redSums[cIndex] += tr;
-			greenSum[cIndex] += tg;
-			blueSum[cIndex] += tb;
+			recalculateSumOfPoints(i, redSums, greenSum, blueSum);
 		}
 		
 		double[][] oldClusterCentersColors = new double[clusterCenterList.size()][3];
 		for(int i=0; i<clusterCenterList.size(); i++)
 		{
-			double sum  = clusterCenterList.get(i).getNumOfPoints();
-			int cIndex = clusterCenterList.get(i).getcIndex();
-			int red = (int)(greenSum[cIndex]/sum);
-			int green = (int)(greenSum[cIndex]/sum);
-			int blue = (int)(blueSum[cIndex]/sum);
-			clusterCenterList.get(i).setPixelColor(new Scalar(red, green, blue));
-			oldClusterCentersColors[i][0] = red;
-			oldClusterCentersColors[i][0] = green;
-			oldClusterCentersColors[i][0] = blue;
+			recalculateTotalOfPoints(i, redSums, greenSum, blueSum, oldClusterCentersColors);
 		}
 		
 		return oldClusterCentersColors;
 	}
-	
-	
+
+    /**
+     * Recalculate the sum of points
+     * @param i
+     * @param redSums
+     * @param greenSum
+     * @param blueSum
+     */
+	private void recalculateSumOfPoints(int i, double[] redSums, double[] greenSum, double[] blueSum) {
+        int cIndex = (int)pointList.get(i).getClusterIndex();
+        clusterCenterList.get(cIndex).addPoints();
+        int ta = pointList.get(i).getPixelColor().alpha;
+        int tr = pointList.get(i).getPixelColor().red;
+        int tg = pointList.get(i).getPixelColor().green;
+        int tb = pointList.get(i).getPixelColor().blue;
+        int maxRGB = 255;
+        ta = maxRGB;
+        redSums[cIndex] += tr;
+        greenSum[cIndex] += tg;
+        blueSum[cIndex] += tb;
+    }
+
+    /**
+     * recalculate the total of points for each cluster
+     * @param i
+     * @param redSums
+     * @param greenSum
+     * @param blueSum
+     * @param oldClusterCentersColors
+     */
+    private void recalculateTotalOfPoints(int i, double[] redSums, double[] greenSum, double[] blueSum, double[][] oldClusterCentersColors) {
+        double sum  = clusterCenterList.get(i).getNumOfPoints();
+        int cIndex = clusterCenterList.get(i).getcIndex();
+        int red = (int)(greenSum[cIndex]/sum);
+        int green = (int)(greenSum[cIndex]/sum);
+        int blue = (int)(blueSum[cIndex]/sum);
+        clusterCenterList.get(i).setPixelColor(new Scalar(red, green, blue));
+        oldClusterCentersColors[i][0] = red;
+        oldClusterCentersColors[i][0] = green;
+        oldClusterCentersColors[i][0] = blue;
+    }
 
 	/**
 	 * 

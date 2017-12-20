@@ -23,69 +23,109 @@ import java.util.Arrays;
  */
 public class Skeleton extends DtBase {
 
-	private void extractSkeletonFromDtImage(byte[] output, int[] distmap, int width, int height) {
-		int offset;
-		int dis;
-		int p1;
-		int p2;
-		int p3;
-		int p4;
+	private static final int MAX_RGB = 255;
 
+	/**
+	 * The process.
+	 * @param binary The byte processor.
+	 */
+	public void process(ByteProcessor binary) {
+		final int width = binary.getWidth();
+		final int height = binary.getHeight();
+
+		byte[] pixels = binary.getGray();
+		byte[] output = initOutput(pixels);
+		int[] distMap = initDistMap(binary);
+
+		for(int row = 0; row < height; row++) {
+			int offset = row * width;
+			for(int col = 0; col < width; col++) {
+				int pv = pixels[offset + col];
+
+				if(pv == MAX_RGB) {
+					distMap[offset + col] = 1;
+				}
+			}
+		}
+
+		distanceTransformStage(pixels, output, distMap, width, height);
+
+		binary.putGray(output);
+	}
+
+	/**
+	 * Extract the skeleton form a distance transform image.
+	 * @param output  The output array.
+	 * @param distMap The distMap array.
+	 * @param width   The width.
+	 * @param height  The height.
+	 */
+	private void extractSkeletonFromDtImage(byte[] output, int[] distMap, int width, int height) {
 		for(int row = 1; row < height-1; row++) {
-			offset = row * width;
+			int offset = row * width;
+
 			for(int col = 1; col < width-1; col++) {
-				dis = distmap[offset+col];
-				p1  = distmap[offset+col-1];
-				p2  = distmap[offset+col+1];
-				p3  = distmap[offset-width+col];
-				p4  = distmap[offset+width+col];
+				int dis = distMap[offset+col];
+				int p1  = distMap[offset+col-1];
+				int p2  = distMap[offset+col+1];
+				int p3  = distMap[offset-width+col];
+				int p4  = distMap[offset+width+col];
 
 				if(dis == 0 || dis < p1 || dis < p2 || dis < p3 || dis < p4) {
 					output[offset+col] = (byte) 0;
 				} else {
-					output[offset+col] = (byte) 255;
+					output[offset+col] = (byte) MAX_RGB;
 				}
 			}
 		}
 	}
 
-	public void process(ByteProcessor binary) {
-		int width = binary.getWidth();
-		int height = binary.getHeight();
-		byte[] pixels = binary.getGray();
-		byte[] output = new byte[width*height];
-		int[] distmap = new int[width*height];
-
-		System.arraycopy(pixels, 0, output, 0, output.length);
-		Arrays.fill(distmap, 0);
-		
-		// initialize distance value
-		int offset;
-		int pv;
-
-		for(int row = 0; row < height; row++) {
-			offset = row * width;
-			for(int col = 0; col < width; col++) {
-				pv = pixels[offset + col];
-				if(pv == 255) {
-					distmap[offset + col] = 1;
-				}
-			}
-		}
-
-		// distance transform stage
+	/**
+	 * The distance transform stage.
+	 * @param pixels  The pixels array.
+	 * @param output  The output array.
+	 * @param distMap The distMap array.
+	 * @param width   The width.
+	 * @param height  The height.
+	 */
+	private void distanceTransformStage(byte[] pixels, byte[] output, int[] distMap, int width, int height) {
 		boolean stop = false;
 		int level = 0;
 		while(!stop) {
-			stop = dt(pixels, output, distmap, level, width, height);
+			stop = distanceTransform(pixels, output, distMap, level, width, height);
 			System.arraycopy(output, 0, pixels, 0, output.length);
 			level++;
 		}
 
 		Arrays.fill(output, (byte) 0);
-		extractSkeletonFromDtImage(output, distmap, width, height);
+		extractSkeletonFromDtImage(output, distMap, width, height);
+	}
 
-		binary.putGray(output);
+	/**
+	 * Initialize the distMap array.
+	 * @param binary The byte processor.
+	 * @return       The distMap array.
+	 */
+	private int[] initDistMap(ByteProcessor binary) {
+		final int width  = binary.getWidth();
+		final int height = binary.getHeight();
+
+		int[] distMap = new int[width * height];
+		Arrays.fill(distMap, 0);
+
+		return distMap;
+	}
+
+	/**
+	 * Initialize the output array.
+	 * @param pixels The pixels array.
+	 * @return       The output array.
+	 */
+	private byte[] initOutput(byte[] pixels) {
+		byte[] output = new byte[pixels.length];
+		System.arraycopy(pixels, 0, output, 0, output.length);
+
+		return output;
 	}
 
 }

@@ -15,7 +15,7 @@
  */
 package com.cv4j.core.binary.Dilate;
 
-import com.cv4j.core.binary.binaryUtility;
+import com.cv4j.core.binary.BinaryUtility;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
 
@@ -30,9 +30,8 @@ public class Dilate {
 	 * @param binary - image data
 	 * @param structureElement - structure element for morphology operator
      */
-	public void process(ByteProcessor binary, Size structureElement)
-	{
-		int numberIteration = 1;
+	public void process(ByteProcessor binary, Size structureElement) {
+		final int numberIteration = 1;
 		process(binary, structureElement, numberIteration);
 	}
 
@@ -43,8 +42,9 @@ public class Dilate {
 	 * @param iteration - 1 as default, better less than 10, for the sake of time consume
      */
 	public void process(ByteProcessor binary, Size structureElement, int iteration){
-		int maxRGB = 255;
-		binaryUtility bU = new binaryUtility();
-		bU.process(binary, structureElement, iteration, maxRGB);
+		final int maxRgb = 255;
+
+		BinaryUtility binaryUtility = new BinaryUtility();
+		binaryUtility.process(binary, structureElement, iteration, maxRgb);
 	}
 }

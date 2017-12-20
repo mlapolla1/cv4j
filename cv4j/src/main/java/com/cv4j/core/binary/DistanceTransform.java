@@ -23,55 +23,119 @@ import java.util.Arrays;
  */
 public class DistanceTransform extends DtBase {
 
-	public void process(ByteProcessor binary) {
-		int width = binary.getWidth();
-		int height = binary.getHeight();
-		byte[] pixels = binary.getGray();
+	/**
+	 * The maximum RGB value.
+	 */
+	private static final int MAX_RGB = 255;
 
-		byte[] output = new byte[width*height];
-		int[] distmap = new int[width*height];
-		System.arraycopy(pixels, 0, output, 0, output.length);
-		Arrays.fill(distmap, 0);
+	public void process(ByteProcessor binary) {
+		final int width     = binary.getWidth();
+		final int height    = binary.getHeight();
+
+		byte[] output = initOutput(binary);
+		byte[] pixels = initPixels(binary, output);
+
+		int[] distMap = initDistMap(binary, pixels);
+
+		distanceTransformStage(output, pixels, distMap, width, height);
 		
-		// initialize distance value
-		int offset =0;
-		int pv = 0;
-		for(int row=0; row<height; row++) {
-			offset = row*width;
-			for(int col=0; col<width; col++) {
-				pv = pixels[offset+col];
-				if(pv == 255) {
-					distmap[offset+col] = 1;
-				}
-			}
-		}
-		
-		// distance transform stage
+		binary.putGray(output);
+	}
+
+	/**
+	 * The distance transform stage.
+	 * @param output  The output.
+	 * @param pixels  The pixels.
+	 * @param distMap The distance map.
+	 * @param width   The width.
+	 * @param height  The height.
+	 */
+	private void distanceTransformStage(byte[] output, byte[] pixels, int[] distMap, int width, int height) {
 		boolean stop = false;
 		int level = 0;
 		while(!stop) {
-			stop = dt(pixels, output, distmap, level, width, height);
+			stop = distanceTransform(pixels, output, distMap, level, width, height);
 			System.arraycopy(output, 0, pixels, 0, output.length);
 			level++;
 		}
 
-		// assign different gray value by distance value
-		int step = 255 / level;
-		int dis = 0;
-		Arrays.fill(output, (byte)0);
-		
-		for(int row=0; row<height; row++) {
-			offset = row*width;
-			for(int col=0; col<width; col++) {
-				dis = distmap[offset+col];
+		assignGrayValuesByDistance(output, distMap, width, height, level);
+	}
+
+	/**
+	 * Assign different gray value by distance value.
+	 * @param output  The output.
+	 * @param distMap The distance map.
+	 * @param width   The width.
+	 * @param height  The height.
+	 * @param level   The level.
+	 */
+	private void assignGrayValuesByDistance(byte[] output, int[] distMap, int width, int height, int level) {
+		int step = MAX_RGB / level;
+		Arrays.fill(output, (byte) 0);
+
+		for(int row = 0; row < height; row++) {
+			int offset = row * width;
+			for(int col = 0; col < width; col++) {
+				int dis = distMap[offset+col];
 				if(dis > 0) {
-					int gray = dis*step;
-					output[offset+col] = (byte)gray;
+					int gray = (dis * step);
+					output[offset+col] = (byte) gray;
 				}
 			}
 		}
-		
-		binary.putGray(output);
+	}
+
+	/**
+	 * Initialization of distMap with their values.
+	 * @param binary The byte processor.
+	 * @return       The distMap.
+	 */
+	private int[] initDistMap(ByteProcessor binary, byte[] pixels) {
+		final int width  = binary.getWidth();
+		final int height = binary.getHeight();
+
+		int[] distMap = new int[width*height];
+		Arrays.fill(distMap, 0);
+
+		// initialize distance value
+		for(int row=0; row<height; row++) {
+			int offset = row*width;
+			for(int col=0; col<width; col++) {
+				int pv = pixels[offset+col];
+
+				if(pv == MAX_RGB) {
+					distMap[offset+col] = 1;
+				}
+			}
+		}
+
+		return distMap;
+	}
+
+	/**
+	 * Initialization of pixels.
+	 * @param binary The byte processor.
+	 * @param output The output.
+	 * @return       The pixels.
+	 */
+	private byte[] initPixels(ByteProcessor binary, byte[] output) {
+		byte[] pixels = binary.getGray();
+		System.arraycopy(pixels, 0, output, 0, output.length);
+
+		return pixels;
+	}
+
+	/**
+	 * Initialization of output.
+	 * @param binary The byte processor.
+	 * @return       The output.
+	 */
+	private byte[] initOutput(ByteProcessor binary) {
+		final int width = binary.getWidth();
+		final int height = binary.getHeight();
+
+		return new byte[width * height];
 	}
 
 }

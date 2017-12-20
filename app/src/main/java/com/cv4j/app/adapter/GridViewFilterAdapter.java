@@ -15,11 +15,13 @@ import com.safframework.tony.common.utils.Preconditions;
 
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.*;
+
 /**
  * Created by Tony Shen on 2017/3/15.
  */
 
-public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAdapter.ViewHolder> {
+public class GridViewFilterAdapter extends Adapter<GridViewFilterAdapter.ViewHolderGFA> {
 
     private List<String> mList;
     private Bitmap mBitmap;
@@ -30,12 +32,12 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
     }
 
     @Override
-    public GridViewFilterAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new GridViewFilterAdapter.ViewHolder(parent, R.layout.cell_gridview_filter);
+    public ViewHolderGFA onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolderGFA(parent, R.layout.cell_gridview_filter);
     }
 
     @Override
-    public void onBindViewHolder(final GridViewFilterAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolderGFA holder, int position) {
 
         String filterName = mList.get(position);
 
@@ -81,7 +83,7 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolderGFA extends ViewHolder {
 
         /**
          * Image view.
@@ -93,11 +95,11 @@ public class GridViewFilterAdapter extends RecyclerView.Adapter<GridViewFilterAd
          */
         private TextView text;
 
-        public ViewHolder(ViewGroup parent, @LayoutRes int resId) {
+        public ViewHolderGFA(ViewGroup parent, @LayoutRes int resId) {
             super(LayoutInflater.from(parent.getContext()).inflate(resId, parent, false));
 
-            this.image = (ImageView)itemView.findViewById(R.id.image);
-            this.text = (TextView)itemView.findViewById(R.id.text);
+            this.image = itemView.findViewById(R.id.image);
+            this.text  = itemView.findViewById(R.id.text);
         }
 
         public ImageView getImage() {

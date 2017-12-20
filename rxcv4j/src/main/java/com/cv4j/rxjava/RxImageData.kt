@@ -20,7 +20,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.ImageView
 import com.cv4j.core.datamodel.CV4JImage
-import com.cv4j.core.datamodel.ImageProcessor
+import com.cv4j.core.datamodel.image.ImageProcessor
 import com.cv4j.core.filters.CommonFilter
 import com.safframework.utils.RxJavaUtils
 import io.reactivex.Flowable

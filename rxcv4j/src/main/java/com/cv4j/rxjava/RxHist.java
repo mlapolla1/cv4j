@@ -17,7 +17,7 @@ package com.cv4j.rxjava;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.CV4JImage;
-import com.cv4j.core.datamodel.ImageProcessor;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.hist.CalcHistogram;
 import com.cv4j.core.hist.EqualHist;
 
@@ -63,12 +63,10 @@ public class RxHist {
      * 计算直方图
      * @param bins
      */
-    public Flowable<int[][]> calcRGBHist(final int bins) {
-
+    public Flowable calcRGBHist(final int bins) {
         return flowable.map(new Function<CV4JImage,int[][]>() {
             @Override
             public int[][] apply(@NonNull CV4JImage cv4JImage) throws Exception {
-
                 CalcHistogram calcHistogram = new CalcHistogram();
                 ImageProcessor imageProcessor = cv4JImage.getProcessor();
                 int[][] hist = new int[imageProcessor.getChannels()][bins];

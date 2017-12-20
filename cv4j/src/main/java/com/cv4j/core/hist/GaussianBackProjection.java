@@ -48,11 +48,6 @@ public class GaussianBackProjection {
 
         float[] R = model.toFloat(0);
         float[] G = model.toFloat(1);
-        int r = 0;
-        int g = 0;
-        int  b = 0;
-        float sum = 0;
-        int index;
 
         calculateMeanRGB(model, R, G);
 
@@ -61,36 +56,8 @@ public class GaussianBackProjection {
         float[] rmdev = Tools.calcMeansAndDev(R);
         float[] gmdev = Tools.calcMeansAndDev(G);
 
-        int width = src.getWidth();
-        int height = src.getHeight();
-
         // 反向投影
-        float pr = 0;
-        float pg = 0;
-        float[] result = new float[width*height];
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                index = row*width + col;
-                b = src.toByte(INDEX_B)[index]&0xff;
-                g = src.toByte(INDEX_G)[index]&0xff;
-                r = src.toByte(INDEX_R)[index]&0xff;
-                sum = b + g + r;
-                float red = r / sum;
-                float green = g / sum;
-                int factor = 2;
-                pr = (float)((1.0 / (rmdev[1]*Math.sqrt(factor * Math.PI)))*Math.exp(-(Math.pow((red - rmdev[0]), factor)) / (factor * Math.pow(rmdev[1], factor))));
-                pg = (float)((1.0 / (gmdev[1]*Math.sqrt(factor * Math.PI)))*Math.exp(-(Math.pow((green - gmdev[0]),factor)) / (factor * Math.pow(gmdev[1], factor))));
-                sum = pr*pg;
-
-                if(Float.isNaN(sum)){
-                    result[index] = 0;
-                    continue;
-                }
-
-                result[index] = sum;
-
-            }
-        }
+        float[] result = reverseProjection(src, rmdev, gmdev);
 
         // 归一化显示高斯反向投影
         float min = 1000;
@@ -107,6 +74,63 @@ public class GaussianBackProjection {
         }
     }
 
+    /**
+     * Calculate the reverse projection
+     * @param src image
+     * @param rmdev mean deviation
+     * @param gmdev standard deviation
+     * @return the result of reverse projection
+     */
+    private float[] reverseProjection(ImageProcessor src, float[] rmdev, float[] gmdev) {
+        // 反向投影
+        int index;
+        int width = src.getWidth();
+        int height = src.getHeight();
+        float[] result = new float[width*height];
+        float sum;
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                index = row*width + col;
+
+                sum = sumRgbValues(src, row, col, index, rmdev, gmdev);
+
+                if(Float.isNaN(sum)){
+                    result[index] = 0;
+                    continue;
+                }
+                result[index] = sum;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Sum RGB Values
+     * @param src
+     * @param row
+     * @param col
+     * @param index
+     * @param rmdev
+     * @param gmdev
+     * @return the sum
+     */
+    private float sumRgbValues(ImageProcessor src, int row, int col, int index, float[] rmdev, float[] gmdev) {
+        int r = 0, g = 0, b = 0;
+        float pr = 0, pg = 0, sum = 0;
+
+        b = src.toByte(INDEX_B)[index]&0xff;
+        g = src.toByte(INDEX_G)[index]&0xff;
+        r = src.toByte(INDEX_R)[index]&0xff;
+        sum = b + g + r;
+        float red = r / sum;
+        float green = g / sum;
+        int factor = 2;
+        pr = (float)((1.0 / (rmdev[1]*Math.sqrt(factor * Math.PI)))*Math.exp(-(Math.pow((red - rmdev[0]), factor)) / (factor * Math.pow(rmdev[1], factor))));
+        pg = (float)((1.0 / (gmdev[1]*Math.sqrt(factor * Math.PI)))*Math.exp(-(Math.pow((green - gmdev[0]),factor)) / (factor * Math.pow(gmdev[1], factor))));
+        sum = pr*pg;
+        return sum;
+    }
     /**
      * Calculate the mean value of RGB.
      * @param model The model image processor

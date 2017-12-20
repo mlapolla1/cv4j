@@ -78,21 +78,11 @@ public class LaplasFilter extends BaseFilter {
 		byte[][] output = new byte[3][total];
 
 		int offset;
-		int r;
-		int g;
-		int b;
 
 		for (int row = 1; row < height - 1; row++) {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
-				r = getFilteredColor(TYPE_COLOR_RED, row, col);
-				g = getFilteredColor(TYPE_COLOR_GREEN, row, col);
-				b = getFilteredColor(TYPE_COLOR_BLUE, row, col);
-
-				int outputOffset = offset + col;
-				output[0][outputOffset] = (byte) Tools.clamp(r);
-				output[1][outputOffset] = (byte) Tools.clamp(g);
-				output[2][outputOffset] = (byte) Tools.clamp(b);
+				calculateFilter(row, col, offset, output);
 			}
 		}
 		
@@ -102,12 +92,27 @@ public class LaplasFilter extends BaseFilter {
 		return src;
 	}
 
+	private void calculateFilter(int row, int col, int offset, byte[][] output) {
+        int r;
+        int g;
+        int b;
+
+        r = getFilteredColor(TYPE_COLOR_RED, row, col);
+        g = getFilteredColor(TYPE_COLOR_GREEN, row, col);
+        b = getFilteredColor(TYPE_COLOR_BLUE, row, col);
+
+        int outputOffset = offset + col;
+        output[0][outputOffset] = (byte) Tools.clamp(r);
+        output[1][outputOffset] = (byte) Tools.clamp(g);
+        output[2][outputOffset] = (byte) Tools.clamp(b);
+    }
+
 	/**
 	 * Given a type of color (red, green or blue), an offset
 	 * and a column, it returns the color filtered with the
 	 * laplas filter.
 	 * @param  type   The type of the color.
-	 * @param  offset The offset of the color.
+	 * @param  row    The row of the color.
 	 * @param  col    The column of the color.
 	 * @return        The filtered color.
 	 */

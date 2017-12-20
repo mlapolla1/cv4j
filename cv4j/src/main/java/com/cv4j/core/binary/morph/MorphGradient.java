@@ -36,59 +36,88 @@ public class MorphGradient {
      */ 
     public static final int BASIC_GRADIENT = 3;
 
-    /***
+    /**
      *
      * @param gray
      * @param structureElement - 3, 5, 7 must be odd
      * @param gradientType
      */
     public void process(ByteProcessor gray, Size structureElement, int gradientType) {
-        int width = gray.getWidth();
-        int height = gray.getHeight();
-        byte[] ero = new byte[width*height];
-        byte[] dil = new byte[width*height];
-        byte[] data = new byte[width*height];
-        System.arraycopy(gray.getGray(), 0, data, 0, data.length);
+        final int width  = gray.getWidth();
+        final int height = gray.getHeight();
+
+        byte[] data = initData(gray);
+        byte[] ero  = initEro(data);
+        byte[] dil  = initDil(data);
 
         // X Direction
-        int xr = structureElement.cols/2;
-        int min = 0;
-        int max = 0;
-        System.arraycopy(data, 0, ero, 0, data.length);
-        System.arraycopy(data, 0, dil, 0, data.length);
-        int offset = 0;
+        // find min and max for input array
+        final int xr = structureElement.cols / 2;
         for(int row=0; row<height; row++) {
-            // find min and max for input array
-            offset = row*width;
+            int offset = row*width;
             for(int col=0; col<width; col++) {
-                min = findMinInputArray(data, row, col, width, height, xr);
-                max = findMaxInputArray(data, row, col, width, height, xr);
-                
-                ero[offset+col] = (byte)min;
-                dil[offset+col] = (byte)max;
+                ero[offset+col] = (byte) findMinInputArray(data, row, col, width, height, xr);
+                dil[offset+col] = (byte) findMaxInputArray(data, row, col, width, height, xr);
             }
         }
 
         // Y Direction
+        // find min for input array
         System.arraycopy(ero, 0, data, 0, data.length);
         for(int col=0; col<width; col++) {
             for(int row=0; row<height; row++) {
-                // find min for input array
-                min = findMinInputArray(data, row, col, width, height, xr);
-                ero[row*width+col] = (byte) min;
+                ero[row*width+col] = (byte) findMinInputArray(data, row, col, width, height, xr);
             }
         }
 
+        // find max for input array
         System.arraycopy(dil, 0, data, 0, data.length);
         for(int col=0; col<width; col++) {
             for(int row=0; row<height; row++) {
-                // find max for input array
-                max = findMaxInputArray(data, row, col, width, height, xr);
-                dil[row*width+col] = (byte)max;
+                dil[row*width+col] = (byte) findMaxInputArray(data, row, col, width, height, xr);;
             }
         }
 
         calculateGradient(data, dil, ero, gray, gradientType);
+    }
+
+    /**
+     * Initialize the dil array.
+     * @param data The data array.
+     * @return     The dil array.
+     */
+    private byte[] initDil(byte[] data) {
+        byte[] dil = new byte[data.length];
+        System.arraycopy(data, 0, dil, 0, data.length);
+
+        return dil;
+    }
+
+    /**
+     * Initialize the ero array.
+     * @param data The data array.
+     * @return     The ero array.
+     */
+    private byte[] initEro(byte[] data) {
+        byte[] ero = new byte[data.length];
+        System.arraycopy(data, 0, ero, 0, data.length);
+
+        return ero;
+    }
+
+    /**
+     * Initialize the data array.
+     * @param gray The byte processor.
+     * @return     The data array.
+     */
+    private byte[] initData(ByteProcessor gray) {
+        final int width  = gray.getWidth();
+        final int height = gray.getHeight();
+
+        byte[] data = new byte[width * height];
+        System.arraycopy(gray.getGray(), 0, data, 0, data.length);
+
+        return data;
     }
 
     private int findMaxInputArray(byte[] data, int row, int col, int width, int height, int xr) {

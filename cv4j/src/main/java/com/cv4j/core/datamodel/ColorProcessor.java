@@ -18,52 +18,121 @@ package com.cv4j.core.datamodel;
 import com.cv4j.core.datamodel.image.ImageData;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.exception.CV4JException;
+
 /**
  * The ColorProcessor class of DataModel
  */
 public class ColorProcessor implements ImageProcessor {
+
+    /**
+     * The hex value 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
+    /**
+     * The integer value 16.
+     */
+    private static final int VALUE_16 = 16;
+
+    /**
+     * The integer value 8.
+     */
+    private static final int VALUE_8  = 8;
+
+    /**
+     * The number of channels.
+     */
+    private static final int NUM_CHANNELS = 3;
+
+    /**
+     * Index of the red channel.
+     */
+    private static final int RED_CHANNEL_INDEX   = 0;
+
+    /**
+     * Index of the green channel.
+     */
+    private static final int GREEN_CHANNEL_INDEX = 1;
+
+    /**
+     * Index of the blue channel
+     */
+    private static final int BLUE_CHANNEL_INDEX  = 2;
+
+    /**
+     * The R values from RGB.
+     */
     private byte[] R;
+
+    /**
+     * The G values from RGB.
+     */
     private byte[] G;
+
+    /**
+     * The B values from RGB.
+     */
     private byte[] B;
+
+    /**
+     * The image data.
+     */
     private ImageData image;
 
+    /**
+     * The image's width.
+     */
     private int width;
+
+    /**
+     * The image's height.
+     */
     private int height;
-    
-    public ColorProcessor(int width, int height) {
-        this.width = width;
-        this.height = height;
-        int size = width * height;
-        R = new byte[size];
-        G = new byte[size];
-        B = new byte[size];
+
+    /**
+     * The ColorProcessor constructor.
+     * @param w The width.
+     * @param h The height.
+     */
+    public ColorProcessor(int w, int h) {
+        this(null, w, h);
     }
 
+    /**
+     * The color processor constructor.
+     * @param pixels The pixels.
+     * @param w      The width.
+     * @param h      The height.
+     */
+    public ColorProcessor(int[] pixels, int w, int h) {
+        final int size = w * h;
 
-    public ColorProcessor(int[] pixels, int width, int height) {
-        this.width = width;
-        this.height = height;
-        int size = width * height;
-        R = new byte[size];
-        G = new byte[size];
-        B = new byte[size];
-        backFillData(pixels);
+        this.width  = w;
+        this.height = h;
+
+        this.R = new byte[size];
+        this.G = new byte[size];
+        this.B = new byte[size];
+
+        if (pixels != null) {
+            backFillData(pixels);
+        }
     }
 
     private void backFillData(int[] input) {
-        int c=0;
-        int r=0;
-        int g=0;
-        int b=0;
-        int length = input.length;
-        for(int i=0; i<length; i++) {
-            c = input[i];
-            r = (c&0xff0000)>>16;
-            g = (c&0xff00)>>8;
-            b = c&0xff;
-            R[i] = (byte)r;
-            G[i] = (byte)g;
-            B[i] = (byte)b;
+        final int valueFF0000 = 0xff0000;
+        final int value00FF00 = 0x00ff00;
+
+        for(int i=0; i < input.length; i++) {
+            int c = input[i];
+
+            int red   = (c & valueFF0000) >> VALUE_16;
+            int green = (c & value00FF00) >> VALUE_8;
+            int blue  = (c & VALUE_0000FF);
+
+            this.R[i] = (byte) red;
+            this.G[i] = (byte) green;
+            this.B[i] = (byte) blue;
         }
     }
 
@@ -79,129 +148,183 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public int getChannels() {
-        int channel = 3;
-        return channel;
+        return NUM_CHANNELS;
     }
 
+    /**
+     * @return The red array.
+     */
     public byte[] getRed() {
-        return R;
+        return this.R;
     }
 
+    /**
+     * @return The green array.
+     */
     public byte[] getGreen() {
-        return G;
+        return this.G;
     }
 
+    /**
+     * @return The blue array.
+     */
     public byte[] getBlue() {
         return B;
     }
 
     @Override
     public void getPixel(int row, int col, byte[] rgb) {
-        int index = row*width + col;
-        if(rgb != null && rgb.length == 3) {
-            rgb[0] = R[index];
-            rgb[1] = G[index];
-            rgb[2] = B[index];
+        final int index = (row * this.width) + col;
+
+        if(rgb != null && rgb.length == NUM_CHANNELS) {
+            rgb[RED_CHANNEL_INDEX]   = this.R[index];
+            rgb[GREEN_CHANNEL_INDEX] = this.G[index];
+            rgb[BLUE_CHANNEL_INDEX]  = this.B[index];
         }
     }
 
+    /**
+     * Copy RGB values.
+     * @param red   The red array to copy.
+     * @param green The green array to copy.
+     * @param blue  The blue array to copy.
+     */
     public void putRGB(byte[] red, byte[] green, byte[] blue) {
         System.arraycopy(red, 0, R, 0, red.length);
         System.arraycopy(green, 0, G, 0, green.length);
         System.arraycopy(blue, 0, B, 0, blue.length);
     }
 
+    /**
+     * @return The pixels array.
+     */
     public int[] getPixels() {
-        int size = width * height;
-        int[] pixels = new int[size];
-        for (int i=0; i < size; i++){
-            pixels[i] = 0xff000000 | ((R[i]&0xff)<<16) | ((G[i]&0xff)<<8) | B[i]&0xff;
+        final int valueFF000000 = 0xff000000;
+
+        int[] pixels = new int[width * height];
+        for (int i=0; i < pixels.length; i++){
+            pixels[i] = valueFF000000 | ((R[i] & VALUE_0000FF) << VALUE_16)
+                                      | ((G[i] & VALUE_0000FF)<< VALUE_8)
+                                      |   B[i] & VALUE_0000FF;
         }
 
         return pixels;
     }
 
+    /**
+     * Set the call back.
+     * @param data The data image.
+     */
     protected void setCallBack(ImageData data) {
         this.image = data;
     }
 
+    /**
+     * @return The image.
+     */
     public ImageData getImage() {
         return this.image;
     }
 
     @Override
     public float[] toFloat(int index) {
-        if(index == 0) {
-            float[] data = new float[R.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = R[i]&0xff;
-            }
-            return data;
-        }
-        else if(index == 1) {
-            float[] data = new float[G.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = G[i]&0xff;
-            }
-            return data;
-        }
-        else if(index == 2) {
-            float[] data = new float[B.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = B[i]&0xff;
-            }
-            return data;
-        } else {
-            throw new CV4JException("invalid argument...");
+        float[] data;
+
+        switch (index) {
+            case RED_CHANNEL_INDEX:
+                data = colorDataToFloat(this.R);
+                break;
+
+            case GREEN_CHANNEL_INDEX:
+                data = colorDataToFloat(this.G);
+                break;
+
+            case BLUE_CHANNEL_INDEX:
+                data = colorDataToFloat(this.B);
+                break;
+
+            default:
+                throw new CV4JException("Invalid argument...");
         }
 
+        return data;
     }
 
     @Override
     public int[] toInt(int index) {
-        if(index == 0) {
-            int[] data = new int[R.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = R[i]&0xff;
-            }
-            return data;
+        int[] data;
+
+        switch (index) {
+            case RED_CHANNEL_INDEX:
+                data = colorDataToInt(this.R);
+                break;
+
+            case GREEN_CHANNEL_INDEX:
+                data = colorDataToInt(this.G);
+                break;
+
+            case BLUE_CHANNEL_INDEX:
+                data = colorDataToInt(this.B);
+                break;
+
+            default:
+                throw new CV4JException("Invalid argument...");
         }
-        else if(index == 1) {
-            int[] data = new int[G.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = G[i]&0xff;
-            }
-            return data;
-        }
-        else if(index == 2) {
-            int[] data = new int[B.length];
-            int length = data.length;
-            for(int i=0; i<length; i++){
-                data[i] = B[i]&0xff;
-            }
-            return data;
-        } else {
-            throw new CV4JException("invalid argument...");
-        }
+
+        return data;
     }
 
     @Override
     public byte[] toByte(int index) {
-        if(index == 0) {
-            return R;
+        byte[] data;
+
+        switch (index) {
+            case RED_CHANNEL_INDEX:
+                data = this.R;
+                break;
+
+            case GREEN_CHANNEL_INDEX:
+                data = this.G;
+                break;
+
+            case BLUE_CHANNEL_INDEX:
+                data = this.B;
+                break;
+
+            default:
+                throw new CV4JException("invalid argument...");
         }
-        else if(index == 1) {
-            return G;
+
+        return data;
+    }
+
+    /**
+     * Convert a color data to a float color data.
+     * @param colorData The color data (R, G, B)
+     * @return          The float color data.
+     */
+    private float[] colorDataToFloat(byte[] colorData) {
+        float[] floatColorData = new float[colorData.length];
+
+        for(int i = 0; i < floatColorData.length; i++){
+            floatColorData[i] = colorData[i] & VALUE_0000FF;
         }
-        else if(index == 2) {
-            return B;
-        } else {
-            throw new CV4JException("invalid argument...");
+
+        return floatColorData;
+    }
+
+    /**
+     * Convert a color data to an int color data.
+     * @param colorData The color data (R, G, B)
+     * @return          The int color data.
+     */
+    private int[] colorDataToInt(byte[] colorData) {
+        int[] intColorData = new int[colorData.length];
+
+        for(int i = 0; i < intColorData.length; i++){
+            intColorData[i] = colorData[i] & VALUE_0000FF;
         }
+
+        return intColorData;
     }
 }

@@ -19,156 +19,209 @@ package com.cv4j.core.datamodel.number;
  * The IntIntegralImage class of DataModel
  */
 public class IntIntegralImage {
-	// sum index tables
+
+	/**
+	 * The hex value 0000FF.
+	 */
+	private static final int VALUE_0000FF = 0x0000ff;
+
+	/**
+	 * Sum index tables.
+ 	 */
 	private int[] sum;
-	// image
-	private float[] squaresum;
+
+	/**
+	 * The image data.
+ 	 */
 	private byte[] image;
+
+	/**
+	 * The square sum index table.
+	 */
+	private float[] squareSum;
+
+	/**
+	 * The width.
+	 */
 	private int width;
+
+	/**
+	 * The height.
+	 */
 	private int height;
 
+	/**
+	 * @return The image data.
+	 */
 	public byte[] getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
-		this.image = image;
+	/**
+	 * Set the image data.
+	 * @param imageData The new image data.
+	 */
+	public void setImage(byte[] imageData) {
+		this.image = imageData;
 	}
 
+	/**
+	 * Return the block sum 2.
+	 * @param ney
+	 * @param nex
+	 * @param swy
+	 * @param swx
+	 * @return    The block sum.
+	 */
 	public int getBlockSum2(int ney, int nex, int swy, int swx) {
-		int sum1;
-		int sum2;
-		int sum3;
-		int sum4;
-		sum1 = sum[ney*width+nex];
-		sum4 = sum[swy*width+swx];
-		sum2 = sum[swy*width+nex];
-		sum3 = sum[ney*width+swx];
+		int sum1 = sum[ney*width+nex];
+		int sum4 = sum[swy*width+swx];
+		int sum2 = sum[swy*width+nex];
+		int sum3 = sum[ney*width+swx];
+
 		return ((sum1 + sum4) - sum2 - sum3);
 	}
 
+	/**
+	 * Returns the block sum.
+	 * @param x
+	 * @param y
+	 * @param m
+	 * @param n
+	 * @return  The block sum.
+	 */
 	public int getBlockSum(int x, int y, int m, int n) {
 		int swx = x + n/2;
 		int swy = y + m/2;
 		int nex = x-n/2-1;
 		int ney = y-m/2-1;
-		int sum1;
-		int sum2;
-		int sum3;
-		int sum4;
+
 		if(swx >= width) {
 			swx = width - 1;
 		}
+
 		if(swy >= height) {
 			swy = height - 1;
 		}
+
 		if(nex < 0) {
 			nex = 0;
 		}
+
 		if(ney < 0) {
 			ney = 0;
 		}
-		sum1 = sum[ney*width+nex];
-		sum4 = sum[swy*width+swx];
-		sum2 = sum[swy*width+nex];
-		sum3 = sum[ney*width+swx];
+
+		int sum1 = sum[ney*width+nex];
+		int sum4 = sum[swy*width+swx];
+		int sum2 = sum[swy*width+nex];
+		int sum3 = sum[ney*width+swx];
+
 		return ((sum1 + sum4) - sum2 - sum3);
 	}
 
+	/**
+	 * Returns the block square sum.
+	 * @param x
+	 * @param y
+	 * @param m
+	 * @param n
+	 * @return  The block square sum.
+	 */
 	public float getBlockSquareSum(int x, int y, int m, int n) {
 		int swx = x + n/2;
 		int swy = y + m/2;
 		int nex = x-n/2-1;
 		int ney = y-m/2-1;
-		float sum1;
-		float sum2;
-		float sum3;
-		float sum4;
+
 		if(swx >= width) {
 			swx = width - 1;
 		}
+
 		if(swy >= height) {
 			swy = height - 1;
 		}
+
 		if(nex < 0) {
 			nex = 0;
 		}
+
 		if(ney < 0) {
 			ney = 0;
 		}
-		sum1 = squaresum[ney*width+nex];
-		sum4 = squaresum[swy*width+swx];
-		sum2 = squaresum[swy*width+nex];
-		sum3 = squaresum[ney*width+swx];
+
+		float sum1 = squareSum[ney*width+nex];
+		float sum4 = squareSum[swy*width+swx];
+		float sum2 = squareSum[swy*width+nex];
+		float sum3 = squareSum[ney*width+swx];
+
 		return ((sum1 + sum4) - sum2 - sum3);
 	}
 
-	private int calculateSumOffsetValue(int row, int col) {
-		int offset = row * this.width;
-		int uprow = row - 1;
-		int leftcol = col - 1;
+	/**
+	 * Calculate the sum offset value.
+	 * @param row The row.
+	 * @param col The column.
+	 * @return    The sum offset value.
+	 */
+	private int calculateSumOffsetValue(int row, int col, int offset) {
+		final int upRow   = row - 1;
+		final int leftCol = col - 1;
 
-		int p1 = image[offset] & 0xff;                                   // p(x, y)
-		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);                      // p(x-1, y)
-		int p3 = (uprow < 0 ? 0 : sum[offset-width]);                    // p(x, y-1);
-		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+		int p1 = image[offset] & VALUE_0000FF;                           // p(x, y)
+		int p2 = (leftCol < 0 ? 0 : sum[offset-1]);                      // p(x-1, y)
+		int p3 = (upRow < 0 ? 0 : sum[offset-width]);                    // p(x, y-1);
+		int p4 = ((upRow < 0 || leftCol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+
 		return p1 + p2 + p3 - p4;
 	}
 
-	private float calculateSquaresumOffsetValue(int row, int col) {
-		int offset = row * this.width;
-		int uprow = row - 1;
-		int leftcol = col - 1;
+	private float calculateSquareSumOffsetValue(int row, int col, int offset) {
+		final int upRow   = row - 1;
+		final int leftCol = col - 1;
 
-		int p1 = image[offset] & 0xff;                  // p(x, y)
-//		int p2 = (leftcol < 0 ? 0 : sum[offset-1]);     // p(x-1, y)
-//		int p3 = (uprow < 0 ? 0 : sum[offset-width]);   // p(x, y-1);
-//		int p4 = ((uprow < 0 || leftcol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+		int p1 = image[offset] & VALUE_0000FF;                           // p(x, y)
 
-		float sp2 = (leftcol<0) ? 0:squaresum[offset-1]; // p(x-1, y)
-		float sp3 = (uprow<0) ? 0:squaresum[offset-width]; // p(x, y-1);
-		float sp4 = (uprow<0||leftcol<0) ? 0:squaresum[offset-width-1]; // p(x-1, y-1);
+		// TODO: these values are unused.
+		//int p2 = (leftCol < 0 ? 0 : sum[offset-1]);                      // p(x-1, y)
+		//int p3 = (upRow < 0 ? 0 : sum[offset-width]);                    // p(x, y-1);
+		//int p4 = ((upRow < 0 || leftCol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);
+
+		float sp2 = (leftCol < 0 ? 0 : squareSum[offset-1]);                      // p(x-1, y)
+		float sp3 = (upRow < 0   ? 0 : squareSum[offset-width]);                  // p(x, y-1);
+		float sp4 = ((upRow < 0 || leftCol < 0) ? 0 : squareSum[offset-width-1]); // p(x-1, y-1);
 
 		return (p1 * p1) + sp2 + sp3 - sp4;
 	}
 
 	public void process(int distance, int elevation) {
-		this.width = distance;
+		this.width  = distance;
 		this.height = elevation;
-		sum = new int[width*height];
+		this.sum    = new int[this.width * this.height];
 
-		// rows
-		int p1;
-		int p2;
-		int p3;
-		int p4;
+		for(int row = 0; row < this.height; row++ ) {
+			int offset = (row * this.width);
 
-		int offset;
-		int uprow;
-		int leftcol;
-
-		for(int row = 0; row < height; row++ ) {
-			offset = row * width;
-			uprow = row-1;
-			for(int col = 0; col < width; col++) {
-				leftcol=col-1;
-				sum[offset] = calculateSumOffsetValue(row, col);
+			for(int col = 0; col < this.width; col++) {
+				this.sum[offset] = calculateSumOffsetValue(row, col, offset);
 				offset++;
 			}
 		}
 	}
 
 	public void process(int distance, int elevation, boolean includeSqrt) {
-		this.width = distance;
-		this.height = elevation;
-		this.sum = new int[width * height];
-		this.squaresum = new float[width * height];
+		final int size = (this.width * this.height);
 
-		for(int row = 0; row < height; row++ ) {
-			int offset = row * width;
-			for(int col = 0; col < width; col++) {
-				sum[offset]       = calculateSumOffsetValue(row, col);
-				squaresum[offset] = calculateSquaresumOffsetValue(row, col);
+		this.width     = distance;
+		this.height    = elevation;
+		this.sum       = new int[size];
+		this.squareSum = new float[size];
+
+		for(int row = 0; row < this.height; row++ ) {
+			int offset = (row * this.width);
+			for(int col = 0; col < this.width; col++) {
+				this.sum[offset]       = calculateSumOffsetValue(row, col, offset);
+				this.squareSum[offset] = calculateSquareSumOffsetValue(row, col, offset);
 				offset++;
 			}
 		}

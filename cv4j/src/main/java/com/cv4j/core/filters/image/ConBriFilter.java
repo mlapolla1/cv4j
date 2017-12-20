@@ -54,11 +54,15 @@ public class ConBriFilter extends BaseFilter {
         rgbmeans[2] = (int)(blueSum / total);
         
         // adjust contrast and brightness algorithm, here
-        setRGBArrays(R, G, B, r, g, b, rgbmeans);
+        setRGBArrays(total, rgbmeans);
         return src;
 	}
 
-	private void setRGBArrays(byte[] R, byte[] G, byte[] B, byte r, byte g, byte b, int[] rgbmeans) {
+	private void setRGBArrays(int total, int[] rgbmeans) {
+		int r;
+		int g;
+		int b;
+
 		for(int i=0; i<total; i++) {
 			r = R[i] & 0xff;
 			g = G[i] & 0xff;

@@ -104,32 +104,27 @@ public class CompareHist {
      * @return
      */
     public double ncc(int[] source, int[] target) {
+        int len = source.length;
+        double[] mixedData = new double[len];
+        double sum1=0, sum2=0, sum3=0;
         if(source.length != target.length) {
             throw new CV4JException("number of histogram bins is not same...");
         }
-        int len = source.length;
-        double[] mixedData = new double[len];
         // start to normalize the histogram data
-        double sum1=0;
-        double sum2=0;
         for (int i = 0; i < len; i++)
         {
             sum1 += source[i];
             sum2 += target[i];
         }
-
         double m1 = sum1 / len;
         double m2 = sum2 / len;
         sum1 = 0;
         sum2 = 0;
-        double sum3 = 0;
         for(int i=0; i<len; i++ ) {
             sum3 += ((source[i] - m1)*(target[i]-m2));
             sum1 += ((source[i] - m1)*(source[i]-m1));
             sum2 += ((target[i] - m2)*(target[i]-m2));
         }
-        double ncc = 0.0;
-        ncc = sum3 / Math.sqrt(sum1*sum2);
-        return ncc;
+        return sum3 / Math.sqrt(sum1*sum2);
     }
 }

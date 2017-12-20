@@ -15,8 +15,8 @@
  */
 package com.cv4j.core.binary.morph;
 
-import com.cv4j.core.binary.Dilate.FastDilate;
-import com.cv4j.core.binary.Erode.FastErode;
+import com.cv4j.core.binary.fast.FastDilate;
+import com.cv4j.core.binary.fast.FastErode;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
 /**

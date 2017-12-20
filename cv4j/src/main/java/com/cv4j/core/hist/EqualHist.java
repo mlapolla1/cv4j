@@ -31,16 +31,12 @@ public class EqualHist {
 
         if (src == null) return;
 
-        int width = src.getWidth();
-        int height = src.getHeight();
-
-        int rgb = 256;
+        int rgb = 256, index = 0;
         int[] inputBins = new int[rgb]; // RGB
         int[] outputBins = new int[rgb]; // after HE
         Arrays.fill(inputBins, 0);
         Arrays.fill(outputBins, 0);
 
-        int index = 0;
         byte[] data = src.getGray();
         if (Preconditions.isNotBlank(data)) {
             for (byte d:data) {
@@ -50,10 +46,9 @@ public class EqualHist {
 
         // generate original source image RGB histogram
         generateHEData(inputBins, outputBins, data.length, rgb);
-        for(int row=0; row<height; row++) {
-            int pv = 0;
-            for(int col=0; col<width; col++) {
-                index = row * width + col;
+        for(int row=0, pv; row<src.getHeight(); row++) {
+            for(int col=0; col<src.getWidth(); col++) {
+                index = row * src.getWidth() + col;
                 pv = data[index]&0xff;
                 data[index] = (byte)outputBins[pv];
             }

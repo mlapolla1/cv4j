@@ -1,6 +1,5 @@
 package com.cv4j.app.activity.Example;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.cv4j.core.binary.Threshold;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.datamodel.Size;
-import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;

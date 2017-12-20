@@ -108,35 +108,14 @@ public class SobelFilter extends BaseFilter {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
 				// red
-				sr = k0 * (R[offset - width + col - 1] & 0xff)
-						+ k1 * (R[offset - width + col] & 0xff)
-						+ k2 * (R[offset - width + col + 1] & 0xff)
-						+ k3 * (R[offset + col - 1] & 0xff)
-						+ k4 * (R[offset + col] & 0xff)
-						+ k5 * (R[offset + col + 1] & 0xff)
-						+ k6 * (R[offset + width + col - 1] & 0xff)
-						+ k7 * (R[offset + width + col] & 0xff)
-						+ k8 * (R[offset + width + col + 1] & 0xff);
+				sr = redPhaseOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
 				// green
-				sg = k0 * (G[offset - width + col - 1]  & 0xff)
-						+ k1 * (G[offset - width + col] & 0xff)
-						+ k2 * (G[offset - width + col + 1] & 0xff)
-						+ k3 * (G[offset + col - 1] & 0xff)
-						+ k4 * (G[offset + col] & 0xff)
-						+ k5 * (G[offset + col + 1] & 0xff)
-						+ k6 * (G[offset + width + col - 1] & 0xff)
-						+ k7 * (G[offset + width + col] & 0xff)
-						+ k8 * (G[offset + width + col + 1] & 0xff);
+				sg = greenPhaseOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
 				// blue
-				sb = k0 * (B[offset - width + col - 1] & 0xff)
-						+ k1 * (B[offset - width + col] & 0xff)
-						+ k2 * (B[offset - width + col + 1] & 0xff)
-						+ k3 * (B[offset + col - 1] & 0xff)
-						+ k4 * (B[offset + col] & 0xff)
-						+ k5 * (B[offset + col + 1] & 0xff)
-						+ k6 * (B[offset + width + col - 1] & 0xff)
-						+ k7 * (B[offset + width + col] & 0xff)
-						+ k8 * (B[offset + width + col + 1] & 0xff);
+				sb = bluePhaseOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
 				r = sr;
 				g = sg;
 				b = sb;
@@ -155,5 +134,44 @@ public class SobelFilter extends BaseFilter {
 		output = null;
 		return src;
 	}
+
+    private int redPhaseOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+                                 int k8, int offset, int col) {
+	    return k0 * (R[offset - width + col - 1] & 0xff)
+                + k1 * (R[offset - width + col] & 0xff)
+                + k2 * (R[offset - width + col + 1] & 0xff)
+                + k3 * (R[offset + col - 1] & 0xff)
+                + k4 * (R[offset + col] & 0xff)
+                + k5 * (R[offset + col + 1] & 0xff)
+                + k6 * (R[offset + width + col - 1] & 0xff)
+                + k7 * (R[offset + width + col] & 0xff)
+                + k8 * (R[offset + width + col + 1] & 0xff);
+    }
+
+    private int greenPhaseOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+                                 int k8, int offset, int col) {
+	    return k0 * (G[offset - width + col - 1]  & 0xff)
+                + k1 * (G[offset - width + col] & 0xff)
+                + k2 * (G[offset - width + col + 1] & 0xff)
+                + k3 * (G[offset + col - 1] & 0xff)
+                + k4 * (G[offset + col] & 0xff)
+                + k5 * (G[offset + col + 1] & 0xff)
+                + k6 * (G[offset + width + col - 1] & 0xff)
+                + k7 * (G[offset + width + col] & 0xff)
+                + k8 * (G[offset + width + col + 1] & 0xff);
+    }
+
+    private int bluePhaseOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+                                   int k8, int offset, int col) {
+	    return k0 * (B[offset - width + col - 1] & 0xff)
+                + k1 * (B[offset - width + col] & 0xff)
+                + k2 * (B[offset - width + col + 1] & 0xff)
+                + k3 * (B[offset + col - 1] & 0xff)
+                + k4 * (B[offset + col] & 0xff)
+                + k5 * (B[offset + col + 1] & 0xff)
+                + k6 * (B[offset + width + col - 1] & 0xff)
+                + k7 * (B[offset + width + col] & 0xff)
+                + k8 * (B[offset + width + col + 1] & 0xff);
+    }
 
 }

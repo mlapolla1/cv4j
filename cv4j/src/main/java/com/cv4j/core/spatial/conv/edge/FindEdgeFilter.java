@@ -85,66 +85,19 @@ public class FindEdgeFilter extends BaseFilter {
 			offset = row * width;
 			for (int col = 1; col < width - 1; col++) {
 				// red
-				yr = k0 * (R[offset - width + col - 1] & 0xff)
-						+ k1 * (R[offset - width + col] & 0xff)
-						+ k2 * (R[offset - width + col + 1] & 0xff)
-						+ k3 * (R[offset + col - 1] & 0xff)
-						+ k4 * (R[offset + col] & 0xff)
-						+ k5 * (R[offset + col + 1] & 0xff)
-						+ k6 * (R[offset + width + col - 1] & 0xff)
-						+ k7 * (R[offset + width + col] & 0xff)
-						+ k8 * (R[offset + width + col + 1] & 0xff);
-				
-				xr = x0 * (R[offset - width + col - 1] & 0xff)
-						+ x1 * (R[offset - width + col] & 0xff)
-						+ x2 * (R[offset - width + col + 1] & 0xff)
-						+ x3 * (R[offset + col - 1] & 0xff)
-						+ x4 * (R[offset + col] & 0xff)
-						+ x5 * (R[offset + col + 1] & 0xff)
-						+ x6 * (R[offset + width + col - 1] & 0xff)
-						+ x7 * (R[offset + width + col] & 0xff)
-						+ x8 * (R[offset + width + col + 1] & 0xff);
+				yr = redPhaseOneOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
+				xr = redPhaseTwoOfFilter(x0, x1, x2, x3, x4, x5, x6, x7, x8, offset, col);
 				
 				// green
-				yg = k0 * (G[offset - width + col - 1] & 0xff)
-						+ k1 * (G[offset - width + col] & 0xff)
-						+ k2 * (G[offset - width + col + 1] & 0xff)
-						+ k3 * (G[offset + col - 1] & 0xff)
-						+ k4 * (G[offset + col] & 0xff)
-						+ k5 * (G[offset + col + 1] & 0xff)
-						+ k6 * (G[offset + width + col - 1] & 0xff)
-						+ k7 * (G[offset + width + col] & 0xff)
-						+ k8 * (G[offset + width + col + 1] & 0xff);
-				
-				xg = x0 * (G[offset - width + col - 1] & 0xff)
-						+ x1 * (G[offset - width + col] & 0xff)
-						+ x2 * (G[offset - width + col + 1] & 0xff)
-						+ x3 * (G[offset + col - 1] & 0xff)
-						+ x4 * (G[offset + col] & 0xff)
-						+ x5 * (G[offset + col + 1] & 0xff)
-						+ x6 * (G[offset + width + col - 1] & 0xff)
-						+ x7 * (G[offset + width + col] & 0xff)
-						+ x8 * (G[offset + width + col + 1] & 0xff);
+				yg = greenPhaseOneOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
+				xg = greenPhaseTwoOfFilter(x0, x1, x2, x3, x4, x5, x6, x7, x8, offset, col);
+
 				// blue
-				yb = k0 * (B[offset - width + col - 1] & 0xff)
-						+ k1 * (B[offset - width + col] & 0xff)
-						+ k2 * (B[offset - width + col + 1] & 0xff)
-						+ k3 * (B[offset + col - 1] & 0xff)
-						+ k4 * (B[offset + col] & 0xff)
-						+ k5 * (B[offset + col + 1] & 0xff)
-						+ k6 * (B[offset + width + col - 1] & 0xff)
-						+ k7 * (B[offset + width + col] & 0xff)
-						+ k8 * (B[offset + width + col + 1] & 0xff);
-				
-				xb = x0 * (B[offset - width + col - 1] & 0xff)
-						+ x1 * (B[offset - width + col] & 0xff)
-						+ x2 * (B[offset - width + col + 1] & 0xff)
-						+ x3 * (B[offset + col - 1] & 0xff)
-						+ x4 * (B[offset + col] & 0xff)
-						+ x5 * (B[offset + col + 1] & 0xff)
-						+ x6 * (B[offset + width + col - 1] & 0xff)
-						+ x7 * (B[offset + width + col] & 0xff)
-						+ x8 * (B[offset + width + col + 1] & 0xff);
+				yb = bluePhaseOneOfFilter(k0, k1, k2, k3, k4, k5, k6, k7, k8, offset, col);
+
+				xb = bluePhaseTwoOfFilter(x0, x1, x2, x3, x4, x5, x6, x7, x8, offset, col);
 				
 				// magnitude 
 				r = (int)Math.sqrt(yr*yr + xr*xr);
@@ -175,6 +128,114 @@ public class FindEdgeFilter extends BaseFilter {
 		output[2] = null;
 		output = null;
 		return src;
+	}
+
+	/**
+	 * Red Phase One Of Filter
+	 * @param k0
+	 * @param k1
+	 * @param k2
+	 * @param k3
+	 * @param k4
+	 * @param k5
+	 * @param k6
+	 * @param k7
+	 * @param k8
+	 * @param offset
+	 * @param col
+	 * @return
+	 */
+	private int redPhaseOneOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+								   int k8, int offset, int col) {
+		return k0 * (R[offset - width + col - 1] & 0xff)
+				+ k1 * (R[offset - width + col] & 0xff)
+				+ k2 * (R[offset - width + col + 1] & 0xff)
+				+ k3 * (R[offset + col - 1] & 0xff)
+				+ k4 * (R[offset + col] & 0xff)
+				+ k5 * (R[offset + col + 1] & 0xff)
+				+ k6 * (R[offset + width + col - 1] & 0xff)
+				+ k7 * (R[offset + width + col] & 0xff)
+				+ k8 * (R[offset + width + col + 1] & 0xff);
+	}
+
+	/**
+	 * Red Phase Two Of Filter
+	 * @param x0
+	 * @param x1
+	 * @param x2
+	 * @param x3
+	 * @param x4
+	 * @param x5
+	 * @param x6
+	 * @param x7
+	 * @param x8
+	 * @param offset
+	 * @param col
+	 * @return
+	 */
+	private int redPhaseTwoOfFilter(int x0, int x1, int x2, int x3, int x4, int x5, int x6, int x7,
+								   int x8, int offset, int col) {
+		return x0 * (R[offset - width + col - 1] & 0xff)
+				+ x1 * (R[offset - width + col] & 0xff)
+				+ x2 * (R[offset - width + col + 1] & 0xff)
+				+ x3 * (R[offset + col - 1] & 0xff)
+				+ x4 * (R[offset + col] & 0xff)
+				+ x5 * (R[offset + col + 1] & 0xff)
+				+ x6 * (R[offset + width + col - 1] & 0xff)
+				+ x7 * (R[offset + width + col] & 0xff)
+				+ x8 * (R[offset + width + col + 1] & 0xff);
+	}
+
+	private int greenPhaseOneOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+									int k8, int offset, int col) {
+		return k0 * (G[offset - width + col - 1] & 0xff)
+				+ k1 * (G[offset - width + col] & 0xff)
+				+ k2 * (G[offset - width + col + 1] & 0xff)
+				+ k3 * (G[offset + col - 1] & 0xff)
+				+ k4 * (G[offset + col] & 0xff)
+				+ k5 * (G[offset + col + 1] & 0xff)
+				+ k6 * (G[offset + width + col - 1] & 0xff)
+				+ k7 * (G[offset + width + col] & 0xff)
+				+ k8 * (G[offset + width + col + 1] & 0xff);
+	}
+
+	private int greenPhaseTwoOfFilter(int x0, int x1, int x2, int x3, int x4, int x5, int x6, int x7,
+									int x8, int offset, int col) {
+		return x0 * (G[offset - width + col - 1] & 0xff)
+				+ x1 * (G[offset - width + col] & 0xff)
+				+ x2 * (G[offset - width + col + 1] & 0xff)
+				+ x3 * (G[offset + col - 1] & 0xff)
+				+ x4 * (G[offset + col] & 0xff)
+				+ x5 * (G[offset + col + 1] & 0xff)
+				+ x6 * (G[offset + width + col - 1] & 0xff)
+				+ x7 * (G[offset + width + col] & 0xff)
+				+ x8 * (G[offset + width + col + 1] & 0xff);
+	}
+
+	private int bluePhaseOneOfFilter(int k0, int k1, int k2, int k3, int k4, int k5, int k6, int k7,
+									  int k8, int offset, int col) {
+		return k0 * (B[offset - width + col - 1] & 0xff)
+				+ k1 * (B[offset - width + col] & 0xff)
+				+ k2 * (B[offset - width + col + 1] & 0xff)
+				+ k3 * (B[offset + col - 1] & 0xff)
+				+ k4 * (B[offset + col] & 0xff)
+				+ k5 * (B[offset + col + 1] & 0xff)
+				+ k6 * (B[offset + width + col - 1] & 0xff)
+				+ k7 * (B[offset + width + col] & 0xff)
+				+ k8 * (B[offset + width + col + 1] & 0xff);
+	}
+
+	private int bluePhaseTwoOfFilter(int x0, int x1, int x2, int x3, int x4, int x5, int x6, int x7,
+									  int x8, int offset, int col) {
+		return x0 * (B[offset - width + col - 1] & 0xff)
+				+ x1 * (B[offset - width + col] & 0xff)
+				+ x2 * (B[offset - width + col + 1] & 0xff)
+				+ x3 * (B[offset + col - 1] & 0xff)
+				+ x4 * (B[offset + col] & 0xff)
+				+ x5 * (B[offset + col + 1] & 0xff)
+				+ x6 * (B[offset + width + col - 1] & 0xff)
+				+ x7 * (B[offset + width + col] & 0xff)
+				+ x8 * (B[offset + width + col + 1] & 0xff);
 	}
 
 }

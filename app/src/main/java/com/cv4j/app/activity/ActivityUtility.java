@@ -8,6 +8,9 @@ import com.cv4j.core.datamodel.CV4JImage;
 
 import java.util.Random;
 
+/**
+ * Activity utility.
+ */
 public class ActivityUtility {
 
 	public Bitmap subInitData(CV4JImage cv4JImage, int[] mask) {

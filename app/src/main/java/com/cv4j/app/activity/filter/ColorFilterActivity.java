@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,13 +21,9 @@ import com.safframework.injectview.annotations.InjectExtra;
 import com.safframework.injectview.annotations.InjectView;
 import com.safframework.injectview.annotations.OnClick;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Tony Shen on 2017/3/15.
  */
-
 public class ColorFilterActivity extends BaseActivity {
 
     @InjectView(R.id.image)

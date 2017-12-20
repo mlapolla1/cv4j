@@ -11,6 +11,11 @@ import com.cv4j.core.datamodel.CV4JImage;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.safframework.injectview.annotations.InjectView;
 
+/**
+ * Back fragment, base back class.
+ * @see BackProjectFragment
+ * @see GaussianBackFragment
+ */
 public class BackFragment {
 
     /**
