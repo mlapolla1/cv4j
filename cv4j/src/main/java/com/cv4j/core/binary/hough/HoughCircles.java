@@ -74,36 +74,59 @@ public class HoughCircles {
      * @param height      The height;
      */
     private void findCenters(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int numOfRadius, int width, int height) {
-        int tempValue = 0;
-        int tempX     = 0;
-        int tempY     = 0;
-
         /// TODO: Variable not used.
         // int[] output = new int[width * height];
 
         for(int i = 0; i < numOfRadius; i++) {
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    int value = (acc[i][x + (y * width)] & VALUE_0000FF);
+            findCentersSub(circles, acc, maxonly, accumulate, width, height);
+        }
+    }
 
-                    // if its higher than current value, swap it
-                    if (maxonly && value > tempValue) {
-                        tempValue = value; //radius?
-                        tempX     = x;     // center.x
-                        tempY     = y;     // center.y
-                    } else if(value > accumulate) {
-                        // filter by threshold
-                        Vec3i vec3i = new Vec3i(x, y, value);
-                        circles.add(vec3i);
-                    }
+    /**
+     * The sub-method, for complexity problems, of the findCenters().
+     * @param circles    The circles.
+     * @param acc        The acc.
+     * @param maxonly    If max only.
+     * @param accumulate The accumulate
+     * @param width      The width.
+     * @param height     The height.
+     */
+    private void findCentersSub(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int width, int height) {
+        int tempValue = 0;
+        int tempX     = 0;
+        int tempY     = 0;
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int value = (acc[i][x + (y * width)] & VALUE_0000FF);
+
+                // if its higher than current value, swap it
+                if (maxonly && value > tempValue) {
+                    tempValue = value; //radius?
+                    tempX     = x;     // center.x
+                    tempY     = y;     // center.y
+                } else if(value > accumulate) {
+                    // filter by threshold
+                    addVectorToCircles(circles, x, y, value);
                 }
             }
-
-            if(maxonly) {
-                Vec3i vec3i = new Vec3i(tempValue, tempX, tempY);
-                circles.add(vec3i);
-            }
         }
+
+        if(maxonly) {
+            addVectorToCircles(circles, tempValue, tempX, tempY);
+        }
+    }
+
+    /**
+     * Add a vec3i to circles.
+     * @param circles The circles.
+     * @param x       The x value.
+     * @param y       The y value.
+     * @param z       The z value.
+     */
+    private void addVectorToCircles(List<Vec3i> circles, int x, int y, int z) {
+        Vec3i vec3i = new Vec3i(x, y, z);
+        circles.add(vec3i);
     }
 
 
