@@ -23,16 +23,38 @@ public class Vec3i {
     /**
      * Coordinate x
      */  
-    public int x = 0;
+    public int x;
     
     /**
      * Coordinate y
      */  
-    public int y = 0;
+    public int y;
     
     /**
      * Coordinate z
      */  
-    public int z = 0;
+    public int z;
+
+
+
+    /**
+     * Default constructor.
+     */
+    public Vec3i() {
+        this(0, 0, 0);
+    }
+
+    /**
+     * Constructor for Vec3i with given values.
+     * @param x The x value.
+     * @param y The y value.
+     * @param z The z value.
+     */
+    public Vec3i(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
 
 }

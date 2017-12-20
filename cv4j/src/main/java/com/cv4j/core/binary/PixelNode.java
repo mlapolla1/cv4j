@@ -31,6 +31,25 @@ public class PixelNode implements Comparable<PixelNode> {
 	 * Column number
 	 */	
 	public int col;
+
+	/**
+	 * Default constructor.
+	 */
+	public PixelNode() {
+		this(0, 0, 0);
+	}
+
+	/**
+	 * Constructor for PixelNode.
+	 * @param c The column.
+	 * @param r The row.
+	 * @param i The index.
+	 */
+	public PixelNode(int c, int r, int i) {
+		this.col   = c;
+		this.row   = r;
+		this.index = i;
+	}
 	
 	@Override
 	public int compareTo(PixelNode p) {

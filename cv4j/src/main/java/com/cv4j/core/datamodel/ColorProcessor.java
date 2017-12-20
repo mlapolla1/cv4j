@@ -60,6 +60,12 @@ public class ColorProcessor implements ImageProcessor {
     private static final int BLUE_CHANNEL_INDEX  = 2;
 
     /**
+     * The string of the exception when an argument
+     * is invalid.
+     */
+    private static final String INVALID_ARGUMENT_STRING_EXCEPTION = "Invalid argument...";
+
+    /**
      * The R values from RGB.
      */
     private byte[] R;
@@ -244,7 +250,7 @@ public class ColorProcessor implements ImageProcessor {
                 break;
 
             default:
-                throw new CV4JException("Invalid argument...");
+                throw new CV4JException(INVALID_ARGUMENT_STRING_EXCEPTION);
         }
 
         return data;
@@ -268,7 +274,7 @@ public class ColorProcessor implements ImageProcessor {
                 break;
 
             default:
-                throw new CV4JException("Invalid argument...");
+                throw new CV4JException(INVALID_ARGUMENT_STRING_EXCEPTION);
         }
 
         return data;
@@ -292,7 +298,7 @@ public class ColorProcessor implements ImageProcessor {
                 break;
 
             default:
-                throw new CV4JException("invalid argument...");
+                throw new CV4JException(INVALID_ARGUMENT_STRING_EXCEPTION);
         }
 
         return data;

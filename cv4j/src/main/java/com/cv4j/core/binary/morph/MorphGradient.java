@@ -24,6 +24,11 @@ import com.cv4j.exception.CV4JException;
 public class MorphGradient {
 
     /**
+     * The hex value 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
+    /**
      * Constant of the internal gradient
      */ 
     public static final int INTERNAL_GRADIENT = 1;
@@ -50,35 +55,77 @@ public class MorphGradient {
         byte[] ero  = initEro(data);
         byte[] dil  = initDil(data);
 
+        final int xr = structureElement.cols / 2;
+
         // X Direction
         // find min and max for input array
-        final int xr = structureElement.cols / 2;
-        for(int row=0; row<height; row++) {
-            int offset = row*width;
-            for(int col=0; col<width; col++) {
-                ero[offset+col] = (byte) findMinInputArray(data, row, col, width, height, xr);
-                dil[offset+col] = (byte) findMaxInputArray(data, row, col, width, height, xr);
-            }
-        }
+        calculateEroAndDilValues(data, ero, dil, width, height, xr);
 
         // Y Direction
         // find min for input array
-        System.arraycopy(ero, 0, data, 0, data.length);
-        for(int col=0; col<width; col++) {
-            for(int row=0; row<height; row++) {
-                ero[row*width+col] = (byte) findMinInputArray(data, row, col, width, height, xr);
-            }
-        }
+        calculateEroValues(data, ero, width, height, xr);
 
         // find max for input array
+        calculateDilValues(data, dil, width, height, xr);
+
+        calculateGradient(data, dil, ero, gray, gradientType);
+    }
+
+    /**
+     * Calculate the dil values.
+     * @param data   The data.
+     * @param dil    The dil.
+     * @param width  The width.
+     * @param height The height.
+     * @param xr     The xr.
+     */
+    private void calculateDilValues(byte[] data, byte[] dil, int width, int height, int xr) {
         System.arraycopy(dil, 0, data, 0, data.length);
-        for(int col=0; col<width; col++) {
-            for(int row=0; row<height; row++) {
+
+        for(int col = 0; col < width; col++) {
+            for(int row = 0; row < height; row++) {
                 dil[row*width+col] = (byte) findMaxInputArray(data, row, col, width, height, xr);;
             }
         }
+    }
 
-        calculateGradient(data, dil, ero, gray, gradientType);
+    /**
+     * Calculate the ero values.
+     * @param data   The data.
+     * @param ero    The ero.
+     * @param width  The width.
+     * @param height The height.
+     * @param xr     The xr.
+     */
+    private void calculateEroValues(byte[] data, byte[] ero, int width, int height, int xr) {
+        System.arraycopy(ero, 0, data, 0, data.length);
+
+        for(int col = 0; col < width; col++) {
+            for(int row = 0; row < height; row++) {
+                ero[row*width+col] = (byte) findMinInputArray(data, row, col, width, height, xr);
+            }
+        }
+    }
+
+    /**
+     * Calculate ero and dil values.
+     * @param data   The data.
+     * @param ero    The ero.
+     * @param dil    The dil.
+     * @param width  The width.
+     * @param height The height.
+     * @param xr     The xr.
+     */
+    private void calculateEroAndDilValues(byte[] data, byte[] ero, byte[] dil, int width, int height, int xr) {
+        for(int row = 0; row < height; row++) {
+            int offset = row * width;
+            for(int col = 0; col < width; col++) {
+                int index = offset + col;
+
+                ero[index] = (byte) findMinInputArray(data, row, col, width, height, xr);
+                dil[index] = (byte) findMaxInputArray(data, row, col, width, height, xr);
+            }
+        }
     }
 
     /**
@@ -136,6 +183,16 @@ public class MorphGradient {
         return max;
     }
 
+    /**
+     * Find minimum input array.
+     * @param data   The data.
+     * @param row    The row.
+     * @param col    The column.
+     * @param width  The width.
+     * @param height The height.
+     * @param xr     The xr.
+     * @return       The minimum input array.
+     */
     private int findMinInputArray(byte[] data, int row, int col, int width, int height, int xr) {
         int min = 256;
 
@@ -152,9 +209,15 @@ public class MorphGradient {
         return min;
     }
 
+    /**
+     * Calculate the gradient.
+     * @param data         The data.
+     * @param dil          The dil.
+     * @param ero          The ero.
+     * @param gray         The byte processor.
+     * @param gradientType The gradient type.
+     */
     private void calculateGradient(byte[] data, byte[] dil, byte[] ero, ByteProcessor gray, int gradientType) {
-        int c;
-
         switch (gradientType) {
             case BASIC_GRADIENT:
                 calculateBasicGradient(data, dil, ero, gray);
@@ -172,23 +235,43 @@ public class MorphGradient {
         }
     }
 
+    /**
+     * Calculate internal gradient.
+     * @param data The data.
+     * @param ero  The ero.
+     */
     private void calculateInternalGradient(byte[] data, byte[] ero) {
-        for(int i=0; i<data.length; i++) {
-            data[i] = (byte)(data[i]&0xff - ero[i] & 0xff);
+        for(int i = 0; i < data.length; i++) {
+            data[i] = (byte)((data[i] & VALUE_0000FF) - (ero[i] & VALUE_0000FF));
         }
     }
 
+    /**
+     * Calculate external gradient.
+     * @param data The data.
+     * @param dil  The dil.
+     */
     private void calculateExternalGradient(byte[] data, byte[] dil) {
         for(int i=0; i<data.length; i++) {
-            data[i] = (byte)(dil[i]&0xff - data[i] & 0xff);
+            data[i] = (byte) ((dil[i] & VALUE_0000FF) - (data[i] & VALUE_0000FF));
         }
     }
 
+    /**
+     * Calculate basic gradient.
+     * @param data The data.
+     * @param dil  The dil.
+     * @param ero  The ero.
+     * @param gray The byte processor.
+     */
     private void calculateBasicGradient(byte[] data, byte[] dil, byte[] ero, ByteProcessor gray) {
+        final int maxRgb = 255;
+
         for(int i=0; i<data.length; i++) {
-            int c = (dil[i] & 0xff - ero[i] & 0xff);
-            data[i] = (byte) ((c > 0) ? 255 : 0);
+            int c = ((dil[i] & VALUE_0000FF) - (ero[i] & VALUE_0000FF));
+            data[i] = (byte) (c > 0 ? maxRgb : 0);
         }
+
         gray.putGray(data);
     }
 }

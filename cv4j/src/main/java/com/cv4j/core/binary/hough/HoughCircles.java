@@ -27,6 +27,21 @@ import java.util.List;
  */
 public class HoughCircles {
 
+    /**
+     * The angle value of 360.
+     */
+    private static final int ANGLE_360 = 360;
+
+    /**
+     * The angle value of 180.
+     */
+    private static final int ANGLE_180 = 180;
+
+    /**
+     * The hex value of 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
     /***
      * The process.
      * @param binary - image data
@@ -59,13 +74,9 @@ public class HoughCircles {
      * @param height      The height;
      */
     private void findCenters(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int numOfRadius, int width, int height) {
-        // find maximum for each space
-        final int numOfTempCircles = 3;
-        final int indexCircle0 = 0;
-        final int indexCircle1 = 1;
-        final int indexCircle2 = 2;
-
-        int[] tempCircle = new int[numOfTempCircles];
+        int tempValue = 0;
+        int tempX     = 0;
+        int tempY     = 0;
 
         /// TODO: Variable not used.
         // int[] output = new int[width * height];
@@ -73,43 +84,28 @@ public class HoughCircles {
         for(int i = 0; i < numOfRadius; i++) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    int value = (acc[i][x + (y * width)] & 0xff);
+                    int value = (acc[i][x + (y * width)] & VALUE_0000FF);
 
                     // if its higher than current value, swap it
-                    if (maxonly && value > tempCircle[indexCircle0]) {
-                        tempCircle[indexCircle0] = value; //radius?
-                        tempCircle[indexCircle1] = x;     // center.x
-                        tempCircle[indexCircle2] = y;     // center.y
-                    } else if(value > accumulate) { // filter by threshold
-                        Vec3i vec3i = createVector3i(x, y, value);
+                    if (maxonly && value > tempValue) {
+                        tempValue = value; //radius?
+                        tempX     = x;     // center.x
+                        tempY     = y;     // center.y
+                    } else if(value > accumulate) {
+                        // filter by threshold
+                        Vec3i vec3i = new Vec3i(x, y, value);
                         circles.add(vec3i);
                     }
                 }
             }
 
             if(maxonly) {
-                Vec3i vec3i = createVector3i(tempCircle[indexCircle0], tempCircle[indexCircle2], tempCircle[indexCircle0]);
+                Vec3i vec3i = new Vec3i(tempValue, tempX, tempY);
                 circles.add(vec3i);
             }
         }
     }
 
-    /**
-     * Create an integer vector of three elements.
-     * @param x The x value.
-     * @param y The y value.
-     * @param z The z value.
-     * @return  The vector.
-     */
-    private Vec3i createVector3i(int x, int y, int z) {
-        Vec3i vec3i = new Vec3i();
-
-        vec3i.x = x;
-        vec3i.y = y;
-        vec3i.z = z;
-
-        return vec3i;
-    }
 
     /**
      * Initialization of acc.
@@ -163,12 +159,10 @@ public class HoughCircles {
      * @return The cosLut.
      */
     private double[] initCosLUT() {
-        final float angle180 = 180f;
-        final int angle360 = 360;
-        double[] cosLut = new double[angle360];
+        double[] cosLut = new double[ANGLE_360];
 
-        for (int theta = 0; theta < angle360; theta++) {
-            cosLut[theta] = Math.cos((theta * Math.PI) / angle180);
+        for (int theta = 0; theta < ANGLE_360; theta++) {
+            cosLut[theta] = Math.cos((theta * Math.PI) / (float) ANGLE_180);
         }
 
         return cosLut;
@@ -179,12 +173,10 @@ public class HoughCircles {
      * @return The sinLut.
      */
     private double[] initSinLUT() {
-        final float angle180 = 180f;
-        final int angle360 = 360;
-        double[] sinLut = new double[angle360];
+        double[] sinLut = new double[ANGLE_360];
 
-        for (int theta = 0; theta < angle360; theta++) {
-            sinLut[theta] = Math.sin((theta * Math.PI) / angle180);
+        for (int theta = 0; theta < ANGLE_360; theta++) {
+            sinLut[theta] = Math.sin((theta * Math.PI) / (float) ANGLE_180);
         }
 
         return sinLut;
@@ -192,11 +184,9 @@ public class HoughCircles {
 
     private void something(byte[] data, int[][] acc, double[] cosLut, double[] sinLut, int x, int y, int width, int height, int minRadius, int maxRadius) {
         final int maxRgb   = 255;
-        final int andValue = 0xff;
-        final int angle360 = 360;
 
-        if ((data[y * width + x] & andValue) == maxRgb) {
-            for (int theta = 0; theta < angle360; theta++) {
+        if ((data[y * width + x] & VALUE_0000FF) == maxRgb) {
+            for (int theta = 0; theta < ANGLE_360; theta++) {
                 for(int r=minRadius; r<=maxRadius; r++) {
                     int x0 = (int) Math.round(x - r * cosLut[theta]);
                     int y0 = (int) Math.round(y - r * sinLut[theta]);

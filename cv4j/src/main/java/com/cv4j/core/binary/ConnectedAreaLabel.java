@@ -15,6 +15,8 @@
  */
 package com.cv4j.core.binary;
 
+import android.annotation.SuppressLint;
+
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Rect;
 
@@ -237,34 +239,32 @@ public class ConnectedAreaLabel {
      * @param height
      */
     private Map<Integer, List<PixelNode>> makeAggregationMap(int[] pixels, int[] labelSet, int width, int height) {
+        @SuppressLint("UseSparseArrays")
         Map<Integer, List<PixelNode>> aggregationMap = new HashMap<>();
 
         for (int i = 0; i < height; i++) {
             int offset = i * width;
-            List<PixelNode> pixelList;
-            PixelNode pn;
 
             for (int j = 0; j < width; j++) {
                 int pixelLabel = pixels[offset + j];
+
                 // skip background
                 if (pixelLabel < 0) {
                     continue;
                 }
 
                 // label each area
-                pixels[offset + j] = labelSet[pixelLabel];
-                pixelList = aggregationMap.get(labelSet[pixelLabel]);
+                final int label = labelSet[pixelLabel];
+                pixels[offset + j] = label;
+                List<PixelNode> pixelList = aggregationMap.get(label);
 
                 if (pixelList == null) {
                     pixelList = new ArrayList<>();
                     aggregationMap.put(labelSet[pixelLabel], pixelList);
                 }
 
-                pn = new PixelNode();
-                pn.row = i;
-                pn.col = j;
-                pn.index = offset + j;
-                pixelList.add(pn);
+                PixelNode pixelNode = new PixelNode(i, j, offset+j);
+                pixelList.add(pixelNode);
             }
         }
 
@@ -273,11 +273,11 @@ public class ConnectedAreaLabel {
 
     /**
      * Assign labels.
-     * @param aggregationMap
-     * @param labelMask
-     * @param drawBounding
-     * @param rectangles
-     * @return
+     * @param aggregationMap The aggregation map.
+     * @param labelMask      The label mask.
+     * @param drawBounding   The draw bounding.
+     * @param rectangles     The rectangles.
+     * @return               The number of labels.
      */
     private int assignLabels(Map<Integer, List<PixelNode>> aggregationMap, int[] labelMask, boolean drawBounding, List<Rect> rectangles) {
         int number = 0;
@@ -292,8 +292,8 @@ public class ConnectedAreaLabel {
                 continue;
             }
             // tag each pixel
-            for (PixelNode pnode : pixelList) {
-                labelMask[pnode.index] = key;
+            for (PixelNode pixelNode : pixelList) {
+                labelMask[pixelNode.index] = key;
             }
 
             // return each label rectangle
@@ -316,21 +316,28 @@ public class ConnectedAreaLabel {
     private Rect boundingRect(List<PixelNode> pixelList) {
         int minX = 10000;
         int maxX = 0;
+
         int minY = 10000;
         int maxY = 0;
-        for (PixelNode pn : pixelList) {
-            minX = Math.min(pn.col, minX);
-            maxX = Math.max(pn.col, maxX);
-            minY = Math.min(pn.row, minY);
-            maxY = Math.max(pn.row, maxY);
+
+        for (PixelNode pixelNode : pixelList) {
+            minX = Math.min(pixelNode.col, minX);
+            maxX = Math.max(pixelNode.col, maxX);
+
+            minY = Math.min(pixelNode.row, minY);
+            maxY = Math.max(pixelNode.row, maxY);
         }
+
         int dx = maxX - minX;
         int dy = maxY - minY;
+
         Rect roi = new Rect();
-        roi.x = minX;
-        roi.y = minY;
-        roi.width = dx;
+
+        roi.x      = minX;
+        roi.y      = minY;
+        roi.width  = dx;
         roi.height = dy;
+
         return roi;
     }
 }

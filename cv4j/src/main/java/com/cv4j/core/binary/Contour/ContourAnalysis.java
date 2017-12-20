@@ -54,8 +54,6 @@ public class ContourAnalysis {
 
         for (int i = 0; i < height; i++) {
             offset = i * width;
-            List<PixelNode> pixelList;
-            PixelNode pn;
 
             for (int j = 0; j < width; j++) {
                 int pixelLabel = labels[offset+j];
@@ -66,16 +64,14 @@ public class ContourAnalysis {
                 }
 
                 // label each area
-                pixelList = aggregationMap.get(pixelLabel);
+                List<PixelNode> pixelList = aggregationMap.get(pixelLabel);
                 if(pixelList == null) {
                     pixelList = new ArrayList<>();
                     aggregationMap.put(pixelLabel, pixelList);
                 }
-                pn = new PixelNode();
-                pn.row = i;
-                pn.col = j;
-                pn.index = offset+j;
-                pixelList.add(pn);
+
+                PixelNode pixelNode = new PixelNode(i, j, offset+j);
+                pixelList.add(pixelNode);
             }
         }
 

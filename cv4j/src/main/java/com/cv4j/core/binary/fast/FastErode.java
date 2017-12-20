@@ -26,34 +26,50 @@ public class FastErode extends FastBase {
 
 	@Override
 	protected void calculateOutputValues(byte[] output, byte[] data, int width, int height, int xyr, int shift) {
-		final int size     = width * height;
-		final int andValue = 0xff;
+		final int valueFF  = 0xff;
 
-		int c;
-		int offset;
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {
-				c = data[row*width+col];
+				final int offsetRowWidthCol = (row * width) + col;
+				int c = data[offsetRowWidthCol];
 
-				if((c & andValue) == 0) {
+				if((c & valueFF) == 0) {
 					continue;
 				}
 
-				for(int i = -(xyr); i <= (xyr - shift); i++) {
-					if(i == 0) {
-						continue;
-					}
-
-					offset = getValueBetween(i + row, 0, height);
-					c &=data[offset*width+col];
-				}
+				c = calculateDataValue(data, c, row, col, width, height, xyr, shift);
 
 				if(c == 0){
-					output[row*width+col] = (byte) 0;
+					output[offsetRowWidthCol] = (byte) 0;
 				}
 			}
 		}
 
-		System.arraycopy(output, 0, data, 0, size);
+		System.arraycopy(output, 0, data, 0, width * height);
+	}
+
+	/**
+	 * Calculate data value.
+	 * @param data   The data.
+	 * @param c      The value.
+	 * @param row    The row.
+	 * @param col    The column.
+	 * @param width  The width.
+	 * @param height The height.
+	 * @param xyr    The xy radius.
+	 * @param shift  The shift.
+	 * @return       The data value.
+	 */
+	private int calculateDataValue(byte[] data, int c, int row, int col, int width, int height, int xyr, int shift) {
+		for(int i = -(xyr); i <= (xyr - shift); i++) {
+			if(i == 0) {
+				continue;
+			}
+
+			int offset = getValueBetween(i + row, 0, height);
+			c &= data[offset*width+col];
+		}
+
+		return c;
 	}
 }
