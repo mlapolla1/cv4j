@@ -155,7 +155,7 @@ public class StrokeAreaFilter extends BaseFilter {
         d2 = colorDistance(rgb1, rgb2);
 
         if (d2 >= d02) {
-            return 0.0;
+            return 0;
         }
 
         r2 = d2 / d02;
