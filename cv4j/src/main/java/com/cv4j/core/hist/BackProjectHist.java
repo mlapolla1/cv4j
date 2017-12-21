@@ -53,6 +53,12 @@ public class BackProjectHist {
         setOut(output, width, height, offset, sum, rimage);
 
         // 归一化
+        setOut2(output);
+
+        thresholdBastardizationDisplay(output, backProj);
+    }
+
+    private void setOut2(float[] output){
         float min = 1000;
         float max = 0;
         for (float anOutput : output) {
@@ -64,8 +70,6 @@ public class BackProjectHist {
         for(int i=0; i<output.length; i++) {
             output[i] =  ((output[i] - min)/delta)*255;
         }
-
-        thresholdBastardizationDisplay(output, backProj);
     }
 
     private void setRimage(byte[] R, byte[] G, byte[] B, int height, int width, int index, float[] rHist, int bins){

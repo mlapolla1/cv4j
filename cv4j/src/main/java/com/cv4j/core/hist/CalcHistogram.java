@@ -73,19 +73,20 @@ public class CalcHistogram {
      * @param norm is norm.
      */
     public void calcRGBHist(ImageProcessor src, int bins, int[][] hist, boolean norm) {
-
         if (src == null) return;
-
         int numChannels = src.getChannels();
         for(int i=0; i<numChannels; i++) {
             byte[] data = src.toByte(i);
             hist[i] = getHistogram(data, bins, new int[]{0, 256});
         }
         if(!norm) return;
-
         float min = 10000000;
         float max = 0;
         float delta;
+        setHistMatrix(hist, numChannels, bins, min, max, delta);
+    }
+
+    private void setHistMatrix(int[][] hist, int numChannels, int bins, float min, float max, float delta){
         for(int i=0; i<numChannels; i++) {
             for(int j=0; j<bins; j++) {
                 min = Math.min(hist[i][j], min);
@@ -95,7 +96,7 @@ public class CalcHistogram {
             for(int j=0; j<bins; j++) {
                 hist[i][j] = (int)(((hist[i][j] - min)/delta)*255);
             }
-        }
+        }      
     }
 
     /**

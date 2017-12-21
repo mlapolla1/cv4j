@@ -46,31 +46,41 @@ public class SinCityFilter extends BaseFilter {
 			tg = G[i] & 0xff;
 			tb = B[i] & 0xff;
 
-			float r1 = 0.299f;
-			float g1 = 0.587f;
-			float b1 = 0.114f;
-
-			int gray = (int)(r1 * (double)tr + g1 * (double)tg + b1 * (double)tb);
+			int gray = setGray(tr, tg, tb);
 			double distance = getDistance(tr, tg, tb);
 
 			if(distance < threshold) {
 				double k = distance / threshold;
 				int[] rgb = getAdjustableRGB(tr, tg, tb, gray, (float)k);
-				int index0 = 0;
-				int index1 = 1;
-				int index2 = 2;
-				tr = rgb[index0];
-				tg = rgb[index1];
-				tb = rgb[index2];
 				setsRGB(tr, tg, tb);
 			} else {
-				setsRGB(gray, gray, gray);
+				setsRGBGray(gray, gray, gray);
 			}
         }
         return src;
 	}
 
-	private void setsRGB(int rset, int gset, int bset){
+	private int setGray(int tr, int tg, int tb){
+		float r1 = 0.299f;
+		float g1 = 0.587f;
+		float b1 = 0.114f;
+
+		return (int)(r1 * (double)tr + g1 * (double)tg + b1 * (double)tb);
+	}
+
+	private void setsRGB(int tr, int tg, int tb){
+		int index0 = 0;
+		int index1 = 1;
+		int index2 = 2;
+		tr = rgb[index0];
+		tg = rgb[index1];
+		tb = rgb[index2];
+		R[i] = (byte)tr;
+		G[i] = (byte)tg;
+		B[i] = (byte)tb;
+	}
+
+	private void setsRGBGray(int rset, int gset, int bset){
 		R[i] = (byte)rset;
 		G[i] = (byte)gset;
 		B[i] = (byte)bset;

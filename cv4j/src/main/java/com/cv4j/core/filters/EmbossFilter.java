@@ -61,7 +61,7 @@ public class EmbossFilter extends BaseFilter {
 	}
 
 
-	private void setOutput(int r, int g, int b, int r1, int g1, int b1, int r2, int g2, int b2, boolean out, byte [][] output, int offset){
+	private void setOutput(int r, int g, int b, int r1, int g1, int b1, int r2, int g2, int b2, boolean isOut, byte [][] output, int offset){
 		for ( int x = 1; x < width-1; x++ ) {
 				r1 = R[offset] & 0xff;
 				g1 = G[offset] & 0xff;
@@ -71,7 +71,7 @@ public class EmbossFilter extends BaseFilter {
 				g2 = G[offset+width] & 0xff;
 				b2 = B[offset+width] & 0xff;
 
-				if(out) {
+				if(isOut) {
 					r = r1 - r2;
 					g = g1 - g2;
 					b = b1 - b2;

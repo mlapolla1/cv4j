@@ -59,12 +59,8 @@ public class GradientFilter {
 	private boolean isSobel;
 
 	private double xred = 0;
-    private int xgreen = 0;
-    private int xblue = 0;
 
     private double yred = 0;
-    private int ygreen = 0;
-    private int yblue = 0;
     /**
      * Constructor initialization of the gradient
      * filter.
@@ -99,8 +95,8 @@ public class GradientFilter {
 	}
 
 	private float[] subRowColAlgorithm(byte[] intput, int width, int height, int row, int col) {
-		float xred = 0;
-		float yred = 0;
+		float xRed = 0;
+		float yRed = 0;
 
 		for(int subrow = -1; subrow <= 1; subrow++) {
 			for(int subcol = -1; subcol <= 1; subcol++) {
@@ -118,12 +114,12 @@ public class GradientFilter {
 				int index2 = newRow * width + newCol;
 				int pv = intput[index2] & 0xff;
 
-				xred += (SOBEL_X[subrow + 1][subcol + 1] * pv);
-				yred += (SOBEL_Y[subrow + 1][subcol + 1] * pv);
+				xRed += (SOBEL_X[subrow + 1][subcol + 1] * pv);
+				yRed += (SOBEL_Y[subrow + 1][subcol + 1] * pv);
 			}
 		}
 
-		return new float[] {xred, yred};
+		return new float[] {xRed, yRed};
 	}
 
     /**
@@ -169,8 +165,8 @@ public class GradientFilter {
 		return outPixels;
 	}
 
-    private void setOutPixels(int direction, int index, double mred, int[] outPixels){
-        switch (direction) {
+    private void setOutPixels(int pixelDirection, int index, double mred, int[] outPixels){
+        switch (pixelDirection) {
             case X_DIRECTION:
                 outPixels[index] = Tools.clamp((int) yred);
                 break;

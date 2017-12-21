@@ -149,7 +149,9 @@ public class ColorFilterActivity extends BaseActivity {
      * Initialize color styles.
      */
     private void initColorStyles() {
-        colorStyles = new SparseArray<>(12);
+        final int numColorStyles = 12;
+
+        colorStyles = new SparseArray<>(numColorStyles);
 
         colorStyles.put(ColorFilter.AUTUMN_STYLE, " 秋天风格 ");
         colorStyles.put(ColorFilter.BONE_STYLE, " 硬朗风格 ");

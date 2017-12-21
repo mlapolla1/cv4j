@@ -26,6 +26,12 @@ import com.cv4j.core.datamodel.Scalar;
  * The principal color extractor.
  */
 public class PrincipalColorExtractor {
+
+	/**
+	 * The hex value of 0000FF.
+	 */
+	private static final int VALUE_0000FF = 0x0000ff;
+
 	/**
 	 * The default number of clusters.
 	 */
@@ -132,7 +138,11 @@ public class PrincipalColorExtractor {
 		for (int row = 0; row < height; ++row) {
 			for (int col = 0; col < width; ++col) {
 				int index = row * width + col;
-				pointList.add(new ClusterPoint(row, col, R[index]&0xff, G[index]&0xff, B[index]&0xff));
+
+				final int red   = R[index] & VALUE_0000FF;
+				final int green = G[index] & VALUE_0000FF;
+				final int blue  = G[index] & VALUE_0000FF;
+				pointList.add(new ClusterPoint(row, col, red, green, blue));
 			}
 		}
 
@@ -146,8 +156,13 @@ public class PrincipalColorExtractor {
 			int randomNumber2 = random.nextInt(height);
 			int index = randomNumber2 * width + randomNumber1;
 
-			ClusterCenter cc = new ClusterCenter(randomNumber1, randomNumber2, R[index]&0xff, G[index]&0xff, B[index]&0xff);
+			final int red   = R[index] & VALUE_0000FF;
+			final int green = G[index] & VALUE_0000FF;
+			final int blue  = B[index] & VALUE_0000FF;
+
+			ClusterCenter cc = new ClusterCenter(randomNumber1, randomNumber2, red, green, blue);
 			cc.setcIndex(i);
+
 			clusterCenterList.add(cc);
 		}
 

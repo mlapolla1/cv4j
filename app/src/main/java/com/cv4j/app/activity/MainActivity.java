@@ -1,6 +1,7 @@
 package com.cv4j.app.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -50,21 +51,17 @@ public class MainActivity extends BaseActivity {
 
     private void initViews() {
         initToolbar();
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-                if (Preconditions.isNotBlank(menuItem.getTitle())) {
-                    toolbar.setTitle(menuItem.getTitle());
-                }
-                showMenu(menuItem);
-                menuItem.setChecked(true);
-
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                return true;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            if (Preconditions.isNotBlank(menuItem.getTitle())) {
+                toolbar.setTitle(menuItem.getTitle());
             }
+            showMenu(menuItem);
+            menuItem.setChecked(true);
+
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+            return true;
         });
     }
 
@@ -80,7 +77,8 @@ public class MainActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().add(R.id.content_frame,mContent, MenuManager.MenuType.HOME.getTitle()).commit();
 
-        menuArray = new SparseArray<>(8);
+        final int numMenus = 8;
+        menuArray = new SparseArray<>(numMenus);
         menuArray.append(R.id.drawer_cv4j, MenuManager.MenuType.HOME);
         menuArray.append(R.id.drawer_io, MenuManager.MenuType.IO);
         menuArray.append(R.id.drawer_filters, MenuManager.MenuType.FILTERS);

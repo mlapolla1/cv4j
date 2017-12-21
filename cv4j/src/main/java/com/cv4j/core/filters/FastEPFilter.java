@@ -28,10 +28,11 @@ public class FastEPFilter implements CommonFilter {
 	private int xr;
 	private int yr;
 	private float sigma;
-	private int indexSwx = 0;
-	private int indexSwy = 1;
-	private int indexNex = 2;
-	private int indexNey = 3;
+	private static final int INDEX_SWX = 0;
+	private static final int INDEX_SWY = 1;
+	private static final int INDEX_NEX = 2;
+	private static final int INDEX_NEY = 3;
+
 	public FastEPFilter() {
 		sigma = 10.0f; // by default
 	}
@@ -83,23 +84,26 @@ public class FastEPFilter implements CommonFilter {
 		for (int row = 0; row < height; row++) {
 			offset = row * width;
 			for (int col = 0; col < width; col++) {
-
 				int [] variables = setVariables(col, row, width, height);
-				int swx = variables[indexSwx];
-				int swy = variables[indexSwy];
-				int nex = variables[indexNex];
-				int ney = variables[indexNey];
+				int swx = variables[INDEX_SWX];
+				int swy = variables[INDEX_SWY];
+				int nex = variables[INDEX_NEX];
+				int ney = variables[INDEX_NEY];
 				size = (swx - nex)*(swy - ney);
 				int sr = input.getBlockSum2(ney, nex, swy, swx);
 				float a = input.getBlockSquareSum(col, row, wy, wx);
 				// fix issue, size is not cover the whole block
-				float b = sr / size;
-				float c = (a - (sr*sr)/size)/size;
-				float d = c / (c+sigma2);
-				r = (int)((1-d)*b + d*r);
-				output[offset + col] = (byte) Tools.clamp(r);
+				setOutput(output, col, r, sr, size, a, sigma2, offset);
 			}
 		}
+	}
+
+	private void setOutput(byte[] output, int col, int r, int sr, int size, int a, float sigma2, int offset){
+		float b = sr / size;
+		float c = (a - (sr*sr)/size)/size;
+		float d = c / (c+sigma2);
+		r = (int)((1-d)*b + d*r);
+		output[offset + col] = (byte) Tools.clamp(r);
 	}
 
 	private int[] setVariables(int col, int row, int width, int height){
@@ -111,16 +115,16 @@ public class FastEPFilter implements CommonFilter {
 
 		int [] variables = new int[dim];
 		if(swx >= width) {
-			variables[indexSwx] = width - 1;
+			variables[INDEX_SWX] = width - 1;
 		}
 		if(swy >= height) {
-			variables[indexSwy] = height - 1;
+			variables[INDEX_SWY] = height - 1;
 		}
 		if(nex < 0) {
-			variables[indexNex] = 0;
+			variables[INDEX_NEX] = 0;
 		}
 		if(ney < 0) {
-			variables[indexNey] = 0;
+			variables[INDEX_NEY] = 0;
 		}
 
 		return variables;

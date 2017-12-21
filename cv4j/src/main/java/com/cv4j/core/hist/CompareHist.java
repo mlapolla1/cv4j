@@ -36,20 +36,11 @@ public class CompareHist {
         int len = source.length;
         double[] mixedData = new double[len];
         // start to normalize the histogram data
-        double[] hist1 = new double[len];
-        double[] hist2 = new double[len];
-        double sum1=0;
-        double sum2=0;
-        for (int i = 0; i < len; i++)
-        {
-            sum1 += source[i];
-            sum2 += target[i];
-        }
-        for (int i = 0; i < len; i++)
-        {
-            hist1[i] = source[i] / sum1;
-            hist2[i] = target[i] / sum2;
-        }
+        double sum1 = getSum(source);
+        double sum2 = getSum(target);
+
+        double[] hist1 = getHist(source, sum1);
+        double[] hist2 = getHist(target, sum2);
 
         for(int i=0; i<len; i++ ) {
             mixedData[i] = Math.sqrt(hist1[i] * hist2[i]);
@@ -63,6 +54,26 @@ public class CompareHist {
 
         // The degree of similarity
         return similarity;
+    }
+
+    private double getSum(int[] array){
+        int len = array.length;
+        double sum = 0;
+        for (int i = 0; i < len; i++)
+        {
+            sum += array[i];
+        }
+        return sum;
+    }
+
+    private double[] getHist(int[] array, double sumx){
+        int len = array.length;
+        double[] hist = new double[len];
+        for (int i = 0; i < len; i++)
+        {
+            hist[i] = array[i] / sumx;
+        }
+        return hist;
     }
 
     public double covariance(int[] source, int[] target) {
