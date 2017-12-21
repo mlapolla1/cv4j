@@ -54,32 +54,60 @@ public class FloSteDitheringFilter implements CommonFilter {
         int err;
 
         if(row + 1 < height && col - 1 > 0) {
-            k = (row + 1) * width + col - 1;
-            err = GRAY[k] & 0xff;
-            err += (int)(er * kernelData[0]);
-            GRAY[k] = (byte)Tools.clamp(err);
+            rowSmallerHeight(row, col, GRAY, er, height, width);
         }
 
         if(col + 1 < width) {
-            k = row * width + col + 1;
-            err = GRAY[k]&0xff;
-            err += (int)(er * kernelData[3]);
-            GRAY[k] = (byte)Tools.clamp(err);
+            colSmallerWidth(row, col, GRAY, er, width);
         }
 
         if(row + 1 < height) {
-            k = (row + 1) * width + col;
-            err = GRAY[k]&0xff;
-            err += (int)(er * kernelData[1]);
-            GRAY[k] = (byte)Tools.clamp(err);
+            rowPlusOneSmallerHeight(row, col, GRAY, height, width, er);
         }
 
         if(row + 1 < height && col + 1 < width) {
-            k = (row + 1) * width + col + 1;
-            err = GRAY[k]&0xff;
-            err += (int)(er * kernelData[2]);
-            GRAY[k] = (byte)Tools.clamp(err);
+            rowAndColSmaller(row, col, GRAY, height, width, er);
         }
+    }
+
+    private void rowAndColSmaller(int row, int col, byte[] GRAY, int height, int width, int er){
+        int k;
+        int err;
+
+        k = (row + 1) * width + col + 1;
+        err = GRAY[k]&0xff;
+        err += (int)(er * kernelData[2]);
+        GRAY[k] = (byte)Tools.clamp(err);        
+    }
+
+    private void rowPlusOneSmallerHeight(int row, int col, byte[] GRAY, int height, int width, int er){
+        int k;
+        int err; 
+
+        k = (row + 1) * width + col;
+        err = GRAY[k]&0xff;
+        err += (int)(er * kernelData[1]);
+        GRAY[k] = (byte)Tools.clamp(err);
+    }
+
+    private void rowSmallerHeight(int row, int col, byte[] GRAY, int er, int height, int width){
+        int k;
+        int err;
+
+        k = (row + 1) * width + col - 1;
+        err = GRAY[k] & 0xff;
+        err += (int)(er * kernelData[0]);
+        GRAY[k] = (byte)Tools.clamp(err);
+    }
+
+    private void colSmallerWidth(int row, int col, byte[] GRAY, int er, int width){
+        int k;
+        int err;
+
+        k = row * width + col + 1;
+        err = GRAY[k]&0xff;
+        err += (int)(er * kernelData[3]);
+        GRAY[k] = (byte)Tools.clamp(err);
     }
 
 	@Override

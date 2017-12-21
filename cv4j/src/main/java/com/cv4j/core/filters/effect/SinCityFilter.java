@@ -62,16 +62,18 @@ public class SinCityFilter extends BaseFilter {
 				tr = rgb[index0];
 				tg = rgb[index1];
 				tb = rgb[index2];
-				R[i] = (byte)tr;
-				G[i] = (byte)tg;
-				B[i] = (byte)tb;
+				setsRGB(tr, tg, tb);
 			} else {
-				R[i] = (byte)gray;
-				G[i] = (byte)gray;
-				B[i] = (byte)gray;
+				setsRGB(gray, gray, gray);
 			}
         }
         return src;
+	}
+
+	private void setsRGB(int rset, int gset, int bset){
+		R[i] = (byte)rset;
+		G[i] = (byte)gset;
+		B[i] = (byte)bset;
 	}
 
 	private int[] getAdjustableRGB(int tr, int tg, int tb, int gray, float rate) {

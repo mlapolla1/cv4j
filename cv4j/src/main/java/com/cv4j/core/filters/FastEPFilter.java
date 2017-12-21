@@ -28,6 +28,10 @@ public class FastEPFilter implements CommonFilter {
 	private int xr;
 	private int yr;
 	private float sigma;
+	private int indexSwx = 0;
+	private int indexSwy = 1;
+	private int indexNex = 2;
+	private int indexNey = 3;
 	public FastEPFilter() {
 		sigma = 10.0f; // by default
 	}
@@ -79,22 +83,12 @@ public class FastEPFilter implements CommonFilter {
 		for (int row = 0; row < height; row++) {
 			offset = row * width;
 			for (int col = 0; col < width; col++) {
-				int swx = col + xr;
-				int swy = row + yr;
-				int nex = col-xr-1;
-				int ney = row-yr-1;
-				if(swx >= width) {
-					swx = width - 1;
-				}
-				if(swy >= height) {
-					swy = height - 1;
-				}
-				if(nex < 0) {
-					nex = 0;
-				}
-				if(ney < 0) {
-					ney = 0;
-				}
+
+				int [] variables = setVariables(col, row, width, height);
+				int swx = variables[indexSwx];
+				int swy = variables[indexSwy];
+				int nex = variables[indexNex];
+				int ney = variables[indexNey];
 				size = (swx - nex)*(swy - ney);
 				int sr = input.getBlockSum2(ney, nex, swy, swx);
 				float a = input.getBlockSquareSum(col, row, wy, wx);
@@ -106,5 +100,30 @@ public class FastEPFilter implements CommonFilter {
 				output[offset + col] = (byte) Tools.clamp(r);
 			}
 		}
+	}
+
+	private int[] setVariables(int col, int row, int width, int height){
+		int swx = col + xr;
+		int swy = row + yr;
+		int nex = col-xr-1;
+		int ney = row-yr-1;
+		int dim = 4;
+
+		int [] variables = new int[dim];
+		if(swx >= width) {
+			variables[indexSwx] = width - 1;
+		}
+		if(swy >= height) {
+			variables[indexSwy] = height - 1;
+		}
+		if(nex < 0) {
+			variables[indexNex] = 0;
+		}
+		if(ney < 0) {
+			variables[indexNey] = 0;
+		}
+
+		return variables;
+
 	}
 }

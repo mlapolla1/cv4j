@@ -57,7 +57,14 @@ public class GradientFilter {
      * Is sobel.
      */
 	private boolean isSobel;
-	
+
+	private double xred = 0;
+    private int xgreen = 0;
+    private int xblue = 0;
+
+    private double yred = 0;
+    private int ygreen = 0;
+    private int yblue = 0;
     /**
      * Constructor initialization of the gradient
      * filter.
@@ -132,14 +139,6 @@ public class GradientFilter {
 
 		int index;
 
-        double xred = 0;
-        int xgreen = 0;
-        int xblue = 0;
-
-        double yred = 0;
-        int ygreen = 0;
-        int yblue = 0;
-
         int newRow;
         int newCol;
 
@@ -158,19 +157,8 @@ public class GradientFilter {
                 max = Math.max(Tools.clamp((int)mred) , max);
                 min = Math.min(Tools.clamp((int)mred) , min);
 
-                switch (direction) {
-					case X_DIRECTION:
-						outPixels[index] = Tools.clamp((int) yred);
-						break;
-					case Y_DIRECTION:
-						outPixels[index] = Tools.clamp((int) xred);
-						break;
-					default:
-						// XY_DIRECTION
-						outPixels[index] = Tools.clamp((int) mred);
-						break;
+                setOutPixels(direction, index, mred, outPixels);
 
-				}
 
 				// cleanup for next loop
                 xred = 0;
@@ -180,5 +168,21 @@ public class GradientFilter {
         }
 		return outPixels;
 	}
+
+    private void setOutPixels(int direction, int index, double mred, int[] outPixels){
+        switch (direction) {
+            case X_DIRECTION:
+                outPixels[index] = Tools.clamp((int) yred);
+                break;
+            case Y_DIRECTION:
+                outPixels[index] = Tools.clamp((int) xred);
+                break;
+            default:
+                // XY_DIRECTION
+                outPixels[index] = Tools.clamp((int) mred);
+                break;
+
+        }
+    }
 
 }

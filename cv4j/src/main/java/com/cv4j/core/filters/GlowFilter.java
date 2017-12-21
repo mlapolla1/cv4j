@@ -53,21 +53,26 @@ public class GlowFilter extends GaussianBlurFilter {
 
 		int index = 0;
 		for ( int y = 0; y < height; y++ ) {
-			for ( int x = 0; x < width; x++ ) {
-				int r1 = R[index] & 0xff;
-				int g1 = G[index] & 0xff;
-				int b1 = B[index] & 0xff;
-
-				int r2 = R1[index] & 0xff;
-				int g2 = G1[index] & 0xff;
-				int b2 = B1[index] & 0xff;
-
-				R[index] = (byte)Tools.clamp( (int)(r1 + a * r2) );
-				G[index] = (byte)Tools.clamp( (int)(g1 + a * g2) );
-				B[index] = (byte)Tools.clamp( (int)(b1 + a * b2) );
-				index++;
-			}
+			index = setRGB(R, G, B, index, a, width);
 		}
 		return src;
+    }
+
+    private int setRGB(byte[] R, byte[] G, byte[] B, int index, float a, int width){
+		for ( int x = 0; x < width; x++ ) {
+			int r1 = R[index] & 0xff;
+			int g1 = G[index] & 0xff;
+			int b1 = B[index] & 0xff;
+
+			int r2 = R1[index] & 0xff;
+			int g2 = G1[index] & 0xff;
+			int b2 = B1[index] & 0xff;
+
+			R[index] = (byte)Tools.clamp( (int)(r1 + a * r2) );
+			G[index] = (byte)Tools.clamp( (int)(g1 + a * g2) );
+			B[index] = (byte)Tools.clamp( (int)(b1 + a * b2) );
+			index++;
+		}
+		return index;
     }
 }

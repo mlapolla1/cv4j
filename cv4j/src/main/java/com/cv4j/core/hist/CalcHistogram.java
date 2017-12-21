@@ -138,16 +138,20 @@ public class CalcHistogram {
             hist[i] = getHistogram(data, bins, ranges[i]);
         }
         if(!norm) return;
+        setHist(hist, bins, ranges);
+    }
 
+    private void setHist(int[][] hist, int bins, int[][] ranges){
         float min = 10000000;
         float max = 0;
         float delta;
-        for(int i=0; i<3; i++) {
+        int length = 3;
+        for(int i=0; i<length; i++) {
             for(int j=0; j<bins; j++) {
                 min = Math.min(hist[i][j], min);
                 max = Math.max(hist[i][j], max);
             }
-            delta = max -min;
+            delta = max - min;
             int dr = ranges[i][1] - ranges[i][0];
             for(int j=0; j<bins; j++) {
                 hist[i][j] = (int)(((hist[i][j] - min)/delta)*dr);
@@ -183,22 +187,26 @@ public class CalcHistogram {
                 obin = 0;
                 prebin = 0;
             }
-            int nbin = (int)Math.floor(currbin);
-
-            for(int j=obin; j<=nbin; j++) {
-                wh[k] += hist[j];
-            }
-
-            w1 = prebin - obin;
-            w2 = currbin - nbin;
-            if(w1 > 0 && w1 < 1) {
-                wh[k] = (int)(wh[k] - hist[obin]*w1);
-            }
-            if(w2 > 0 && w2 < 1) {
-                wh[k] = (int)(wh[k] + hist[nbin+1]*w2);
-            }
+            setWh(obin, currbin, prebin, wh, bins, k, hist, w1, w2);
         }
         return wh;
+    }
+
+    private void setWh(int obin, double currbin, double prebin,  int[] wh, int bins, int k, int[] hist, double w1, double w2){
+        int nbin = (int)Math.floor(currbin);
+
+        for(int j=obin; j<=nbin; j++) {
+            wh[k] += hist[j];
+        }
+
+        w1 = prebin - obin;
+        w2 = currbin - nbin;
+        if(w1 > 0 && w1 < 1) {
+            wh[k] = (int)(wh[k] - hist[obin]*w1);
+        }
+        if(w2 > 0 && w2 < 1) {
+            wh[k] = (int)(wh[k] + hist[nbin+1]*w2);
+        }
     }
 
     private void increaseHistogramFromData(int[] hist, byte[] data) {

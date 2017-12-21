@@ -82,26 +82,12 @@ public class MotionFilter extends BaseFilter {
 				newY = (int) Math.floor(newY + (i * sinAngle));
 				newX = (int) Math.floor(newX + (i * cosAngle));
 			}
-			float f = (float) (i / iteration);
 
-			if (newX < 0 || newX >= width) {
-				break;
-			}
-			if (newY < 0 || newY >= height) {
-				break;
-			}
-
-			// scale the pixels
-			float scale = 1-zoom*f;
-			float m11 = cx - (cx * scale);
-			float m22 = cy - (cy * scale);
-			newY = (int)(newY * scale + m22);
-			newX = (int)(newX * scale + m11);
+			int idx = getIdx(newX, newY, width, height, cx, cy, zoom, i, iteration);
 
 			// blur the pixels, here
 			count++;
 
-			int idx = (newY * width) + newX;
 			tr += R[idx] & 0xff;
 			tg += G[idx] & 0xff;
 			tb += B[idx] & 0xff;
@@ -116,6 +102,24 @@ public class MotionFilter extends BaseFilter {
 
 		return results;
 	}
+
+	private int getIdx(int newX, int newY, int width, int height, int cx, int cy, float zoom, int i, int iteration){
+		float f = (float) (i / iteration);
+		if (newX < 0 || newX >= width) {
+			break;
+		}
+		if (newY < 0 || newY >= height) {
+			break;
+		}
+
+		// scale the pixels
+		float scale = 1-zoom*f;
+		float m11 = cx - (cx * scale);
+		float m22 = cy - (cy * scale);
+		newY = (int)(newY * scale + m22);
+		newX = (int)(newX * scale + m11);
+		return (newY * width) + newX;
+	}
 	
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
@@ -129,7 +133,7 @@ public class MotionFilter extends BaseFilter {
         int cy = height / 2;
         
         // calculate the triangle geometry value
-        float degree180 = 180.0f;
+		float degree180 = 180.0f;
         float sinAngle = (float)Math.sin(angle/degree180 * onePI);
         float cosAngle = (float)Math.cos(angle/degree180 * onePI);
         
@@ -137,6 +141,14 @@ public class MotionFilter extends BaseFilter {
         float imageRadius = (float) Math.sqrt(cx*cx + cy*cy);
         float maxDistance = distance + imageRadius * zoom;
 
+        setOuts(width, height, cx, cy, output, index, onePI, zoom, degree180, sinAngle, cosAngle, imageRadius, maxDistance);
+
+		((ColorProcessor) src).putRGB(R, G, B);
+
+		return src;
+	}
+
+	private void setOuts(int width, int height, int cx, int cy, byte[][] output, int index, float onePI, float zoom, float degree180, float sinAngle, float cosAngle, float imageRadius, float maxDistance){
         for(int row = 0; row < height; row++) {
         	int ta = 0;
         	int tr = 0;
@@ -170,9 +182,6 @@ public class MotionFilter extends BaseFilter {
 				index++;
         	}
         }
-		((ColorProcessor) src).putRGB(R, G, B);
-
-		return src;
 	}
 
 }

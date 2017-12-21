@@ -61,25 +61,29 @@ public class MosaicFilter extends BaseFilter {
 		int offset = 0;
 		for (int row = 0; row < height; row++) {
 			offset = row*width;
-			for (int col = 0; col < width; col++) {
-				int dy = (row / size);
-				int dx = (col / size);
-				int ny = dy*size+r;
-				int nx = dx*size+r;
-				int sr = rii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
-				int sg = gii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
-				int sb = bii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
-				tr = sr / size;
-				tg = sg / size;
-				tb = sb / size;
-				output[0][offset] = (byte)tr;
-				output[1][offset] = (byte)tg;
-				output[2][offset] = (byte)tb;
-				offset++;
-			}
+			setOutputs(width, row, rii, gii, bii, tr, tg, tb, size, offset, output);
 		}
 		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
 		output = null;
 		return src;
+	}
+
+	private int setOutputs(int width, int row, IntIntegralImage rii, IntIntegralImage gii, IntIntegralImage bii, int tr, int tg, int tb, int size, int offset, byte[][] output){
+		for (int col = 0; col < width; col++) {
+			int dy = (row / size);
+			int dx = (col / size);
+			int ny = dy*size+r;
+			int nx = dx*size+r;
+			int sr = rii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
+			int sg = gii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
+			int sb = bii.getBlockSum(nx, ny, (r * 2 + 1), (r * 2 + 1));
+			tr = sr / size;
+			tg = sg / size;
+			tb = sb / size;
+			output[0][offset] = (byte)tr;
+			output[1][offset] = (byte)tg;
+			output[2][offset] = (byte)tb;
+			offset++;
+		}
 	}
 }

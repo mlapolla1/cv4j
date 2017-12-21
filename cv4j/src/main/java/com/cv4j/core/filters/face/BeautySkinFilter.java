@@ -55,10 +55,7 @@ public class BeautySkinFilter implements CommonFilter {
         byte[] G = new byte[length];
         byte[] B = new byte[length];
 
-
-        System.arraycopy(src.toByte(INDEX0), 0, R, 0, R.length);
-        System.arraycopy(src.toByte(INDEX1), 0, G, 0, G.length);
-        System.arraycopy(src.toByte(INDEX2), 0, B, 0, B.length);
+        copyArray(src, R, G, B);
 
         FastEPFilter epFilter = new FastEPFilter();
         epFilter.filter(src);
@@ -72,14 +69,7 @@ public class BeautySkinFilter implements CommonFilter {
         Erode erode = new Erode();
         int size = 5;
         erode.process(new ByteProcessor(mask, width, height), new Size(size));
-        for (int i = 0; i < mask.length; i++) {
-            int c = mask[i] & 0xff;
-            if (c > 0) {
-                src.toByte(INDEX0)[i] = R[i];
-                src.toByte(INDEX1)[i] = G[i];
-                src.toByte(INDEX2)[i] = B[i];
-            }
-        }
+        setSrcByte(src, R, G, B, mask);
 
         setMask(R, G, B, mask);
 
@@ -92,6 +82,23 @@ public class BeautySkinFilter implements CommonFilter {
         alphaBlend(src, blurmask, R, G, B);
 
         return src;
+    }
+
+    private void copyArray(ImageProcessor src, byte[] R, byte[] G, byte[] B){
+        System.arraycopy(src.toByte(INDEX0), 0, R, 0, R.length);
+        System.arraycopy(src.toByte(INDEX1), 0, G, 0, G.length);
+        System.arraycopy(src.toByte(INDEX2), 0, B, 0, B.length);
+    }
+
+    private void setSrcByte(ImageProcessor src, byte[] R, byte[] G, byte[] B, byte[] mask){
+        for (int i = 0; i < mask.length; i++) {
+            int c = mask[i] & 0xff;
+            if (c > 0) {
+                src.toByte(INDEX0)[i] = R[i];
+                src.toByte(INDEX1)[i] = G[i];
+                src.toByte(INDEX2)[i] = B[i];
+            }
+        }
     }
 
     private void setMask(byte [] R, byte [] G, byte [] B, ISkinDetection skinDetector, byte[] mask){

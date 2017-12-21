@@ -41,15 +41,41 @@ public class BackProjectHist {
 
         // 根据像素值查找R，得到分布概率权重
         int index;
-        int bidx;
 
+        float[] rimage = new float[width * height];
+        setRimage(R, G, B, height, width, index, rHist, bins);
+
+        // 计算卷积
+        int offset;
+        float sum = 0;
+        float[] output = new float[width*height];
+        System.arraycopy(rimage, 0, output, 0, output.length);
+        setOut(output, width, height, offset, sum, rimage);
+
+        // 归一化
+        float min = 1000;
+        float max = 0;
+        for (float anOutput : output) {
+            min = Math.min(min, anOutput);
+            max = Math.max(max, anOutput);
+        }
+
+        float delta = max - min;
+        for(int i=0; i<output.length; i++) {
+            output[i] =  ((output[i] - min)/delta)*255;
+        }
+
+        thresholdBastardizationDisplay(output, backProj);
+    }
+
+    private void setRimage(byte[] R, byte[] G, byte[] B, int height, int width, int index, float[] rHist, int bins){
+        int bidx;
         int tr;
         int tg;
         int tb;
 
         int level = 256 / bins;
 
-        float[] rimage = new float[width * height];
         for(int row=0; row<height; row++) {
             for(int col=0; col<width; col++) {
                 index = row * width + col;
@@ -60,12 +86,9 @@ public class BackProjectHist {
                 rimage[index] = Math.min(1, rHist[bidx]);
             }
         }
+    }
 
-        // 计算卷积
-        int offset;
-        float sum = 0;
-        float[] output = new float[width*height];
-        System.arraycopy(rimage, 0, output, 0, output.length);
+    private void setOut(float[] output, int width, int height, int offset, float sum, float[] rimage){
         for(int row=1; row<height-1; row++) {
             offset = width * row;
             for(int col=1; col<width-1; col++) {
@@ -83,22 +106,6 @@ public class BackProjectHist {
                 sum = 0f; // for next
             }
         }
-
-        // 归一化
-        float min = 1000;
-        float max = 0;
-        for (float anOutput : output) {
-            min = Math.min(min, anOutput);
-            max = Math.max(max, anOutput);
-        }
-
-        float delta = max - min;
-        for(int i=0; i<output.length; i++) {
-            output[i] =  ((output[i] - min)/delta)*255;
-        }
-
-        thresholdBastardizationDisplay(output, backProj);
-
     }
 
     private void thresholdBastardizationDisplay(float[] output, ByteProcessor backProj) {

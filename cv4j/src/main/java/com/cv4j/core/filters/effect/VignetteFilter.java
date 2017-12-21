@@ -46,68 +46,74 @@ public class VignetteFilter extends BaseFilter {
 
 		int index = 0;
 		for(int row=0; row<height; row++) {
-			int ta = 0;
-			int tr = 0;
-			int tg = 0;
-			int tb = 0;
 			for(int col=0; col<width; col++) {
 
 				int dX = Math.min(col, width - col);
 				int dY = Math.min(row, height - row);
 				index = row * width + col;
-				tr = R[index] & 0xff;
-				tg = G[index] & 0xff;
-				tb = B[index] & 0xff;
-				if ((dY <= vignetteWidth) & (dX <= vignetteWidth))
-				{
-					double k = 1 - (double)(Math.min(dY, dX) - vignetteWidth + fade) / (double)fade;
-					int[] rgb = superpositionColor(tr, tg, tb, k);
-					output[0][index] = (byte)rgb[0];
-					output[1][index] = (byte)rgb[1];
-					output[2][index] = (byte)rgb[2];
-					continue;
-				}
+				int tr = R[index] & 0xff;
+				int tg = G[index] & 0xff;
+				int tb = B[index] & 0xff;
 
-				if ((dX < (vignetteWidth - fade)) | (dY < (vignetteWidth - fade)))
-				{
-					output[0][index] = (byte)Color.red(vignetteColor);
-					output[1][index] = (byte)Color.green(vignetteColor);
-					output[2][index] = (byte)Color.blue(vignetteColor);
-				}
-				else
-				{
-					if ((dX < vignetteWidth)&(dY>vignetteWidth))
-					{
-						double k = 1 - (double)(dX - vignetteWidth + fade) / (double)fade;
-						int[] rgb = superpositionColor(tr, tg, tb, k);
-						output[0][index] = (byte)rgb[0];
-						output[1][index] = (byte)rgb[1];
-						output[2][index] = (byte)rgb[2];
-					}
-					else
-					{
-						if ((dY < vignetteWidth)&(dX > vignetteWidth))
-						{
-							double k = 1 - (double)(dY - vignetteWidth + fade) / (double)fade;
-							int[] rgb = superpositionColor(tr, tg, tb, k);
-							output[0][index] = (byte)rgb[0];
-							output[1][index] = (byte)rgb[1];
-							output[2][index] = (byte)rgb[2];
-						}
-						else
-						{
-							output[0][index] = (byte)tr;
-							output[1][index] = (byte)tg;
-							output[2][index] = (byte)tb;
-						}
-					}
-				}
+				checkSetOuts(dX, dY, output, index, tr, tg, tb);
 			}
 		}
         
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
 		output = null;
         return src;
+	}
+
+	private void checkSetOuts(dX, dY, output, index, tr, tg, tb){
+		if ((dY <= vignetteWidth) & (dX <= vignetteWidth))
+		{
+			double k = 1 - (double)(Math.min(dY, dX) - vignetteWidth + fade) / (double)fade;
+			setOuts(output, index, tr, tg, tb, k);
+			continue;
+		}
+
+		if ((dX < (vignetteWidth - fade)) | (dY < (vignetteWidth - fade)))
+		{
+			setOutsColor(output, index);
+		}
+		else
+		{
+			if ((dX < vignetteWidth)&(dY>vignetteWidth))
+			{
+				double k = 1 - (double)(dX - vignetteWidth + fade) / (double)fade;
+				setOuts(output, index, tr, tg, tb, k);
+			}
+			else
+			{
+				if ((dY < vignetteWidth)&(dX > vignetteWidth))
+				{
+					double k = 1 - (double)(dY - vignetteWidth + fade) / (double)fade;
+					setOuts(output, index, tr, tg, tb, k);
+				}
+				else
+				{
+					setOutsTRGB(output, tr, tg, tb, index);
+				}
+			}
+		}
+	}
+
+	private void setOutsTRGB(byte[][] output, int tr, int tg, int tb, int index){
+		output[0][index] = (byte)tr;
+		output[1][index] = (byte)tg;
+		output[2][index] = (byte)tb;
+	}
+
+	private void setOutsColor(byte[][] output, int index){
+		output[0][index] = (byte)Color.red(vignetteColor);
+		output[1][index] = (byte)Color.green(vignetteColor);
+		output[2][index] = (byte)Color.blue(vignetteColor);
+	}
+	private void setOuts(byte[][] output, int index, int tr, int tg, int tb, double k){
+		int[] rgb = superpositionColor(tr, tg, tb, k);
+		output[0][index] = (byte)rgb[0];
+		output[1][index] = (byte)rgb[1];
+		output[2][index] = (byte)rgb[2];
 	}
 	
 	public int[] superpositionColor(int red, int green, int blue, double k) {

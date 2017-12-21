@@ -82,6 +82,17 @@ public class StrokeAreaFilter extends BaseFilter {
             rgb[i] = rgb2[i] = 0;
         }
 
+        setOutputs(width, height, index, rgb, rgb2, semiRow, semiCol, output);
+
+        int index0 = 0;
+        int index1 = 1;
+        int index2 = 2;
+        ((ColorProcessor) src).putRGB(output[index0], output[index1], output[index2]);
+        output = null;
+        return src;
+    }
+
+    private void setOutputs(int width, int height, int index, int[] rgb, int[] rgb2, int semiRow, int semiCol, byte[][] output){
         for(int row=0; row<height; row++) {
             int ta = 0;
             for(int col=0; col<width; col++) {
@@ -101,12 +112,6 @@ public class StrokeAreaFilter extends BaseFilter {
                 output[INDEX2][index] = (byte)outPixelValue;
             }
         }
-        int index0 = 0;
-        int index1 = 1;
-        int index2 = 2;
-        ((ColorProcessor) src).putRGB(output[index0], output[index1], output[index2]);
-        output = null;
-        return src;
     }
 
     private double fitRegionInSourceImage(int[] rgb, int[] rgb2, int semiRow, int semiCol, int row, int col) {

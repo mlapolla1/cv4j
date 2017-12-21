@@ -78,35 +78,39 @@ public class WaterFilter extends BaseFilter {
 				int se;
 
 				// 获取周围四个像素，插值用，
-				if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {
-					// Easy case, all corners are in the image
-					int i = width*srcY + srcX;
-					nw = inPixels[i];
-					ne = inPixels[i+1];
-					sw = inPixels[i+width];
-					se = inPixels[i+width+1];
-				} else {
-					// Some of the corners are off the image
-					nw = getPixel( inPixels, srcX, srcY, width, height );
-					ne = getPixel( inPixels, srcX+1, srcY, width, height );
-					sw = getPixel( inPixels, srcX, srcY+1, width, height );
-					se = getPixel( inPixels, srcX+1, srcY+1, width, height );
-				}
-
-				// 取得对应的振幅位置P(x, y)的像素，使用双线性插值
-				int p = Tools.bilinearInterpolate(xWeight, yWeight, nw, ne, sw, se);
-				int r = (p >> 16) & 0xff;
-				int g = (p >> 8) & 0xff;
-				int b = (p) & 0xff;
-				output[0][index] = (byte)r;
-				output[1][index] = (byte)g;
-				output[2][index] = (byte)b;
+				setOuts(output, index, xWeight, yWeight, nw, ne, sw, se, srcX, srcY, inPixels);
         	}
         }
 		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
 		inPixels = null;
 		output = null;
         return src;
+	}
+
+	private void setOuts(byte[][] output, int index, float xWeight, float yWeight, int nw, int ne, int sw, int se, int srcX, int srcY, int[] inPixels){
+		if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {
+			// Easy case, all corners are in the image
+			int i = width*srcY + srcX;
+			nw = inPixels[i];
+			ne = inPixels[i+1];
+			sw = inPixels[i+width];
+			se = inPixels[i+width+1];
+		} else {
+			// Some of the corners are off the image
+			nw = getPixel( inPixels, srcX, srcY, width, height );
+			ne = getPixel( inPixels, srcX+1, srcY, width, height );
+			sw = getPixel( inPixels, srcX, srcY+1, width, height );
+			se = getPixel( inPixels, srcX+1, srcY+1, width, height );
+		}
+
+		// 取得对应的振幅位置P(x, y)的像素，使用双线性插值
+		int p = Tools.bilinearInterpolate(xWeight, yWeight, nw, ne, sw, se);
+		int r = (p >> 16) & 0xff;
+		int g = (p >> 8) & 0xff;
+		int b = (p) & 0xff;
+		output[0][index] = (byte)r;
+		output[1][index] = (byte)g;
+		output[2][index] = (byte)b;
 	}
 
 	private int getPixel(int[] pixels, int x, int y, int width, int height) {

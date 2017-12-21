@@ -53,17 +53,21 @@ public class SpotlightFilter extends BaseFilter {
                 	scale = scale * scale;
                 }
 
-            	tr = (int)(scale * tr);
-            	tg = (int)(scale * tg);
-            	tb = (int)(scale * tb);
-
-				R[offset] = (byte)tr;
-				G[offset] = (byte)tg;
-				B[offset] = (byte)tb;
+                setRGB(tr, tg, tb, scale, offset);
 				offset++;
         	}
         }
         return src;
+	}
+
+	private void setRGB(int tr, int tg, int tb, double scale, int offset){
+    	tr = (int)(scale * tr);
+    	tg = (int)(scale * tg);
+    	tb = (int)(scale * tb);
+
+		R[offset] = (byte)tr;
+		G[offset] = (byte)tg;
+		B[offset] = (byte)tb;
 	}
 	
 	private double getDistance(int centerX, int centerY, int px, int py) {

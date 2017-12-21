@@ -74,37 +74,46 @@ public class OilPaintFilter extends BaseFilter {
         int[] gavg = new int[intensity+1];
         int[] bavg = new int[intensity+1];
 
-        for(int i=0; i<=intensity; i++) {
-            intensityCount[i] = 0;
-            ravg[i] = 0;
-            gavg[i] = 0;
-            bavg[i] = 0;
-        }
+        inizialize(intensityCount, ravg, gavg, bavg);
+
 
         for(int row=0; row<height; row++) {
             int ta = 0;
             int tr = 0;
             int tg = 0;
             int tb = 0;
-            for(int col=0; col<width; col++) {
-                // find the max number of same gray level pixel
-                int maxIndex = findMaxNumberIndex(intensityCount);
-                int maxCount = intensityCount[maxIndex];
-
-                // get average value of the pixel
-                int nr = ravg[maxIndex] / maxCount;
-                int ng = gavg[maxIndex] / maxCount;
-                int nb = bavg[maxIndex] / maxCount;
-                index = row * width + col;
-                output[0][index] = (byte) nr;
-                output[1][index] = (byte) ng;
-                output[2][index] = (byte) nb;
-            }
+            setOutputs(intensityCount, ravg, gavg, bavg, output, row, width, index);
         }
 
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
 
         return src;
+    }
+
+    private void setOutputs(int[] intensityCount, int[] ravg, int[] gavg, int[] bavg, byte[][] output, int row, int width, int index){
+        for(int col=0; col<width; col++) {
+            // find the max number of same gray level pixel
+            int maxIndex = findMaxNumberIndex(intensityCount);
+            int maxCount = intensityCount[maxIndex];
+
+            // get average value of the pixel
+            int nr = ravg[maxIndex] / maxCount;
+            int ng = gavg[maxIndex] / maxCount;
+            int nb = bavg[maxIndex] / maxCount;
+            index = row * width + col;
+            output[0][index] = (byte) nr;
+            output[1][index] = (byte) ng;
+            output[2][index] = (byte) nb;
+        }
+    }
+
+    private void inizialize(int[] intensityCount, int[] ravg, int[] gavg, int[] bavg){
+        for(int i=0; i<=intensity; i++) {
+            intensityCount[i] = 0;
+            ravg[i] = 0;
+            gavg[i] = 0;
+            bavg[i] = 0;
+        }    
     }
 
     private int findMaxNumberIndex(int[] intensityCount) {
