@@ -100,20 +100,25 @@ public class GaussianBlurFilter extends BaseFilter {
             int c = 0;
             index = row;
             for(int col=0; col<width; col++) {
-                sum = 0;
-                for(int m = -k; m< kernel.length; m++) {
-                    subCol = col + m;
-                    if(subCol < 0 || subCol >= width) {
-                        subCol = 0;
-                    }
-                    index2 = row * width + subCol;
-                    c = inPixels[index2] & 0xff;
-                    sum += c * kernel[Math.abs(m)];
-                }
+                sum = getSum(c, inPixels, index2, row, subCol, width, col, k);
                 outPixels[index] = (byte)Tools.clamp(sum);
                 index += height;
             }
         }
+    }
+
+    private float getSum(int c, byte[] inPixels, int index2, int row, int subCol, int width, int col, int k){
+        int sum = 0;
+        for(int m = -k; m< kernel.length; m++) {
+            subCol = col + m;
+            if(subCol < 0 || subCol >= width) {
+                subCol = 0;
+            }
+            index2 = row * width + subCol;
+            c = inPixels[index2] & 0xff;
+            sum += c * kernel[Math.abs(m)];
+        }
+        return sum;
     }
 
 
@@ -123,19 +128,32 @@ public class GaussianBlurFilter extends BaseFilter {
         float expFactor = -0.5f;
 
         int kRadius = (int) Math.ceil(sigmaValue * Math.sqrt(factor * Math.log(accuracy))) + 1;
-
+        // too small maxRadius would result in inaccurate sum.
         if (maxRadius < radiusLimit) {
-            maxRadius = radiusLimit;         // too small maxRadius would result in inaccurate sum.
+            maxRadius = radiusLimit;         
         }
 
         this.kernel = new float[kRadius];
-        
-        for (int i=0; i<kRadius; i++){               // Gaussian function
+        // Gaussian function
+        for (int i=0; i<kRadius; i++){               
             this.kernel[i] = (float)(Math.exp(expFactor*i*i/sigmaValue/sigmaValue));
             this.kernel[i] = (float)(Math.exp(expFactor*i*i/sigmaValue/sigmaValue));
         }
+        // sum over all kernel elements for normalization
+        double sum = getSum(kRadius, maxRadius, sigmaValue);
 
-        double sum;                                 // sum over all kernel elements for normalization
+        setKernel(kRadius, sum);
+    }
+
+    private void setKernel(int kRadius, int sum){
+        for (int i=0; i<kRadius; i++) {
+            double v = (kernel[i]/sum);
+            kernel[i] = (float)v;
+        }
+    }
+
+    private double getSum(int kRadius, int maxRadius, final double sigmaValue){
+        double sum;        
         int sumFactor = 2;
         if (kRadius < maxRadius) {
             sum = kernel[0];
@@ -146,9 +164,6 @@ public class GaussianBlurFilter extends BaseFilter {
             sum = sigmaValue * Math.sqrt(sumFactor * Math.PI);
         }
 
-        for (int i=0; i<kRadius; i++) {
-            double v = (kernel[i]/sum);
-            kernel[i] = (float)v;
-        }
+        return sum;
     }
 }

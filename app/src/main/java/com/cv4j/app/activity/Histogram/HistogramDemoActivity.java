@@ -96,10 +96,10 @@ public class HistogramDemoActivity extends BaseActivity {
         Canvas canvas = createCanvas(imageProcessor, paint, bitmap);
 
         float step = width / bins;
-        int[] colors = getColors();
+        int[] colorsData = getColors();
 
         for (int i = 0; i < channels; i++) {
-            paint.setColor(colors[i]);
+            paint.setColor(colorsData[i]);
 
             for (int j = 0; j < bins; j++) {
                 int xOffset = (int) (j * step);
@@ -140,12 +140,12 @@ public class HistogramDemoActivity extends BaseActivity {
         final int color2 = 255;
         final int color3 = 0;
 
-        int[] colors = new int[] {
+        int[] colorsData = new int[] {
                 Color.argb(color1, color2, color3, color3),
                 Color.argb(color1, color3, color2, color3),
                 Color.argb(color1, color3, color3, color2)
         };
 
-        return colors;
+        return colorsData;
     }
 }

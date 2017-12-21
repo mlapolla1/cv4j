@@ -70,12 +70,12 @@ public class BeautySkinActivity extends BaseActivity {
      * @param bitmap The bitmap to apply the filter.
      */
     private void applyFilterIntoImage2(Bitmap bitmap) {
-        RxImageData rxImageData2 = RxImageData.bitmap(bitmap);
+        rxImageData = RxImageData.bitmap(bitmap);
 
         BeautySkinFilter beautySkinFilter = new BeautySkinFilter();
 
-        rxImageData2.addFilter(beautySkinFilter);
-        rxImageData2.into(image2);
+        rxImageData.addFilter(beautySkinFilter);
+        rxImageData.into(image2);
     }
 
     /**
@@ -84,12 +84,12 @@ public class BeautySkinActivity extends BaseActivity {
      * @param bitmap The bitmap to apply the filter.
      */
     private void applyFilterIntoImage1(Bitmap bitmap) {
-        RxImageData rxImageData1 = RxImageData.bitmap(bitmap);
+        rxImageData = RxImageData.bitmap(bitmap);
 
         BeautySkinFilter beautySkinFilter = new BeautySkinFilter();
 
-        rxImageData1.addFilter(beautySkinFilter);
-        rxImageData1.into(image1);
+        rxImageData.addFilter(beautySkinFilter);
+        rxImageData.into(image1);
     }
 
     /**

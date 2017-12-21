@@ -238,41 +238,40 @@ public class NatureFilter extends BaseFilter {
 
 	private void calculateMetalStyle(int[] pixel, int tr, int tg, int tb) {
 		int metalFactor = 64;
-
 		float r = Math.abs(tr - metalFactor);
 		float g = Math.abs(r - metalFactor);
-		float b = Math.abs(g - metalFactor);
+		float b = Math.abs(g - metalFactor);	
+		float grayFloat = setGrayFloat(float r, float g, float b);
+		int r1 = 70;
+		int r2 = 128;
+		int rgbFactor = 100;
+		float rgbFactor2 = 100f;
+		r = grayFloat + r1;
+		r = r + (((r - r2) * rgbFactor) / rgbFactor2);
+		int g1 = 65;
+		int g2 = 128;
+		g = grayFloat + g1;
+		g = g + (((g - g2) * rgbFactor) / rgbFactor2);
+		int b1 = 75;
+		int b2 = 128;
+		b = grayFloat + b1;
+		b = b + (((b - b2) * rgbFactor) / rgbFactor2);
+		setPixel(pixel, r, g, b);
+	}
 
+	private void setPixel(int[] pixel, float r, float g, float b){
+		pixel[INDEX1] = Tools.clamp((int) r);
+		pixel[INDEX2] = Tools.clamp((int) g);
+		pixel[INDEX3] = Tools.clamp((int) b);
+	}
+
+	private float setGrayFloat(float r, float g, float b){
 		int grayR = 222;
 		int grayG = 707;
 		int grayB = 71;
 		int grayFactor = 1000;
 
-		float grayFloat = ((grayR * r + grayG * g + grayB * b) / grayFactor);
-
-		int r1 = 70;
-		int r2 = 128;
-		int rgbFactor = 100;
-		float rgbFactor2 = 100f;
-
-		r = grayFloat + r1;
-		r = r + (((r - r2) * rgbFactor) / rgbFactor2);
-
-		int g1 = 65;
-		int g2 = 128;
-
-		g = grayFloat + g1;
-		g = g + (((g - g2) * rgbFactor) / rgbFactor2);
-
-		int b1 = 75;
-		int b2 = 128;
-
-		b = grayFloat + b1;
-		b = b + (((b - b2) * rgbFactor) / rgbFactor2);
-
-		pixel[INDEX1] = Tools.clamp((int) r);
-		pixel[INDEX2] = Tools.clamp((int) g);
-		pixel[INDEX3] = Tools.clamp((int) b);
+		return ((grayR * r + grayG * g + grayB * b) / grayFactor);
 	}
 
 	private void calculateLavaStyle(int[] pixel, int tr, int tg, int tb) {

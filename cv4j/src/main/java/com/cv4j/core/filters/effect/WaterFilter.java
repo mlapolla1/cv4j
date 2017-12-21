@@ -62,6 +62,15 @@ public class WaterFilter extends BaseFilter {
 		radius2 = radius*radius;
         int index = 0;
         float[] out = new float[2];
+
+        doFilterLoop(index, out, output, inPixels);
+		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
+		inPixels = null;
+		output = null;
+        return src;
+	}
+
+	private void doFilterLoop(int index, foat[] out, byte[][] output, int[] inPixels){
         for(int row=0; row<height; row++) {
         	for(int col=0; col<width; col++) {
         		index = row * width + col;
@@ -81,12 +90,7 @@ public class WaterFilter extends BaseFilter {
 				setOuts(output, index, xWeight, yWeight, nw, ne, sw, se, srcX, srcY, inPixels);
         	}
         }
-		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
-		inPixels = null;
-		output = null;
-        return src;
 	}
-
 	private void setOuts(byte[][] output, int index, float xWeight, float yWeight, int nw, int ne, int sw, int se, int srcX, int srcY, int[] inPixels){
 		if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {
 			// Easy case, all corners are in the image

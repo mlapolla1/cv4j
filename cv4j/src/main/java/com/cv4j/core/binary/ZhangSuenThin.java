@@ -27,6 +27,11 @@ public class ZhangSuenThin {
 	 */
 	private static final short MAX_RGB = 255;
 
+	/**
+	 * The integer value of 0000FF.
+	 */
+	private static final int VALUE_0000FF = 0x0000ff;
+
 	public void process(ByteProcessor binary) {
 		int width = binary.getWidth();
 		int height = binary.getHeight();
@@ -173,7 +178,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP1(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+col] & 0xff;
+		return input[offset+col] & VALUE_0000FF;
 	}
 
 	/**
@@ -186,7 +191,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP2(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset-width+col+1] & 0xff;
+		return input[offset-width+col+1] & VALUE_0000FF;
 	}
 
 	/**
@@ -199,7 +204,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP3(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset-width+col+1] & 0xff;
+		return input[offset-width+col+1] & VALUE_0000FF;
 	}
 
 	/**
@@ -212,7 +217,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP4(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+col+1] & 0xff;
+		return input[offset+col+1] & VALUE_0000FF;
 	}
 
 	/**
@@ -225,7 +230,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP5(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+width+col+1] & 0xff;
+		return input[offset+width+col+1] & VALUE_0000FF;
 	}
 
 	/**
@@ -238,7 +243,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP6(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+width+col] & 0xff;
+		return input[offset+width+col] & VALUE_0000FF;
 	}
 
 	/**
@@ -251,7 +256,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP7(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+width+col-1] & 0xff;
+		return input[offset+width+col-1] & VALUE_0000FF;
 	}
 
 	/**
@@ -264,7 +269,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP8(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset+col-1] & 0xff;
+		return input[offset+col-1] & VALUE_0000FF;
 	}
 
 	/**
@@ -277,7 +282,7 @@ public class ZhangSuenThin {
 	 */
 	private int calculateP9(byte[] input, int row, int col, int width) {
 		int offset = width * row;
-		return input[offset-width+col-1] & 0xff;
+		return input[offset-width+col-1] & VALUE_0000FF;
 	}
 
 	/**
