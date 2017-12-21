@@ -1,5 +1,6 @@
 package com.cv4j.app.activity.Example;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -65,24 +66,41 @@ public class CoinsActivity extends BaseActivity {
      * Data initialization.
      */
     private void initData() {
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test_coins);
+        final Bitmap bitmap = createBitmapFromTestCoins();
         final CV4JImage cv4JImage = new CV4JImage(bitmap);
         final ByteProcessor byteProcessor = (ByteProcessor) cv4JImage.getProcessor();
+
+        final int width  = byteProcessor.getWidth();
+        final int height = byteProcessor.getHeight();
 
         initImage0(bitmap);
         initImage1(cv4JImage);
         initImage2(cv4JImage);
 
-        ConnectedAreaLabel connectedAreaLabel = new ConnectedAreaLabel();
-        int[] mask = new int[byteProcessor.getWidth() * byteProcessor.getHeight()];
-        int num = connectedAreaLabel.process(byteProcessor, mask, null, false); // 获取连通组件的个数
+        int[] mask = new int[width * height];
+        int num = createConnectedAreaLabelProcess(byteProcessor, mask);
 
         initImage3(cv4JImage, mask);
 
+        setTextView(num);
+    }
+
+    private void setTextView(int num) {
         if (num > 0) {
             String numString = String.valueOf(num);
             this.numTextView.setText(numString);
         }
+    }
+
+    private int createConnectedAreaLabelProcess(ByteProcessor byteProcessor, int[] mask) {
+        ConnectedAreaLabel connectedAreaLabel = new ConnectedAreaLabel();
+        return connectedAreaLabel.process(byteProcessor, mask, null, false); // 获取连通组件的个数
+
+    }
+
+    private Bitmap createBitmapFromTestCoins() {
+        final Resources res = getResources();
+        return BitmapFactory.decodeResource(res, R.drawable.test_coins)
     }
 
     /**
@@ -121,10 +139,10 @@ public class CoinsActivity extends BaseActivity {
      * @param cv4JImage
      */
     private void initImage1(CV4JImage cv4JImage) {
-        final int MAX_RGB = 255;
+        final int maxRgb = 255;
 
         Threshold threshold = new Threshold();
-        threshold.process((ByteProcessor) cv4JImage.convert2Gray().getProcessor(), Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY_INV, MAX_RGB);
+        threshold.process((ByteProcessor) cv4JImage.convert2Gray().getProcessor(), Threshold.THRESH_OTSU,Threshold.METHOD_THRESH_BINARY_INV, maxRgb);
 
         this.image1.setImageBitmap(cv4JImage.getProcessor().getImage().toBitmap());
     }

@@ -18,7 +18,6 @@ import com.safframework.injectview.annotations.OnClick;
 /**
  * Created by Tony Shen on 2017/4/23.
  */
-
 public class BeautySkinActivity extends BaseActivity {
 
     @InjectView(R.id.origin_image1)
@@ -46,28 +45,73 @@ public class BeautySkinActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beauty_skin);
 
+        initViews();
         initData();
     }
 
+    private void initViews() {
+        final String toolbarTitle = "< " + title;
+        this.toolbar.setTitle(toolbarTitle);
+    }
+
     private void initData() {
-        toolbar.setTitle("< "+title);
-        Resources res= getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.test_beauty_skin1);
-        originImage1.setImageBitmap(bitmap);
+        Bitmap bitmap1 = createBitmapTestBeautySkin1();
+        originImage1.setImageBitmap(bitmap1);
+        applyFilterIntoImage1(bitmap1);
 
-        rxImageData = RxImageData.bitmap(bitmap);
-        rxImageData.addFilter(new BeautySkinFilter()).into(image1);
+        Bitmap bitmap2 = createBitmapTestBeautySkin2();
+        originImage2.setImageBitmap(bitmap2);
+        applyFilterIntoImage2(bitmap2);
+    }
 
-        bitmap = BitmapFactory.decodeResource(res, R.drawable.test_beauty_skin2);
-        originImage2.setImageBitmap(bitmap);
+    /**
+     * Apply filter BeautySkinFilter to image2.
+     * @see BeautySkinFilter
+     * @param bitmap The bitmap to apply the filter.
+     */
+    private void applyFilterIntoImage2(Bitmap bitmap) {
+        RxImageData rxImageData2 = RxImageData.bitmap(bitmap);
 
-        rxImageData = RxImageData.bitmap(bitmap);
-        rxImageData.addFilter(new BeautySkinFilter()).into(image2);
+        BeautySkinFilter beautySkinFilter = new BeautySkinFilter();
+
+        rxImageData2.addFilter(beautySkinFilter);
+        rxImageData2.into(image2);
+    }
+
+    /**
+     * Apply filter BeautySkinFilter to image1.
+     * @see BeautySkinFilter
+     * @param bitmap The bitmap to apply the filter.
+     */
+    private void applyFilterIntoImage1(Bitmap bitmap) {
+        RxImageData rxImageData1 = RxImageData.bitmap(bitmap);
+
+        BeautySkinFilter beautySkinFilter = new BeautySkinFilter();
+
+        rxImageData1.addFilter(beautySkinFilter);
+        rxImageData1.into(image1);
+    }
+
+    /**
+     * Create the bitmap from test_beauty_skin2.
+     * @return The bitmap.
+     */
+    private Bitmap createBitmapTestBeautySkin2() {
+        final Resources res = getResources();
+        return BitmapFactory.decodeResource(res, R.drawable.test_beauty_skin2);
+    }
+
+    /**
+     * Create the bitmap from test_beauty_skin1.
+     * @return The bitmap.
+     */
+    private Bitmap createBitmapTestBeautySkin1() {
+        final Resources res = getResources();
+        return BitmapFactory.decodeResource(res, R.drawable.test_beauty_skin1);
     }
 
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
-
         finish();
     }
 

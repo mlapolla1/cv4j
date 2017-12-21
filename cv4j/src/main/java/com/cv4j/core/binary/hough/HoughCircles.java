@@ -78,7 +78,7 @@ public class HoughCircles {
         // int[] output = new int[width * height];
 
         for(int i = 0; i < numOfRadius; i++) {
-            findCentersSub(circles, acc, maxonly, accumulate, width, height);
+            findCentersSub(circles, acc, maxonly, accumulate, width, height, i);
         }
     }
 
@@ -91,14 +91,14 @@ public class HoughCircles {
      * @param width      The width.
      * @param height     The height.
      */
-    private void findCentersSub(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int width, int height) {
+    private void findCentersSub(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int width, int height, int index) {
         int tempValue = 0;
         int tempX     = 0;
         int tempY     = 0;
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int value = (acc[i][x + (y * width)] & VALUE_0000FF);
+                int value = (acc[index][x + (y * width)] & VALUE_0000FF);
 
                 // if its higher than current value, swap it
                 if (maxonly && value > tempValue) {

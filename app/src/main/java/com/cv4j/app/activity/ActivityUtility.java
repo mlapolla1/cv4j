@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.util.SparseIntArray;
 
 import com.cv4j.core.datamodel.CV4JImage;
+import com.cv4j.core.datamodel.image.ImageProcessor;
 
 import java.util.Random;
 
@@ -14,33 +15,55 @@ import java.util.Random;
 public class ActivityUtility {
 
 	public Bitmap subInitData(CV4JImage cv4JImage, int[] mask) {
+        final ImageProcessor imageProcessor = cv4JImage.getProcessor();
 
-        SparseIntArray colors = new SparseIntArray();
-        Random random = new Random();
+        final int height = imageProcessor.getHeight();
+        final int width  = imageProcessor.getWidth();
+        final int size   = width * height;
 
-        int height = cv4JImage.getProcessor().getHeight();
-        int width = cv4JImage.getProcessor().getWidth();
-        int size = height * width;
-        int maxRGB = 255;
-        for (int i = 0;i<size;i++) {
-            int c = mask[i];
-            if (c>=0) {
-                colors.put(c, Color.argb(maxRGB, random.nextInt(maxRGB),random.nextInt(maxRGB),random.nextInt(maxRGB)));
-            }
-        }
+        SparseIntArray colors = initColors(mask, size);
 
-        cv4JImage.resetBitmap();
-        Bitmap newBitmap = cv4JImage.getProcessor().getImage().toBitmap();
+        return getBitmapFromColors(cv4JImage, mask, colors, width, height);
+	}
 
-        for(int row=0; row<height; row++) {
+    private Bitmap getBitmapFromColors(CV4JImage cv4JImage, int[] mask, SparseIntArray colors, int width, int height) {
+        Bitmap bitmap = cv4JImage.getProcessor().getImage().toBitmap();
+
+        for(int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-
                 int c = mask[row*width+col];
-                if (c>=0) {
-                    newBitmap.setPixel(col,row,colors.get(c));
+
+                if (c >= 0) {
+                    bitmap.setPixel(col, row, colors.get(c));
                 }
             }
         }
-        return newBitmap;
-	}
+
+        return bitmap;
+    }
+
+    private SparseIntArray initColors(int[] mask, int size) {
+        SparseIntArray colors = new SparseIntArray();
+
+        for (int i = 0;i<size;i++) {
+            int c = mask[i];
+
+            if (c >= 0) {
+                colors.put(c, getRandomColor());
+            }
+        }
+
+        return colors;
+    }
+
+    private int getRandomColor() {
+	    final Random random = new Random();
+        final int maxRgbValue = 255;
+
+        final int redValue   = random.nextInt(maxRgbValue);
+        final int greenValue = random.nextInt(maxRgbValue);
+        final int blueValue  = random.nextInt(maxRgbValue);
+
+        return Color.argb(maxRgbValue, redValue, greenValue, blueValue);
+    }
 }
