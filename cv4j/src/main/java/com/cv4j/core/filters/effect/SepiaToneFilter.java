@@ -28,32 +28,38 @@ public class SepiaToneFilter extends BaseFilter {
 	public ImageProcessor doFilter(ImageProcessor src) {
 
         int total = width * height;
+
+        for(int i=0; i<total; i++) {
+			processForFilter(i);
+		}
+        return src;
+	}
+
+	private void processForFilter(int i) {
 		int r;
 		int g;
 		int b;
-        for(int i=0; i<total; i++) {
-			r = R[i] & 0xff;
-			g = G[i] & 0xff;
-			b = B[i] & 0xff;
 
-			float r1 = 0.393f;
-			int   r2 = 349;
-			int   r3 = 272;
-			float g1 = 0.769f;
-			float g2 = 0.686f;
-			float g3 = 0.534f;
-			float b1 = 0.189f;
-			float b2 = 0.168f;
-			float b3 = 0.131f;
-			r = (int) colorBlend(noise(), (r * r1) + (g * g1) + (b * b1), r);
-			g = (int) colorBlend(noise(), (r * r2) + (g * g2) + (b * b2), g);
-			b = (int) colorBlend(noise(), (r * r3) + (g * g3) + (b * b3), b);
+		r = R[i] & 0xff;
+		g = G[i] & 0xff;
+		b = B[i] & 0xff;
 
-			R[i] = (byte) Tools.clamp(r);
-			G[i] = (byte) Tools.clamp(g);
-			B[i] = (byte) Tools.clamp(b);
-		}
-        return src;
+		float r1 = 0.393f;
+		int   r2 = 349;
+		int   r3 = 272;
+		float g1 = 0.769f;
+		float g2 = 0.686f;
+		float g3 = 0.534f;
+		float b1 = 0.189f;
+		float b2 = 0.168f;
+		float b3 = 0.131f;
+		r = (int) colorBlend(noise(), (r * r1) + (g * g1) + (b * b1), r);
+		g = (int) colorBlend(noise(), (r * r2) + (g * g2) + (b * b2), g);
+		b = (int) colorBlend(noise(), (r * r3) + (g * g3) + (b * b3), b);
+
+		R[i] = (byte) Tools.clamp(r);
+		G[i] = (byte) Tools.clamp(g);
+		B[i] = (byte) Tools.clamp(b);
 	}
 	
 	private double noise() {

@@ -66,17 +66,25 @@ public class TemplateMatch2 {
         Arrays.fill(result, 0);
         FloatProcessor tpl_data = new FloatProcessor(result, rw, rh);
         int channelValue = 3;
+
+        processMatch(target, tpl, channelValue, width, height, tw, th, tpl_data);
+
+        return tpl_data;
+    }
+
+    private void processMatch(ImageProcessor target, ImageProcessor tpl, int channelValue, int width,
+                              int height, int tw, int th, FloatProcessor tpl_data) {
+
         if(target.getChannels() == channelValue && tpl.getChannels() == channelValue) {
             for(int ch=0; ch<channelValue; ch++) {
-            	FloatProcessor tmp = processSingleChannels(width, height, target.toByte(ch), tw, th, tpl.toByte(ch), ch);
-            	tpl_data.addArray(tmp.toFloat(0));
+                FloatProcessor tmp = processSingleChannels(width, height, target.toByte(ch), tw, th, tpl.toByte(ch), ch);
+                tpl_data.addArray(tmp.toFloat(0));
             }
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
-        	tpl_data = processSingleChannels(width, height, target.toByte(0), tw, th, tpl.toByte(0), 0);
+            tpl_data = processSingleChannels(width, height, target.toByte(0), tw, th, tpl.toByte(0), 0);
         } else {
             throw new IllegalStateException("\nERR:Image Type is not same...\n");
         }
-        return tpl_data;
     }
     
     /**

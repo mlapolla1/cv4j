@@ -46,40 +46,44 @@ public class VarianceFilter extends BaseFilter {
 	}
 
 	public ImageProcessor doFilter(ImageProcessor src) {
-		ExecutorService mExecutor;
-		CompletionService<Void> service;
 		int numOfPixels = width * height;
 		byte[][] output = new byte[3][numOfPixels];
 
-		int dims = src.getChannels();
-		mExecutor = TaskUtils.newFixedThreadPool("cv4j",dims);
-		service = new ExecutorCompletionService<>(mExecutor);
-
-		for (int i = 0;i<dims;i++) {
-			final byte[] realOutput = output[i];
-			final byte[] input = src.toByte(i);
-			service.submit(new Callable<Void>() {
-				public Void call() throws Exception {
-					getNewPixels(realOutput,input);
-					return null;
-				}
-			});
-		}
-
-		for (int i = 0; i < dims; i++) {
-			try {
-				service.take();
-			} catch (InterruptedException e) {
-                System.out.println("InterruptedException in VarianceFilter.doFilter() for service.take()");
-			}
-		}
-
-		mExecutor.shutdown();
+        processFilter(src, output);
 
 		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
 		output = null;
 		return src;
 	}
+
+	private void processFilter(ImageProcessor src, byte[][] output) {
+        ExecutorService mExecutor;
+        CompletionService<Void> service;
+        int dims = src.getChannels();
+        mExecutor = TaskUtils.newFixedThreadPool("cv4j",dims);
+        service = new ExecutorCompletionService<>(mExecutor);
+
+        for (int i = 0;i<dims;i++) {
+            final byte[] realOutput = output[i];
+            final byte[] input = src.toByte(i);
+            service.submit(new Callable<Void>() {
+                public Void call() throws Exception {
+                    getNewPixels(realOutput,input);
+                    return null;
+                }
+            });
+        }
+
+        for (int i = 0; i < dims; i++) {
+            try {
+                service.take();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException in VarianceFilter.doFilter() for service.take()");
+            }
+        }
+
+        mExecutor.shutdown();
+    }
 
 	private void getNewPixels(byte[] output, byte[] input) {
 		int size = radius * 2 + 1;

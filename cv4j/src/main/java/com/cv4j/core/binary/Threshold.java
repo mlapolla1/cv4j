@@ -20,10 +20,44 @@ import android.util.SparseArray;
 import com.cv4j.core.binary.functions.ThresholdFunction;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.number.IntIntegralImage;
+
+import static android.os.Build.VERSION_CODES.N;
+
 /**
  * The Threshold class
  */
 public class Threshold {
+
+    /**
+     * Position of sum1.
+     */
+    private static final int SUM1_POS   = 0;
+
+    /**
+     * Position of sum2.
+     */
+    private static final int SUM2_POS   = 1;
+
+    /**
+     * Position of count1.
+     */
+    private static final int COUNT1_POS = 2;
+
+    /**
+     * Position of count2.
+     */
+    private static final int COUNT2_POS = 3;
+
+    /**
+     * The hex value 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
+    /**
+     * The max RGB value.
+     */
+    private static final int MAX_RGB_VALUE = 255;
+
     /** binary image */
     public static final int METHOD_THRESH_BINARY = 0;
     /** invert binary image */
@@ -74,37 +108,53 @@ public class Threshold {
     }
 
     public void adaptiveThresh(ByteProcessor gray, int type, int blockSize, int constant, int method) {
-        int width = gray.getWidth();
-        int height = gray.getHeight();
-        int doubleOp = 2;
-        // 图像灰度化
+        final int width = gray.getWidth();
+        final int height = gray.getHeight();
 
-        // per-calculate integral image
-        IntIntegralImage grayii = new IntIntegralImage();
-        byte[] binary_data = gray.getGray();
-        grayii.setImage(binary_data);
-        grayii.process(width, height);
-        int yr = blockSize;
-        int xr = blockSize;
-        int index = 0;
-        int size = (yr * doubleOp + 1)*(xr * doubleOp + 1);
+        // 图像灰度化
+        byte[] binaryData = gray.getGray();
+        IntIntegralImage grayIntIntegralImage = initGrayIntIntegralImage(binaryData, width, height);
+
+        calculateBinaryDataAdaptiveThresh(grayIntIntegralImage, binaryData, blockSize, constant, width, height);
+    }
+
+    private void calculateBinaryDataAdaptiveThresh(IntIntegralImage grayIntIntegralImage, byte[] binaryData, int constant, int blockSize, int width, int height) {
+        final int doubleOp = 2;
+        final int size = (blockSize * doubleOp + 1)*(blockSize * doubleOp + 1);
+
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                index = row * width + col;
+                int index = row * width + col;
 
                 // 计算均值
-                int sr = grayii.getBlockSum(col, row, (yr * doubleOp + 1), (xr * doubleOp + 1));
+                int sr = grayIntIntegralImage.getBlockSum(col, row, (blockSize * doubleOp + 1), (blockSize * doubleOp + 1));
                 int mean = sr / size;
-                int pixel = binary_data[index]&0xff;
-                int maxRGB = 255;
+                int pixel = binaryData[index] & VALUE_0000FF;
+
                 // 二值化
                 if(pixel > (mean-constant)) {
-                    binary_data[row * width + col] = (byte)maxRGB;
+                    binaryData[row * width + col] = (byte) MAX_RGB_VALUE;
                 } else {
-                    binary_data[row * width + col] = (byte)0;
+                    binaryData[row * width + col] = (byte) 0;
                 }
             }
         }
+    }
+
+    /**
+     * Pre-calculate integral image.
+     * @param binaryData The binary data.
+     * @param width      The width.
+     * @param height     The height.
+     * @return           The grayIntIntegralImage.
+     */
+    private IntIntegralImage initGrayIntIntegralImage(byte[] binaryData, int width, int height) {
+        IntIntegralImage grayIntIntegralImage = new IntIntegralImage();
+
+        grayIntIntegralImage.setImage(binaryData);
+        grayIntIntegralImage.process(width, height);
+
+        return grayIntIntegralImage;
     }
 
     /**
@@ -124,19 +174,16 @@ public class Threshold {
         }
 
         byte[] data = gray.getGray();
-        int c;
-        int andValue = 0xff;
-        byte maxValue = (byte) 255;
         byte minValue = (byte) 0;
 
         for(int i = 0; i < data.length; i++) {
-            c = data[i] & andValue;
+            int c = data[i] & VALUE_0000FF;
 
             // TODO: Same for if and else -> error?
             if(c <= thresholdValue) {
-                data[i] = (method == METHOD_THRESH_BINARY_INV ? maxValue : minValue);
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? (byte) MAX_RGB_VALUE : minValue);
             } else {
-                data[i] = (method == METHOD_THRESH_BINARY_INV ? maxValue : minValue);
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? (byte) MAX_RGB_VALUE : minValue);
             }
 
         }
@@ -148,7 +195,7 @@ public class Threshold {
 
         int sum = 0;
         for (byte aData : data) {
-            sum += aData & 0xff;
+            sum += aData & VALUE_0000FF;
         }
 
         meanThreshold = sum / data.length;
@@ -158,49 +205,52 @@ public class Threshold {
 
     private int getOTSUThreshold(ByteProcessor gray) {
         // 获取直方图
-        int dim = 256;
+        final int dim = 256;
         int[] histogram = new int[dim];
         byte[] data = gray.getGray();
 
         increaseHistogramFromData(histogram, data);
 
-        // 图像二值化 - OTSU 阈值化方法
-        double total = data.length;
-        double[] variances = new double[dim];
-
-        for(int i = 0; i < variances.length; i++) {
-
-            int[] results = calculateCountAndBmeans(histogram, i);
-            int count = results[COUNT_POS];
-            int bmeans = results[BMEANS_POS];
-            double bw = count / total;
-
-            double bvariance = calculateBvariance(histogram, i, bmeans, count);
-
-
-            double fw;
-            double fmeans = 0;
-            count = 0;
-
-            for(int t = i; t < histogram.length; t++) {
-                count += histogram[t];
-                fmeans += histogram[t] * t;
-            }
-
-            fw = count / total;
-            fmeans = (count == 0) ? 0 : (fmeans / count);
-
-            double fvariance = calculateFvariance(histogram, i, fmeans, count);
-
-            variances[i] = bw * bvariance + fw * fvariance;
-        }
+        double[] variances = calculateVariances(histogram, data, dim);
 
         // find the minimum within class variance
         int threshold = findMinPosWithinClassVariance(variances);
 
         // 二值化
         System.out.println("final threshold value : " + threshold);
+
         return threshold;
+    }
+
+    private double[] calculateVariances(int[] histogram, byte[] data, int dim) {
+        // 图像二值化 - OTSU 阈值化方法
+        double total = data.length;
+        double[] variances = new double[dim];
+
+        for(int i = 0; i < variances.length; i++) {
+            int[] results = calculateCountAndBmeans(histogram, i);
+            int count  = results[COUNT_POS];
+            int bMeans = results[BMEANS_POS];
+            double bw = count / total;
+
+            double bVariance = calculateBvariance(histogram, i, bMeans, count);
+
+            count = 0;
+            double fMeans = 0;
+
+            for(int t = i; t < histogram.length; t++) {
+                count += histogram[t];
+                fMeans += histogram[t] * t;
+            }
+
+            fMeans = (count == 0 ? 0 : (fMeans / count));
+            double fw = count / total;
+            double fVariance = calculateFvariance(histogram, i, fMeans, count);
+
+            variances[i] = bw * bVariance + fw * fVariance;
+        }
+
+        return variances;
     }
 
     private double calculateFvariance(int[] histogram, int i, double fmeans, int count) {
@@ -262,85 +312,73 @@ public class Threshold {
 
     private int getTriangleThreshold(ByteProcessor gray) {
         // 获取直方图
-        int maxRGB = 256;
-        int[] histogram = new int[maxRGB];
+        final int dim = 256;
+
+        int[] histogram = new int[dim];
         byte[] data = gray.getGray();
 
         increaseHistogramFromData(histogram, data);
 
-        int left_bound = 0;
-        int right_bound = 0;
-        int max_ind = 0;
-        int max = 0;
-        int temp;
-        int N = 256;
+        int leftBound = findHistogramLeftBoundIndex(histogram, dim);
+        int rightBound = findHistogramRightBoundIndex(histogram, dim);
 
-        boolean isflipped = false;
-
-        // 找到最左边零的位置
-        left_bound = findHistogramLeftBoundIndex(histogram, N);
-
-        // 找到最右边零点位置
-        right_bound = findHistogramRightBoundIndex(histogram, N);
-
-
-        // 位置再移动一个步长，即为最左侧零位置
-        if(left_bound > 0) {
-            left_bound--;
-        }
-
-        // 位置再移动一个步长，即为最右侧零位置
-        if(right_bound < N-1) {
-            right_bound++;
-        }
-
-        max_ind = findMaxHistogramIndex(histogram, N);
-        max     = histogram[max_ind];
+        int maxHistogramIndex     = findMaxHistogramIndex(histogram, dim);
+        int maxHistogramValue     = histogram[maxHistogramIndex];
 
         // 如果最大值落在靠左侧这样就无法满足三角法求阈值，所以要检测是否最大值是否靠近左侧
         // 如果靠近左侧则通过翻转到右侧位置。
-        if((max_ind - left_bound) < (right_bound - max_ind)) {
-            isflipped = true;
-            int i = 0;
-            int j = N-1;
+        boolean isFlipped = false;
+        if((maxHistogramIndex - leftBound) < (rightBound - maxHistogramIndex)) {
+            isFlipped = true;
 
-            while(i < j) {
-                // 左右交换
-                temp = histogram[i];
-                histogram[i] = histogram[j];
-                histogram[j] = temp;
+            flipHistogram(histogram, dim);
 
-                i++;
-                j--;
-            }
-
-            left_bound = N - 1 - right_bound;
-            max_ind    = N - 1 - max_ind;
+            leftBound = dim - 1 - rightBound;
+            maxHistogramIndex    = dim - 1 - maxHistogramIndex;
         }
 
-        // 计算求得阈值
-        double thresh = left_bound;
-        double a = max;
-        double b = left_bound - max_ind;
-        double dist = 0;
-        double tempdist;
+        return (int) calculateThreshValue(histogram, leftBound, maxHistogramValue, maxHistogramIndex, isFlipped);
+    }
 
-        for(int i = left_bound+1; i <= max_ind; i++) {
+    private void flipHistogram(int[] histogram, int dim) {
+        int i = 0;
+        int j = dim - 1;
+
+        while(i < j) {
+            // 左右交换
+            int temp = histogram[i];
+            histogram[i] = histogram[j];
+            histogram[j] = temp;
+
+            i++;
+            j--;
+        }
+    }
+
+    private double calculateThreshValue(int[] histogram, int leftBound, int max, int max_ind, boolean isFlipped) {
+        // 计算求得阈值
+        double thresh = leftBound;
+        double a = max;
+        double b = leftBound - max_ind;
+        double dist = 0;
+        double tempDist;
+
+        for(int i = leftBound+1; i <= max_ind; i++) {
             // 计算距离 - 不需要真正计算
-            tempdist = a*i + b*histogram[i];
-            if(tempdist > dist) {
-                dist = tempdist;
+            tempDist = a*i + b*histogram[i];
+            if(tempDist > dist) {
+                dist = tempDist;
                 thresh = i;
             }
         }
         thresh--;
 
         // 对已经得到的阈值T,如果前面已经翻转了，则阈值要用255-T
-        if (isflipped) {
+        if (isFlipped) {
             thresh = N - 1 - thresh;
         }
 
-        return (int) thresh;
+        return thresh;
     }
 
     private int findHistogramRightBoundIndex(int[] histogram, int n) {
@@ -351,6 +389,11 @@ public class Threshold {
                 rightBound = i;
                 break;
             }
+        }
+
+        // 位置再移动一个步长，即为最右侧零位置
+        if(rightBound < N-1) {
+            rightBound++;
         }
 
         return rightBound;
@@ -366,44 +409,32 @@ public class Threshold {
             }
         }
 
+        // 位置再移动一个步长，即为最左侧零位置
+        if(leftBound > 0) {
+            leftBound--;
+        }
+
         return leftBound;
     }
 
     private int shift(ByteProcessor gray) {
         // find threshold
         int t = 127;
-        int nt;
-
-        int m1;
-        int m2;
-
-        int sum1   = 0;
-        int sum2   = 0;
-        int count1 = 0;
-        int count2 = 0;
-
         int[] data = gray.toInt(0);
 
         while(true) {
-            for(int i = 0; i < data.length; i++) {
-                if(data[i] > t) {
-                    sum1 += data[i];
-                    count1++;
-                } else {
-                    sum2 += data[i];
-                    count2++;
-                }
-            }
+            int[] results = calculateSumAndCountFromData(data, t);
 
-            m1 = sum1 / count1;
-            m2 = sum2 / count2;
+            int sum1   = results[SUM1_POS];
+            int sum2   = results[SUM2_POS];
+            int count1 = results[COUNT1_POS];
+            int count2 = results[COUNT2_POS];
 
-            sum1   = 0;
-            sum2   = 0;
-            count1 = 0;
-            count2 = 0;
-            int ratio = 2;
-            nt = (m1 + m2) / ratio;
+            int m1 = sum1 / count1;
+            int m2 = sum2 / count2;
+
+            final int ratio = 2;
+            int nt = (m1 + m2) / ratio;
 
             if(t == nt) {
                 break;
@@ -411,14 +442,42 @@ public class Threshold {
                 t = nt;
             }
         }
+
         return t;
+    }
+
+    private int[] calculateSumAndCountFromData(int[] data, int t) {
+        final int numValues = 4;
+        int[] values = new int[numValues];
+
+        int sum1   = 0;
+        int sum2   = 0;
+        int count1 = 0;
+        int count2 = 0;
+
+        for (int aData : data) {
+            if (aData > t) {
+                sum1 += aData;
+                count1++;
+            } else {
+                sum2 += aData;
+                count2++;
+            }
+        }
+
+        values[SUM1_POS]   = sum1;
+        values[SUM2_POS]   = sum2;
+        values[COUNT1_POS] = count1;
+        values[COUNT2_POS] = count2;
+
+        return values;
     }
 
     private void increaseHistogramFromData(int[] histogram, byte[] data) {
         int index;
 
         for (byte aData : data) {
-            index = aData & 0xff;
+            index = aData & VALUE_0000FF;
             histogram[index]++;
         }
     }

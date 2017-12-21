@@ -152,14 +152,14 @@ public class PixelOperatorActivity extends BaseActivity {
         }
     }
 
-    private ImageProcessor executeOperationByType(int type, ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
+    private ImageProcessor executeOperationByType(int operationType, ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
         ImageProcessor imageProcessor;
-        OperatorFunction operator = operationsTwoImages.get(type);
+        OperatorFunction operator = operationsTwoImages.get(operationType);
 
         if (operator != null) {
             imageProcessor  = operator.call(imageProcessor1, imageProcessor2);
         } else {
-            switch (type) {
+            switch (operationType) {
                 case BITWISE_NOT:
                     imageProcessor = calculateBitwiseNot(imageProcessor1);
                     break;

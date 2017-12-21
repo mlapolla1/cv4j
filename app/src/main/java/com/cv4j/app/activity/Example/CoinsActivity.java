@@ -100,7 +100,7 @@ public class CoinsActivity extends BaseActivity {
 
     private Bitmap createBitmapFromTestCoins() {
         final Resources res = getResources();
-        return BitmapFactory.decodeResource(res, R.drawable.test_coins)
+        return BitmapFactory.decodeResource(res, R.drawable.test_coins);
     }
 
     /**
