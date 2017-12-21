@@ -38,6 +38,20 @@ public class GeoMoments {
         int q11 = 1;
         double m11 = centralMoments(pixelList, pm11, q11);
 
+        double[] result = processForCalculate(pixelList, m11);
+        double ra = result[0];
+        double rb = result[1];
+        double angle = result[2];
+
+        measures.setAngle(angle);
+        measures.setRoundness(rb == 0 ? Double.MAX_VALUE : (ra / rb));
+
+        return measures;
+    }
+
+    private double[] processForCalculate(List<PixelNode> pixelList, double m11) {
+        double[] result = new double[3];
+
         int pm02 = 0;
         int qm02 = 2;
         double m02 = centralMoments(pixelList, pm02, qm02);
@@ -59,14 +73,11 @@ public class GeoMoments {
 
         double pi4 = Math.PI / 4.0;
         double half = 2.0;
-        double ra = Math.sqrt((power*a1)/Math.abs(pixelList.size()));
-        double rb = Math.sqrt((power*a2)/Math.abs(pixelList.size()));
-        double angle = ((m20 - m02) == 0) ? pi4 : Math.atan((power*m11)/(m20 - m02))/half;
+        result[0] = Math.sqrt((power*a1)/Math.abs(pixelList.size())); //ra
+        result[1] = Math.sqrt((power*a2)/Math.abs(pixelList.size())); //rb
+        result[2] = ((m20 - m02) == 0) ? pi4 : Math.atan((power*m11)/(m20 - m02))/half; //angle
 
-        measures.setAngle(angle);
-        measures.setRoundness(rb == 0 ? Double.MAX_VALUE : (ra / rb));
-
-        return measures;
+        return result;
     }
 
     private Point getCenterPoint(List<PixelNode> pixelList)

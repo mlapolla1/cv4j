@@ -104,7 +104,15 @@ public class TemplateMatch {
         Arrays.fill(tplmask, 0);
         
         float[] result = new float[rw * rh];
-        
+
+        processMatchFloat(target, tpl, method, width, height, offx, offy, tplmask, result);
+
+        return new FloatProcessor(result, rw, rh);
+    }
+
+    private void processMatchFloat(ImageProcessor target, ImageProcessor tpl, int method, int width, int height,
+                              int offx, int offy, int[] tplmask, float[] result) {
+
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
             channel3x3(target, tpl, width, height, offx, offy);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
@@ -117,7 +125,6 @@ public class TemplateMatch {
             throw new IllegalStateException("\nERR:Image Type is not same...\n");
         }
 
-        return new FloatProcessor(result, rw, rh);
     }
 
     /**
@@ -145,31 +152,39 @@ public class TemplateMatch {
         if(target.getChannels() == 3 && tpl.getChannels() == 3) {
             channel3x3(target, tpl, width, height, offx, offy);
         } else if(target.getChannels() == 1 && tpl.getChannels() == 1) {
-            byte[]   data     = ((ByteProcessor)target).getGray();
-            byte[]   tdata    = ((ByteProcessor)tpl).getGray();
-            float[]  meansdev = Tools.calcMeansAndDev(((ByteProcessor)tpl).toFloat(0));
-            double[] tDiff    = calculateDiff(tdata, meansdev[0]);
-            
-            for(int row = offy; row < height-offy; row += 2) {
-                for(int col = offx; col < width-offx; col += 2) {
-                    something(tplmask, data, raidus_height, raidus_width, th, tw, width, row, col);
-                    
-                    // calculate the ncc
-                    float[] _meansDev = Tools.calcMeansAndDev(tplmask);
-                    double[] diff = calculateDiff(tplmask, _meansDev[0]);
-                    double ncc = calculateNcc(tDiff, diff, _meansDev[1], meansdev[1]);
-                    
-                    if(ncc > threhold) {
-                        Point mpoint = new Point();
-                        mpoint.x = (col - raidus_width);
-                        mpoint.y  = (row - raidus_height);
-                        locations.add(mpoint);
-                    }
-                }
-            }
+            processMatchElse(target, tpl, threhold, locations, height, width, offx, offy, tplmask,
+                            raidus_width, raidus_height,tw, th);
         } else {
             // do nothing and throw exception later on...
             System.err.println("\nERR:could not match input image type...\n");
+        }
+    }
+
+    private void processMatchElse(ImageProcessor target, ImageProcessor tpl, double threhold, List<Point> locations,
+                                  int height, int width, int offx, int offy, int[] tplmask,
+                                  int raidus_width, int raidus_height, int tw, int th) {
+
+        byte[]   data     = ((ByteProcessor)target).getGray();
+        byte[]   tdata    = ((ByteProcessor)tpl).getGray();
+        float[]  meansdev = Tools.calcMeansAndDev(((ByteProcessor)tpl).toFloat(0));
+        double[] tDiff    = calculateDiff(tdata, meansdev[0]);
+
+        for(int row = offy; row < height-offy; row += 2) {
+            for(int col = offx; col < width-offx; col += 2) {
+                something(tplmask, data, raidus_height, raidus_width, th, tw, width, row, col);
+
+                // calculate the ncc
+                float[] _meansDev = Tools.calcMeansAndDev(tplmask);
+                double[] diff = calculateDiff(tplmask, _meansDev[0]);
+                double ncc = calculateNcc(tDiff, diff, _meansDev[1], meansdev[1]);
+
+                if(ncc > threhold) {
+                    Point mpoint = new Point();
+                    mpoint.x = (col - raidus_width);
+                    mpoint.y  = (row - raidus_height);
+                    locations.add(mpoint);
+                }
+            }
         }
     }
 
@@ -189,6 +204,16 @@ public class TemplateMatch {
 
         int rw = width - offx*2;
         int rh = height - offy*2;
+
+
+        processForGenerateNCCResult(result, tplmask, offx, offy, width, height, tw, th, raidus_width,
+                                    raidus_height, data, meansdev, tDiff, rw);
+    }
+
+    private void processForGenerateNCCResult(float[] result, int[] tplmask, int offx, int offy,
+                                             int width, int height, int tw, int th, int raidus_width,
+                                             int raidus_height, byte[] data, float[] meansdev,
+                                             double[] tDiff, int rw) {
 
         for(int row=offy; row<height-offy; row+=2) {
             for(int col=offx; col<width-offx; col+=2) {

@@ -64,7 +64,7 @@ public class VignetteFilter extends BaseFilter {
         return src;
 	}
 
-	private void checkSetOuts(dX, dY, output, index, tr, tg, tb){
+	private void checkSetOuts(int dX, int dY, byte[][] output, int index, int tr, int tg, int tb){
 		if ((dY <= vignetteWidth) & (dX <= vignetteWidth))
 		{
 			double k = 1 - (double)(Math.min(dY, dX) - vignetteWidth + fade) / (double)fade;

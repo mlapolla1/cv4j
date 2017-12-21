@@ -81,47 +81,15 @@ public class ZhangSuenThin {
 			return stop;
 		}
 
-		int p2 = calculateP2(input, row, col, width);
-		int p3 = calculateP3(input, row, col, width);
-		int p4 = calculateP4(input, row, col, width);
-		int p5 = calculateP5(input, row, col, width);
-		int p6 = calculateP6(input, row, col, width);
-		int p7 = calculateP7(input, row, col, width);
-		int p8 = calculateP8(input, row, col, width);
-		int p9 = calculateP9(input, row, col, width);
+		int[] p = firstPhaseOfSometing(input, row, col, width, p1);
 
-		// match 1 - foreground, 0 - background
-		p1 = normalizeRgbZeroOne(p1);
-		p2 = normalizeRgbZeroOne(p2);
-		p3 = normalizeRgbZeroOne(p3);
-		p4 = normalizeRgbZeroOne(p4);
-		p5 = normalizeRgbZeroOne(p5);
-		p6 = normalizeRgbZeroOne(p6);
-		p7 = normalizeRgbZeroOne(p7);
-		p8 = normalizeRgbZeroOne(p8);
-		p9 = normalizeRgbZeroOne(p9);
+		int[] result = secondPhaseOfSometing(p);
+		int con1 = result[0];
+		int index1 = result[1];
+        int index2 = result[2];
 
-		int con1 = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-		String one = "01";
-
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder
-				.append(String.valueOf(p2))
-				.append(String.valueOf(p3))
-				.append(String.valueOf(p4))
-				.append(String.valueOf(p5))
-				.append(String.valueOf(p6))
-				.append(String.valueOf(p7))
-				.append(String.valueOf(p8))
-				.append(String.valueOf(p9))
-				.append(String.valueOf(p2));
-
-		String sequence = stringBuilder.toString();
-		int index1 = sequence.indexOf(one);
-		int index2 = sequence.lastIndexOf(one);
-
-		int con3 = p2*p4*p6;
-		int con4 = p4*p6*p8;
+		int con3 = p[1]*p[3]*p[5];
+        int con4 = p[3]*p[5]*p[7];
 		int limitDown = 2;
 		int limitUp = 6;
 
@@ -132,6 +100,57 @@ public class ZhangSuenThin {
 
 		return stop;
 	}
+
+	private int[] firstPhaseOfSometing(byte[] input, int row, int col, int width, int p1) {
+	    int[] p = new int[9];
+
+        int p2 = calculateP2(input, row, col, width);
+        int p3 = calculateP3(input, row, col, width);
+        int p4 = calculateP4(input, row, col, width);
+        int p5 = calculateP5(input, row, col, width);
+        int p6 = calculateP6(input, row, col, width);
+        int p7 = calculateP7(input, row, col, width);
+        int p8 = calculateP8(input, row, col, width);
+        int p9 = calculateP9(input, row, col, width);
+
+        // match 1 - foreground, 0 - background
+        p[0] = normalizeRgbZeroOne(p1); //p1
+        p[1] = normalizeRgbZeroOne(p2); //p2
+        p[2] = normalizeRgbZeroOne(p3); //p3
+        p[3] = normalizeRgbZeroOne(p4); //p4
+        p[4] = normalizeRgbZeroOne(p5); //p5
+        p[5] = normalizeRgbZeroOne(p6); //p6
+        p[6] = normalizeRgbZeroOne(p7); //p7
+        p[7] = normalizeRgbZeroOne(p8); //p8
+        p[8] = normalizeRgbZeroOne(p9); //p9
+
+        return p;
+    }
+
+    private int[] secondPhaseOfSometing(int[] p) {
+        int[] result = new int[3];
+
+        String one = "01";
+        result[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7] + p[8]; //con1
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(String.valueOf(p[1]))
+                .append(String.valueOf(p[2]))
+                .append(String.valueOf(p[3]))
+                .append(String.valueOf(p[4]))
+                .append(String.valueOf(p[5]))
+                .append(String.valueOf(p[6]))
+                .append(String.valueOf(p[7]))
+                .append(String.valueOf(p[8]))
+                .append(String.valueOf(p[1]));
+
+        String sequence = stringBuilder.toString();
+        result[1] = sequence.indexOf(one); //index1
+        result[2] = sequence.lastIndexOf(one); //index2
+
+        return result;
+    }
 
 	private boolean step2Scan(byte[] input, int[] flagmap, int width, int height) {
 		boolean stop = true;

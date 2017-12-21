@@ -94,11 +94,22 @@ public class HistogramEqualizationActivity extends BaseActivity {
 
         float histNumberFloat = 512.0f;
         float step = histNumberFloat/bins;
-        int xoffset;
-        int yoffset;
+
         int channels = imageProcessor.getChannels();
 
         int[] colors = new int[]{Color.argb(bins,maxRgb,point1,point2),Color.argb(bins,point1,maxRgb,point2),Color.argb(bins,point1,point2,maxRgb)};
+
+        processForDrawHist(paint, channels, colors, bins, step, hist, histNumber, maxRgb, canvas);
+
+        return bm;
+    }
+
+    private void processForDrawHist(Paint paint, int channels, int[] colors, int bins,
+                                    float step, int[][] hist, int histNumber, int maxRgb,
+                                    Canvas canvas) {
+        int xoffset;
+        int yoffset;
+
         for (int i=0;i<channels;i++) {
 
             paint.setColor(colors[i]);
@@ -109,13 +120,11 @@ public class HistogramEqualizationActivity extends BaseActivity {
                 canvas.drawRect(xoffset,histNumber-yoffset,xoffset+step,histNumber,paint);
             }
         }
-
-        return bm;
     }
 
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
 
-        finish();
+        //finish();
     }
 }
