@@ -3,6 +3,7 @@ package com.cv4j.core.binary;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.number.IntIntegralImage;
 import com.cv4j.core.datamodel.Size;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * Binary utility.
@@ -41,7 +42,7 @@ public class BinaryUtility {
 				final int intIntegralImageBlockSum = intIntegralImage.getBlockSum(nx, ny, (yr * 2 + 1), (xr * 2 + 1));
 
 				if(intIntegralImageBlockSum > 0 && intIntegralImageBlockSum < blockSum) {
-					output[row*width+col] = (byte) outputNum;
+					output[row*width+col] = SafeCasting.safeIntToByte(outputNum);
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.cv4j.core.datamodel.image.ImageData;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.exception.CV4JException;
 import com.cv4j.image.util.IOUtils;
 
@@ -121,25 +122,35 @@ public class CV4JImage implements ImageData {
 
     @Override
     public CV4JImage convert2Gray() {
-        if(processor instanceof ColorProcessor) {
+        final int value0000FF = 0x0000ff;
+
+        if(this.processor instanceof ColorProcessor) {
+            final double grayConvertConst1 = 0.299;
+            final double grayConvertConst2 = 0.587;
+            final double grayConvertConst3 = 0.113;
 
             byte[] gray = new byte[width * height];
-            int tr=0;
-            int tg=0;
-            int tb=0; 
-            int c=0;
-            byte[] R = ((ColorProcessor) processor).getRed();
-            byte[] G = ((ColorProcessor) processor).getGreen();
-            byte[] B = ((ColorProcessor) processor).getBlue();
-            for (int i=0; i<gray.length; i++) {
-                tr = R[i] & 0xff;
-                tg = G[i] & 0xff;
-                tb = B[i] & 0xff;
-                c = (int) (0.299 * tr + 0.587 * tg + 0.114 * tb);
-                gray[i] = (byte) c;
+
+            ColorProcessor colorProcessor = (ColorProcessor) this.processor;
+            byte[] R = colorProcessor.getRed();
+            byte[] G = colorProcessor.getGreen();
+            byte[] B = colorProcessor.getBlue();
+
+            for (int i = 0; i < gray.length; i++) {
+                int tr = R[i] & value0000FF;
+                int tg = G[i] & value0000FF;
+                int tb = B[i] & value0000FF;
+
+                double grayConversionValue = grayConvertConst1 * tr + grayConvertConst2 * tg + grayConvertConst3 * tb;
+                int c = SafeCasting.safeDoubleToInt(grayConversionValue);
+
+                gray[i] = SafeCasting.safeIntToByte(c);
             }
-            processor = new ByteProcessor(gray, width, height);
-            ((ByteProcessor)processor).setCallBack(this);
+
+            this.processor = new ByteProcessor(gray, this.width, this.height);
+
+            ByteProcessor byteProcessor = (ByteProcessor) this.processor;
+            byteProcessor.setCallBack(this);
         }
 
         return this;
@@ -188,9 +199,10 @@ public class CV4JImage implements ImageData {
      */
     public void savePic(Bitmap image, Bitmap.CompressFormat format, String path) {
         File file = new File(path);
+        FileOutputStream out = null;
 
         try {
-            FileOutputStream out = new FileOutputStream(file);
+            out = new FileOutputStream(file);
 
             int quality = 100;
             if (bitmap.compress(format, quality, out)) {
@@ -201,6 +213,16 @@ public class CV4JImage implements ImageData {
             System.out.println("File not found in path \"" + path + "\"");
         } catch (IOException e) {
             System.out.println("I/O exception in CV4JImage.savePic()");
+        } finally {
+            try {
+                if(out!=null) {
+                    out.flush();
+                    out.close();
+                }
+            } catch(IOException e) {
+                System.out.println("I/O exception in CV4JImage.savePic() finaly block");
+            }
+
         }
     }
 

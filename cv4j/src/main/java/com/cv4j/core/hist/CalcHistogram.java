@@ -82,7 +82,7 @@ public class CalcHistogram {
         if(!norm) return;
         float min = 10000000;
         float max = 0;
-        float delta;
+        float delta = 0;
         setHistMatrix(hist, numChannels, bins, min, max, delta);
     }
 
@@ -145,7 +145,7 @@ public class CalcHistogram {
     private void setHist(int[][] hist, int bins, int[][] ranges){
         float min = 10000000;
         float max = 0;
-        float delta;
+        float delta = 0;
         int length = 3;
         for(int i=0; i<length; i++) {
             for(int j=0; j<bins; j++) {
@@ -176,10 +176,10 @@ public class CalcHistogram {
         double numOfGap = dr/bins;
         int[] wh = new int[bins];
 
-        double prebin;
-        double currbin;
-        double w1;
-        double w2;
+        double prebin = 0.0;
+        double currbin = 0.0;
+        double w1 = 0.0;
+        double w2 = 0.0;
         for(int k=0; k<bins; k++) {
             prebin = (k-1)*numOfGap;
             currbin = k*numOfGap;

@@ -16,6 +16,8 @@
 package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
+import com.cv4j.core.utils.SafeCasting;
+
 import java.util.Arrays;
 
 /**
@@ -23,7 +25,7 @@ import java.util.Arrays;
  */
 public class Skeleton extends DtBase {
 
-	private static final int MAX_RGB = 255;
+	private static final int MAX_RGB_VALUE = 255;
 
 	/**
 	 * The process.
@@ -42,7 +44,7 @@ public class Skeleton extends DtBase {
 			for(int col = 0; col < width; col++) {
 				int pv = pixels[offset + col];
 
-				if(pv == MAX_RGB) {
+				if(pv == MAX_RGB_VALUE) {
 					distMap[offset + col] = 1;
 				}
 			}
@@ -74,7 +76,7 @@ public class Skeleton extends DtBase {
 				if(dis == 0 || dis < p1 || dis < p2 || dis < p3 || dis < p4) {
 					output[offset+col] = (byte) 0;
 				} else {
-					output[offset+col] = (byte) MAX_RGB;
+					output[offset+col] = SafeCasting.safeIntToByte(MAX_RGB_VALUE);
 				}
 			}
 		}

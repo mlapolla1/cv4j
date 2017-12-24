@@ -34,7 +34,7 @@ public class FindEdgeFilter extends BaseFilter {
 	 *  0  0  0 <br>
 	 *  1  2  1 <br>
 	 */
-	public static final int[] sobel_x = new int[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
+	private static final int[] sobel_x = new int[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 	/**
 	 * Vertical Sobel operator filters for edge detection
 	 * <p>
@@ -43,7 +43,7 @@ public class FindEdgeFilter extends BaseFilter {
 	 * -2  0  2 <br>
 	 * -1  0  1 <br>
 	 */
-	public static final int[] sobel_y = new int[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
+	private static final int[] sobel_y = new int[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {

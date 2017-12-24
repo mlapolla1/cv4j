@@ -20,6 +20,7 @@ import android.graphics.Color;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -60,7 +61,7 @@ public class VignetteFilter extends BaseFilter {
 		}
         
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
-		output = null;
+
         return src;
 	}
 
@@ -69,7 +70,9 @@ public class VignetteFilter extends BaseFilter {
 		{
 			double k = 1 - (double)(Math.min(dY, dX) - vignetteWidth + fade) / (double)fade;
 			setOuts(output, index, tr, tg, tb, k);
-			continue;
+
+			/// Continue without loop, error?
+			// continue;
 		}
 
 		if ((dX < (vignetteWidth - fade)) | (dY < (vignetteWidth - fade)))
@@ -99,28 +102,29 @@ public class VignetteFilter extends BaseFilter {
 	}
 
 	private void setOutsTRGB(byte[][] output, int tr, int tg, int tb, int index){
-		output[0][index] = (byte)tr;
-		output[1][index] = (byte)tg;
-		output[2][index] = (byte)tb;
+		output[0][index] = SafeCasting.safeIntToByte(tr);
+		output[1][index] = SafeCasting.safeIntToByte(tg);
+		output[2][index] = SafeCasting.safeIntToByte(tb);
 	}
 
 	private void setOutsColor(byte[][] output, int index){
-		output[0][index] = (byte)Color.red(vignetteColor);
-		output[1][index] = (byte)Color.green(vignetteColor);
-		output[2][index] = (byte)Color.blue(vignetteColor);
+		output[0][index] = SafeCasting.safeIntToByte(Color.red(vignetteColor));
+		output[1][index] = SafeCasting.safeIntToByte(Color.green(vignetteColor));
+		output[2][index] = SafeCasting.safeIntToByte(Color.blue(vignetteColor));
 	}
 	private void setOuts(byte[][] output, int index, int tr, int tg, int tb, double k){
 		int[] rgb = superpositionColor(tr, tg, tb, k);
-		output[0][index] = (byte)rgb[0];
-		output[1][index] = (byte)rgb[1];
-		output[2][index] = (byte)rgb[2];
+		output[0][index] = SafeCasting.safeIntToByte(rgb[0]);
+		output[1][index] = SafeCasting.safeIntToByte(rgb[1]);
+		output[2][index] = SafeCasting.safeIntToByte(rgb[2]);
 	}
 	
 	public int[] superpositionColor(int red, int green, int blue, double k) {
-		red = (int)(Color.red(vignetteColor) * k + red *(1.0-k));
-		green = (int)(Color.green(vignetteColor) * k + green *(1.0-k));
-		blue = (int)(Color.blue(vignetteColor) * k + blue *(1.0-k));
-		return new int[]{Tools.clamp(red), Tools.clamp(green),Tools.clamp(blue)};
+		red   = SafeCasting.safeDoubleToInt(Color.red(vignetteColor)   * k + red *(1.0-k));
+		green = SafeCasting.safeDoubleToInt(Color.green(vignetteColor) * k + green *(1.0-k));
+		blue  = SafeCasting.safeDoubleToInt(Color.blue(vignetteColor)  * k + blue *(1.0-k));
+
+		return new int[]{ Tools.clamp(red), Tools.clamp(green), Tools.clamp(blue) };
 	}
 	
 	public int getVignetteWidth() {

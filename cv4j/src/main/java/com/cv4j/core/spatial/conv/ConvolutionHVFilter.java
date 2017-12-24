@@ -17,81 +17,84 @@ package com.cv4j.core.spatial.conv;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * can iteration this operation multiple, make it more blur
  */
 public class ConvolutionHVFilter extends BaseFilter {
 
+    /**
+     * The value of 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
+        final int total = this.width * this.height;
 
-		int total = width*height;
-		byte[][] output = new byte[3][total];
-		int r=0;
-		int g=0;
-		int b=0;
-		firstPhaseFilter(r, g, b, output);
+        byte[][] output = new byte[3][total];
+
+		firstPhaseFilter(output);
 
 		// Y 方向
-        secondPhaseFilter(r, g, b, output);
+        secondPhaseFilter(output);
 
-		output[0] = null;
-		output[1] = null;
-		output[2] = null;
-		output = null;
 		return src;
 	}
 
     /**
-     * First phase of filter
-     * @param r
-     * @param g
-     * @param b
-     * @param output
+     * First phase of filter.
+     * @param output The output.
      */
-	private void firstPhaseFilter(int r, int g, int b, byte[][] output) {
+	private void firstPhaseFilter(byte[][] output) {
         for(int row=0; row<height; row++) {
             int offset = row*width;
             for(int col=1; col<width-1; col++) {
-                int sr=0;
-                int sg=0;
-                int sb=0;
+                int sr = 0;
+                int sg = 0;
+                int sb = 0;
+
                 for(int j=-1; j<=1; j++) {
                     int coffset = j+col;
                     sr += R[offset+coffset]&0xff;
                     sg += G[offset+coffset]&0xff;
                     sb += B[offset+coffset]&0xff;
                 }
-                r = sr / 3;
-                g = sg / 3;
-                b = sb / 3;
-                output[0][offset+col]=(byte)r;
-                output[1][offset+col]=(byte)g;
-                output[2][offset+col]=(byte)b;
+
+                int r = sr / 3;
+                int g = sg / 3;
+                int b = sb / 3;
+
+                output[0][offset+col] = SafeCasting.safeIntToByte(r);
+                output[1][offset+col] = SafeCasting.safeIntToByte(g);
+                output[2][offset+col] = SafeCasting.safeIntToByte(b);
             }
         }
     }
 
-    private void secondPhaseFilter(int r, int g, int b, byte[][] output) {
+    private void secondPhaseFilter(byte[][] output) {
         for(int col=0; col<width; col++) {
-            int coffset = col;
+            int colOffset = col;
             for(int row=1; row<height-1; row++) {
                 int sr=0;
                 int sg=0;
                 int sb=0;
+
                 for(int j=-1; j<=1; j++) {
-                    int roffset = j+row;
-                    sr += output[0][roffset*width+coffset]&0xff;
-                    sg += output[1][roffset*width+coffset]&0xff;
-                    sb += output[2][roffset*width+coffset]&0xff;
+                    int rowOffset = j+row;
+                    sr += output[0][rowOffset*width+colOffset] & 0xff;
+                    sg += output[1][rowOffset*width+colOffset] & 0xff;
+                    sb += output[2][rowOffset*width+colOffset] & 0xff;
                 }
-                r = sr / 3;
-                g = sg / 3;
-                b = sb / 3;
-                R[row*width+col]=(byte)r;
-                G[row*width+col]=(byte)g;
-                B[row*width+col]=(byte)b;
+
+                int r = sr / 3;
+                int g = sg / 3;
+                int b = sb / 3;
+
+                this.R[row*width+col] = SafeCasting.safeIntToByte(r);
+                this.G[row*width+col] = SafeCasting.safeIntToByte(g);
+                this.B[row*width+col] = SafeCasting.safeIntToByte(b);
             }
         }
     }

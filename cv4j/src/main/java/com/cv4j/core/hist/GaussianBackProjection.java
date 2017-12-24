@@ -83,11 +83,11 @@ public class GaussianBackProjection {
      */
     private float[] reverseProjection(ImageProcessor src, float[] rmdev, float[] gmdev) {
         // 反向投影
-        int index;
+        int index = 0;
         int width = src.getWidth();
         int height = src.getHeight();
         float[] result = new float[width*height];
-        float sum;
+        float sum = 0;
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {

@@ -89,7 +89,7 @@ public class HoughLinesP {
 		int[] acc = new int[rMax * DEGREE_180]; // 0 ~ 180角度范围
 		byte[] input = binary.getGray();
 
-		int r;
+		int r = 0;
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -107,9 +107,6 @@ public class HoughLinesP {
 		normalizeAccValues(acc, rMax);
 
 		findMaxima(acc, rows);
-
-		// filter by min gap
-		// TODO: zhigaang
 	}
 
 	/**
@@ -140,7 +137,7 @@ public class HoughLinesP {
 	 */
 	private int findAccMaxValue(int[] acc, int rmax) {
 		int max_value = 0;
-		int value_pos;
+		int value_pos = 0;
 
 		for (int r = 0; r < rmax; r++) {
 			for (int theta = 0; theta < DEGREE_180; theta++) {
@@ -198,7 +195,7 @@ public class HoughLinesP {
 	 * @param labels The labels.
 	 */
 	private void merge(double[] karray, int[] labels) {
-		double distance;
+		double distance = 0.0;
 		double distanceThreshold = 0.1;
 
 		for(int i = 0; i < karray.length-1; i++) {

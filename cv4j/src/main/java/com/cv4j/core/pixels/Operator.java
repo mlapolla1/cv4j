@@ -19,6 +19,7 @@ import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.exception.CV4JException;
 import com.cv4j.image.util.Preconditions;
 import com.cv4j.image.util.Tools;
@@ -27,6 +28,16 @@ import com.cv4j.image.util.Tools;
  * The class operator.
  */
 public final class Operator {
+
+	/**
+	 * The value of 0000FF.
+	 */
+	private static final int VALUE_0000FF = 0x0000ff;
+
+	/**
+	 * The number of channels.
+	 */
+	private static final int NUM_CHANNELS = 3;
 	
 	public static ImageProcessor add(ImageProcessor image1, ImageProcessor image2) {
 		if(!checkParams(image1, image2)) {
@@ -35,17 +46,15 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
-		int a=0;
-		int b=0;
-		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
-				c = Tools.clamp(a + b);
-				dst.toByte(n)[i] = (byte)c;
+				int a = image1.toByte(n)[i] & VALUE_0000FF;
+				int b = image2.toByte(n)[i] & VALUE_0000FF;
+
+				int c = Tools.clamp(a + b);
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(c);
 			}
 		}
 		return dst;
@@ -58,17 +67,19 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
+
 				c = Tools.clamp(a - b);
-				dst.toByte(n)[i] = (byte)c;
+
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(c);
 			}
 		}
 		return dst;
@@ -81,17 +92,17 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
 				c = Tools.clamp(a * b);
-				dst.toByte(n)[i] = (byte)c;
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(c);
 			}
 		}
 		return dst;
@@ -104,17 +115,17 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
 				c = b == 0 ? 0 : Tools.clamp(a / b);
-				dst.toByte(n)[i] = (byte)c;
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(c);
 			}
 		}
 		return dst;
@@ -127,17 +138,17 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
 				c = a&b;
-				dst.toByte(n)[i] = (byte)Tools.clamp(c);
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(Tools.clamp(c));
 			}
 		}
 		return dst;
@@ -157,10 +168,10 @@ public final class Operator {
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
 				c = a|b;
-				dst.toByte(n)[i] = (byte)Tools.clamp(c);
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(Tools.clamp(c));
 			}
 		}
 		return dst;
@@ -170,13 +181,13 @@ public final class Operator {
 		int channels = image.getChannels();
 		int w = image.getWidth();
 		int h = image.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
 				c = ~image.toByte(n)[i];
-				dst.toByte(n)[i] = (byte)c;
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(c);
 			}
 		}
 		return dst;
@@ -189,17 +200,17 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
 				c = a^b;
-				dst.toByte(n)[i] = (byte)Tools.clamp(c);
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(Tools.clamp(c));
 			}
 		}
 		return dst;
@@ -212,17 +223,17 @@ public final class Operator {
 		int channels = image1.getChannels();
 		int w = image1.getWidth();
 		int h = image1.getHeight();
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int size = w*h;
 		int a=0;
 		int b=0;
 		int c=0;
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<channels; n++) {
-				a = image1.toByte(n)[i]&0xff;
-				b = image2.toByte(n)[i]&0xff;
-				c = (int)(a*w1 + b*w2 + gamma);
-				dst.toByte(n)[i] = (byte)Tools.clamp(c);
+				a = image1.toByte(n)[i] & VALUE_0000FF;
+				b = image2.toByte(n)[i] & VALUE_0000FF;
+				c = SafeCasting.safeFloatToInt(a*w1 + b*w2 + gamma);
+				dst.toByte(n)[i] = SafeCasting.safeIntToByte(Tools.clamp(c));
 			}
 		}
 		return dst;
@@ -239,7 +250,7 @@ public final class Operator {
 		int channels = image.getChannels();
 		int w = rect.width;
 		int h = rect.height;
-		ImageProcessor dst = (channels == 3) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
+		ImageProcessor dst = (channels == NUM_CHANNELS) ? new ColorProcessor(w, h) : new ByteProcessor(w, h);
 		int a=0;
 		int index = 0;
 
@@ -248,9 +259,9 @@ public final class Operator {
 				for(int row=rect.y; row < (rect.y+rect.height); row++) {
 					for(int col=rect.x; col < (rect.x+rect.width); col++) {
 						index = row*image.getWidth() + col;
-						a = image.toByte(n)[index]&0xff;
+						a = image.toByte(n)[index] & VALUE_0000FF;
 						index = (row - rect.y)*w + (col - rect.x);
-						dst.toByte(n)[index] = (byte)a;
+						dst.toByte(n)[index] = SafeCasting.safeIntToByte(a);
 					}
 				}
 			}

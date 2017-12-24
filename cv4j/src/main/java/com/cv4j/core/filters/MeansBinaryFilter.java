@@ -18,6 +18,7 @@ package com.cv4j.core.filters;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * The means binary filter.
@@ -25,27 +26,32 @@ import com.cv4j.core.datamodel.image.ImageProcessor;
 public class MeansBinaryFilter implements CommonFilter {
 
 	public ImageProcessor filter(ImageProcessor src) {
+	    final int value0000FF = 0x0000ff;
+	    final int maxRgbValue = 255;
+
         if(src instanceof ColorProcessor) {
             src.getImage().convert2Gray();
             src = src.getImage().getProcessor();
         }
-        int width = src.getWidth();
+
+        int width  = src.getWidth();
         int height = src.getHeight();
+
         byte[] GRAY = ((ByteProcessor)src).getGray();
 
         float graySum = 0;
         int total = width * height;
-        for(int i=0; i<total; i++){
-            graySum += GRAY[i]&0xff;
+        for(int i = 0; i < total; i++){
+            graySum += GRAY[i] & value0000FF;
         }
-        int means = (int)(graySum / total);
+        int means = SafeCasting.safeFloatToInt(graySum / total);
         
         // dithering
-        int c = 0;
         for(int i=0; i<total; i++) {
-            c = ((GRAY[i]&0xff) >= means) ? 255 : 0;
-            GRAY[i] = (byte)c;
+            int c = ((GRAY[i] & value0000FF) >= means) ? maxRgbValue : 0;
+            GRAY[i] = SafeCasting.safeIntToByte(c);
         }
+
         return src;
 	}
 }

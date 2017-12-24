@@ -129,8 +129,7 @@ public class CompareHist {
         }
         double m1 = sum1 / len;
         double m2 = sum2 / len;
-        sum1 = 0;
-        sum2 = 0;
+        sum1 = sum2 =0;
         for(int i=0; i<len; i++ ) {
             sum3 += ((source[i] - m1)*(target[i]-m2));
             sum1 += ((source[i] - m1)*(source[i]-m1));

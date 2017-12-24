@@ -17,6 +17,7 @@ package com.cv4j.core.filters.blur;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 /**
  * The BloxBlurFilter class.
@@ -82,9 +83,9 @@ public class BoxBlurFilter extends BaseFilter {
     private int setOut(int[] divide, int outIndex, int tr, int tg, int tb, int radius, int widthMinus1, int height, byte[][] out){
         for ( int x = 0; x < width; x++ ) {
             // 赋值到输出像素
-            out[0][outIndex] = (byte)divide[tr];
-            out[1][outIndex] = (byte)divide[tg];
-            out[2][outIndex] = (byte)divide[tb];
+            out[0][outIndex] = SafeCasting.safeIntToByte(divide[tr]);
+            out[1][outIndex] = SafeCasting.safeIntToByte(divide[tg]);
+            out[2][outIndex] = SafeCasting.safeIntToByte(divide[tb]);
 
             // 移动盒子一个像素距离
             int i1 = x+radius+1;

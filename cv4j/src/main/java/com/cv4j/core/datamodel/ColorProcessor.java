@@ -17,6 +17,7 @@ package com.cv4j.core.datamodel;
 
 import com.cv4j.core.datamodel.image.ImageData;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.exception.CV4JException;
 
 /**
@@ -136,9 +137,9 @@ public class ColorProcessor implements ImageProcessor {
             int green = (c & value00FF00) >> VALUE_8;
             int blue  = (c & VALUE_0000FF);
 
-            this.R[i] = (byte) red;
-            this.G[i] = (byte) green;
-            this.B[i] = (byte) blue;
+            this.R[i] = SafeCasting.safeIntToByte(red);
+            this.G[i] = SafeCasting.safeIntToByte(green);
+            this.B[i] = SafeCasting.safeIntToByte(blue);
         }
     }
 
@@ -234,7 +235,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public float[] toFloat(int index) {
-        float[] data;
+        float[] data = new float[0];
 
         switch (index) {
             case RED_CHANNEL_INDEX:
@@ -258,7 +259,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public int[] toInt(int index) {
-        int[] data;
+        int[] data = new int[0];
 
         switch (index) {
             case RED_CHANNEL_INDEX:
@@ -282,7 +283,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public byte[] toByte(int index) {
-        byte[] data;
+        byte[] data = new byte[0];
 
         switch (index) {
             case RED_CHANNEL_INDEX:

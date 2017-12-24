@@ -18,6 +18,7 @@ package com.cv4j.core.filters.effect;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 import static com.cv4j.image.util.Tools.clamp;
 
@@ -25,6 +26,11 @@ import static com.cv4j.image.util.Tools.clamp;
  * The stroke area filter.
  */
 public class StrokeAreaFilter extends BaseFilter {
+
+    /**
+     * The value of 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
 
     /**
      * Index zero.
@@ -70,7 +76,7 @@ public class StrokeAreaFilter extends BaseFilter {
         int dimRow = 3;
         byte[][] output = new byte[dimRow][R.length];
 
-        int index;
+        int index = 0;
         int ratio = 2;
         int semiRow = (int)(size/ratio);
         int semiCol = (int)(size/ratio);
@@ -93,23 +99,25 @@ public class StrokeAreaFilter extends BaseFilter {
     }
 
     private void setOutputs(int width, int height, int index, int[] rgb, int[] rgb2, int semiRow, int semiCol, byte[][] output){
+        final double sizeSqaured = this.size * this.size;
+
         for(int row=0; row<height; row++) {
             int ta = 0;
             for(int col=0; col<width; col++) {
                 index = row * width + col;
-                rgb[INDEX0] = R[index] & 0xff;
-                rgb[INDEX1] = G[index] & 0xff;
-                rgb[INDEX2] = B[index] & 0xff;
+                rgb[INDEX0] = R[index] & VALUE_0000FF;
+                rgb[INDEX1] = G[index] & VALUE_0000FF;
+                rgb[INDEX2] = B[index] & VALUE_0000FF;
 
                 /* adjust region to fit in source image */
                 // color difference and moment Image
                 Double maxRGB = 255.0d;
                 double moment = fitRegionInSourceImage(rgb, rgb2, semiRow, semiCol, row, col);
-                // calculate the output pixel value.
-                int outPixelValue = clamp((int) (maxRGB * moment / (size*size)));
-                output[INDEX0][index] = (byte)outPixelValue;
-                output[INDEX1][index] = (byte)outPixelValue;
-                output[INDEX2][index] = (byte)outPixelValue;
+                // calculate the output pixel value.V
+                int outPixelValue = clamp(SafeCasting.safeDoubleToInt(maxRGB * moment / (sizeSqaured)));
+                output[INDEX0][index] = SafeCasting.safeIntToByte(outPixelValue);
+                output[INDEX1][index] = SafeCasting.safeIntToByte(outPixelValue);
+                output[INDEX2][index] = SafeCasting.safeIntToByte(outPixelValue);
             }
         }
     }
@@ -123,9 +131,10 @@ public class StrokeAreaFilter extends BaseFilter {
                 int newX = valueBetween(col + subCol, 0, width-1);
 
                 int index = newY * width + newX;
-                rgb2[INDEX0] = R[index] & 0xff; // red
-                rgb2[INDEX1] = G[index] & 0xff; // green
-                rgb2[INDEX2] = B[index] & 0xff; // blue
+                rgb2[INDEX0] = R[index] & VALUE_0000FF; // red
+                rgb2[INDEX1] = G[index] & VALUE_0000FF; // green
+                rgb2[INDEX2] = B[index] & VALUE_0000FF; // blue
+
                 moment += colorDiff(rgb, rgb2);
             }
         }
@@ -149,30 +158,28 @@ public class StrokeAreaFilter extends BaseFilter {
         final double d02 = 150*150;
 
         // (1-(d/d0)^2)^2
-        double d2;
-        double r2;
+
         double minus = 1.0d;
-        d2 = colorDistance(rgb1, rgb2);
+        double d2 = colorDistance(rgb1, rgb2);
 
         if (d2 >= d02) {
-            return 0.0;
+            return 0;
         }
 
-        r2 = d2 / d02;
+        double r2 = d2 / d02;
 
         return ((minus - r2) * (minus - r2));
     }
 
     public static double colorDistance(int[] rgb1, int[] rgb2) {
-        int dr;
-        int dg;
-        int db;
-        int index0 = 0;
-        int index1 = 1;
-        int index2 = 2;
-        dr = rgb1[index0] - rgb2[index0];
-        dg = rgb1[index1] - rgb2[index1];
-        db = rgb1[index2] - rgb2[index2];
+        final int index0 = 0;
+        final int index1 = 1;
+        final int index2 = 2;
+
+        int dr = rgb1[index0] - rgb2[index0];
+        int dg = rgb1[index1] - rgb2[index1];
+        int db = rgb1[index2] - rgb2[index2];
+
         return dr * dr + dg * dg + db * db;
     }
 }

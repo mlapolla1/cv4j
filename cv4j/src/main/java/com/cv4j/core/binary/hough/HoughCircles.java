@@ -74,7 +74,7 @@ public class HoughCircles {
      * @param height      The height;
      */
     private void findCenters(List<Vec3i> circles, int[][] acc, boolean maxonly, int accumulate, int numOfRadius, int width, int height) {
-        /// TODO: Variable not used.
+        /// FIX: Variable not used.
         // int[] output = new int[width * height];
 
         for(int i = 0; i < numOfRadius; i++) {

@@ -38,9 +38,9 @@ public class CourtEdge {
 	}
 
 	private byte[] calculateOutput(byte[] input1, byte[] input2, int width, int height) {
-		int offset;
-		int p1;
-		int p2;
+		int offset = 0;
+		int p1 = 0;
+		int p2 = 0;
 
 		byte[] output = initOutput(input1);
 

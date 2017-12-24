@@ -16,6 +16,7 @@
 package com.cv4j.core.hist;
 
 import com.cv4j.core.datamodel.ByteProcessor;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * ProjectionHist.
@@ -128,15 +129,15 @@ public class ProjectionHist {
 
 
         // 宽高整数部分
-        int nw = (int)Math.floor(w);
-        int nh = (int)Math.floor(h);
+        int nw = SafeCasting.safeDoubleToInt(Math.floor(w));
+        int nh = SafeCasting.safeDoubleToInt(Math.floor(h));
 
         // 小数部分
         float fw = w - nw;
         float fh = h - nh;
 
         // 统计黑色像素个数
-        int ww = (int)width;
+        int ww = SafeCasting.safeFloatToInt(width);
         int weight = numberOfBlackPixels(data, ny, nh, nx, nw, ww);
 
         // 计算小数部分黑色像素权重加和
@@ -168,7 +169,7 @@ public class ProjectionHist {
                                                          float fx, float fy, float fw, float fh,
                                                          int nx, int ny, int nw, int nh, int ww,
                                                          int weight) {
-        float weightNum;
+        float weightNum = 0.0f;
 
         float w1 = calculateW1(data, width, fx, nx, ny, nh, ww);
         float w2 = calculateW2(data, height, fy, ny, nx, nw, ww);

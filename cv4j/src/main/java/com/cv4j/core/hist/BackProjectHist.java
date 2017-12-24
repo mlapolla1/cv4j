@@ -18,6 +18,7 @@ package com.cv4j.core.hist;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * BackProjectHist.
@@ -40,13 +41,13 @@ public class BackProjectHist {
         float[] rHist = calculateFatMapRatio(mHist, src, bins);
 
         // 根据像素值查找R，得到分布概率权重
-        int index;
+        int index = 0;
 
         float[] rimage = new float[width * height];
-        setRimage(R, G, B, height, width, index, rHist, bins);
+        setRimage(R, G, B, height, width, index, rHist, bins, rimage);
 
         // 计算卷积
-        int offset;
+        int offset = 0;
         float sum = 0;
         float[] output = new float[width*height];
         System.arraycopy(rimage, 0, output, 0, output.length);
@@ -72,21 +73,19 @@ public class BackProjectHist {
         }
     }
 
-    private void setRimage(byte[] R, byte[] G, byte[] B, int height, int width, int index, float[] rHist, int bins){
-        int bidx;
-        int tr;
-        int tg;
-        int tb;
-
-        int level = 256 / bins;
+    private void setRimage(byte[] R, byte[] G, byte[] B, int height, int width, int index, float[] rHist, int bins, float[] rimage){
+        final int value0000FF = 0x0000ff;
+        final int level = 256 / bins;
 
         for(int row=0; row<height; row++) {
             for(int col=0; col<width; col++) {
                 index = row * width + col;
-                tr = R[index]&0xff;
-                tg = G[index]&0xff;
-                tb = B[index]&0xff;
-                bidx = (tr / level) + (tg / level)*bins + (tb / level)*bins*bins;
+                int tr = R[index] & value0000FF;
+                int tg = G[index] & value0000FF;
+                int tb = B[index] & value0000FF;
+
+                int bidx = (tr / level) + (tg / level)*bins + (tb / level)*bins*bins;
+
                 rimage[index] = Math.min(1, rHist[bidx]);
             }
         }
@@ -120,7 +119,7 @@ public class BackProjectHist {
                 pv = 255;
             }
 
-            backProj.getGray()[i] = (byte)pv;
+            backProj.getGray()[i] = SafeCasting.safeIntToByte(pv);
         }
     }
 

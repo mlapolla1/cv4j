@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.cv4j.app.R;
 import com.cv4j.app.app.BaseActivity;
 import com.cv4j.core.datamodel.CV4JImage;
+import com.cv4j.core.datamodel.image.ImageData;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.Rect;
 import com.cv4j.core.pixels.Operator;
@@ -153,7 +154,7 @@ public class PixelOperatorActivity extends BaseActivity {
     }
 
     private ImageProcessor executeOperationByType(int operationType, ImageProcessor imageProcessor1, ImageProcessor imageProcessor2) {
-        ImageProcessor imageProcessor;
+        ImageProcessor imageProcessor = null;
         OperatorFunction operator = operationsTwoImages.get(operationType);
 
         if (operator != null) {
@@ -199,10 +200,8 @@ public class PixelOperatorActivity extends BaseActivity {
 
         Rect rect = new Rect();
 
-        rect.x      = 0;
-        rect.y      = 0;
-        rect.width  = 300;
-        rect.height = 300;
+        rect.x = rect.y = 0;
+        rect.width = rect.height = 300;
 
         try {
             imageProcessor = Operator.subImage(imageProcessor1, rect);

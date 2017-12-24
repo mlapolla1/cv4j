@@ -18,6 +18,7 @@ package com.cv4j.core.filters.effect;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -25,24 +26,55 @@ import com.cv4j.image.util.Tools;
  */
 public class WaterFilter extends BaseFilter {
 
+	/**
+	 * The output index 0.
+	 */
+	private static final int OUTPUT_INDEX0 = 0;
+
+	/**
+	 * The output index 1.
+	 */
+	private static final int OUTPUT_INDEX1 = 1;
+
+	/**
+	 * The output index 2.
+	 */
+	private static final int OUTPUT_INDEX2 = 2;
+
 	private float wavelength = 16;
 	private float radius = 50;
 	private float radius2 = 0;
-	private float icentreX;
-	private float icentreY;
-	
+	private float iCentreX;
+	private float iCentreY;
+
+	/**
+	 * Set the radius.
+	 * @param radius The radius.
+	 */
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
-	
+
+	/**
+	 * Returns the radius.
+	 * @return The radius.
+	 */
 	public float getRadius() {
 		return radius;
 	}
-	
+
+	/**
+	 * Set the wave length.
+	 * @param wavelength The wave length to set.
+	 */
 	public void setWavelength(float wavelength) {
 		this.wavelength = wavelength;
 	}
 
+	/**
+	 * Return the wave length.
+	 * @return The wave length.
+	 */
 	public float getWavelength() {
 		return wavelength;
 	}
@@ -51,26 +83,32 @@ public class WaterFilter extends BaseFilter {
 	public ImageProcessor doFilter(ImageProcessor src){
 		final float centreX = 0.5f;
 		final float centreY = 0.5f;
-		int total = width*height;
+
+		final int output1dSize = 3;
+		final int total = width*height;
+
 		int[] inPixels = src.getPixels();
-		byte[][] output = new byte[3][total];
+		byte[][] output = new byte[output1dSize][total];
 
-		icentreX = width * centreX;
-		icentreY = height * centreY;
-		if ( radius == 0 )
-			radius = Math.min(icentreX, icentreY);
-		radius2 = radius*radius;
-        int index = 0;
-        float[] out = new float[2];
+		this.iCentreX = this.width * centreX;
+		this.iCentreY = this.height * centreY;
+		if (Float.compare(radius, 0) == 0) {
+			radius = Math.min(iCentreX, iCentreY);
+		}
+		this.radius2 = this.radius * this.radius;
 
-        doFilterLoop(index, out, output, inPixels);
-		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
-		inPixels = null;
-		output = null;
+		final int outSize = 2;
+        float[] out = new float[outSize];
+
+        doFilterLoop(0, out, output, inPixels);
+
+		ColorProcessor colorProcessor = (ColorProcessor) src;
+		colorProcessor.putRGB(output[OUTPUT_INDEX0], output[OUTPUT_INDEX1], output[OUTPUT_INDEX2]);
+
         return src;
 	}
 
-	private void doFilterLoop(int index, foat[] out, byte[][] output, int[] inPixels){
+	private void doFilterLoop(int index, float[] out, byte[][] output, int[] inPixels){
         for(int row=0; row<height; row++) {
         	for(int col=0; col<width; col++) {
         		index = row * width + col;
@@ -81,17 +119,22 @@ public class WaterFilter extends BaseFilter {
 				int srcY = (int)Math.floor( out[1] );
 				float xWeight = out[0]-srcX;
 				float yWeight = out[1]-srcY;
-				int nw;
-				int ne;
-				int sw;
-				int se;
+				int nw = 0;
+				int ne = 0;
+				int sw = 0;
+				int se = 0;
 
 				// 获取周围四个像素，插值用，
 				setOuts(output, index, xWeight, yWeight, nw, ne, sw, se, srcX, srcY, inPixels);
         	}
         }
 	}
+
 	private void setOuts(byte[][] output, int index, float xWeight, float yWeight, int nw, int ne, int sw, int se, int srcX, int srcY, int[] inPixels){
+		final int value0000FF = 0xff;
+		final int value16     = 16;
+		final int value8      = 8;
+
 		if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {
 			// Easy case, all corners are in the image
 			int i = width*srcY + srcX;
@@ -109,12 +152,13 @@ public class WaterFilter extends BaseFilter {
 
 		// 取得对应的振幅位置P(x, y)的像素，使用双线性插值
 		int p = Tools.bilinearInterpolate(xWeight, yWeight, nw, ne, sw, se);
-		int r = (p >> 16) & 0xff;
-		int g = (p >> 8) & 0xff;
-		int b = (p) & 0xff;
-		output[0][index] = (byte)r;
-		output[1][index] = (byte)g;
-		output[2][index] = (byte)b;
+		int r = (p >> value16) & value0000FF;
+		int g = (p >> value8) & value0000FF;
+		int b = (p) & value0000FF;
+
+		output[0][index] = SafeCasting.safeIntToByte(r);
+		output[1][index] = SafeCasting.safeIntToByte(g);
+		output[2][index] = SafeCasting.safeIntToByte(b);
 	}
 
 	private int getPixel(int[] pixels, int x, int y, int width, int height) {
@@ -127,8 +171,8 @@ public class WaterFilter extends BaseFilter {
 	protected void generateWaterRipples(int x, int y, float[] out) {
 		final float amplitude = 10;
 		final float phase = 0;
-		float dx = x-icentreX;
-		float dy = y-icentreY;
+		float dx = x- iCentreX;
+		float dy = y- iCentreY;
 		float distance2 = dx*dx + dy*dy;
 		// 确定 water ripple的半径，如果在半径之外，就直接获取原来位置，不用计算迁移量
 		if (distance2 > radius2) { 
@@ -141,8 +185,10 @@ public class WaterFilter extends BaseFilter {
 			float amount = amplitude * (float)Math.sin(distance / wavelength * Tools.TWO_PI - phase);
 			// 计算能量损失，
 			amount *= (radius-distance)/radius; // 计算能量损失，
-			if ( distance != 0 )
-				amount *= wavelength/distance;
+			if (Float.compare(distance, 0) != 0) {
+				amount *= wavelength / distance;
+			}
+
 			// 得到water ripple 最终迁移位置
 			out[0] = x + dx*amount;
 			out[1] = y + dy*amount;

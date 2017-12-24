@@ -17,6 +17,7 @@ package com.cv4j.core.filters.math;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.TaskUtils;
 import com.cv4j.image.util.Tools;
 
@@ -145,15 +146,14 @@ public class GaussianBlurFilter extends BaseFilter {
         setKernel(kRadius, sum);
     }
 
-    private void setKernel(int kRadius, int sum){
-        for (int i=0; i<kRadius; i++) {
-            double v = (kernel[i]/sum);
-            kernel[i] = (float)v;
+    private void setKernel(int kRadius, double sum){
+        for (int i = 0; i < kRadius; i++) {
+            kernel[i] = SafeCasting.safeDoubleToFloat(kernel[i] / sum);
         }
     }
 
     private double getSum(int kRadius, int maxRadius, final double sigmaValue){
-        double sum;        
+        double sum = 0;
         int sumFactor = 2;
         if (kRadius < maxRadius) {
             sum = kernel[0];
