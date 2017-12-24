@@ -46,7 +46,7 @@ public class EqualHist {
 
         // generate original source image RGB histogram
         generateHEData(inputBins, outputBins, data.length, rgb);
-        for(int row=0, pv; row<src.getHeight(); row++) {
+        for(int row=0, pv=0; row<src.getHeight(); row++) {
             for(int col=0; col<src.getWidth(); col++) {
                 index = row * src.getWidth() + col;
                 pv = data[index]&0xff;

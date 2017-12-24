@@ -22,7 +22,7 @@ public abstract class FastBase {
         byte[] data   = initData(binary);
         byte[] output = initOutput(binary, data);
 
-        //TODO: This place can use multi-thread.
+        /// This place can use multi-thread.
 
         // X Direction
         int xr = structureElement.cols / 2;

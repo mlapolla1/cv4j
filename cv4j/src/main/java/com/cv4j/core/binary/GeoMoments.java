@@ -17,10 +17,12 @@ package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.MeasureData;
 import com.cv4j.core.datamodel.Point;
+import com.cv4j.core.utils.SafeCasting;
 
 import java.util.List;
+
 /**
- * The GeoMoments class
+ * The GeoMoments class.
  */
 public class GeoMoments {
 
@@ -39,12 +41,12 @@ public class GeoMoments {
         double m11 = centralMoments(pixelList, pm11, q11);
 
         double[] result = processForCalculate(pixelList, m11);
-        double ra = result[0];
-        double rb = result[1];
+        double ra    = result[0];
+        double rb    = result[1];
         double angle = result[2];
 
         measures.setAngle(angle);
-        measures.setRoundness(rb == 0 ? Double.MAX_VALUE : (ra / rb));
+        measures.setRoundness(Double.compare(rb, 0) == 0 ? Double.MAX_VALUE : (ra / rb));
 
         return measures;
     }
@@ -75,21 +77,23 @@ public class GeoMoments {
         double half = 2.0;
         result[0] = Math.sqrt((power*a1)/Math.abs(pixelList.size())); //ra
         result[1] = Math.sqrt((power*a2)/Math.abs(pixelList.size())); //rb
-        result[2] = ((m20 - m02) == 0) ? pi4 : Math.atan((power*m11)/(m20 - m02))/half; //angle
+        result[2] = Double.compare((m20 - m02), 0) == 0 ? pi4 : Math.atan((power*m11) / (m20 - m02)) / half; //angle
 
         return result;
     }
 
-    private Point getCenterPoint(List<PixelNode> pixelList)
-    {
+    private Point getCenterPoint(List<PixelNode> pixelList) {
         double m00 = moments(pixelList, 0, 0);
         double yCr = moments(pixelList, 1, 0) / m00; // row
         double xCr = moments(pixelList, 0, 1) / m00; // column
-        return new Point((int)xCr, (int)yCr);
+
+        int xCrInt = SafeCasting.safeDoubleToInt(xCr);
+        int yCrInt = SafeCasting.safeDoubleToInt(yCr);
+
+        return new Point(xCrInt, yCrInt);
     }
 
-    private double moments(List<PixelNode> pixelList, int p, int q)
-    {
+    private double moments(List<PixelNode> pixelList, int p, int q) {
         double mpq = 0.0;
 
         for(PixelNode pixel : pixelList) {
@@ -97,11 +101,11 @@ public class GeoMoments {
             int col = pixel.col;
             mpq += Math.pow(row, p) * Math.pow(col, q);
         }
+
         return mpq;
     }
 
-    private double centralMoments(List<PixelNode> pixelList, int p, int q)
-    {
+    private double centralMoments(List<PixelNode> pixelList, int p, int q) {
         double m00 = moments(pixelList, 0, 0);
         double yCr = moments(pixelList, 1, 0) / m00;
         double xCr = moments(pixelList, 0, 1) / m00;
@@ -112,6 +116,7 @@ public class GeoMoments {
             int col = pixel.col;
             cMpq += Math.pow(row - yCr, p) * Math.pow(col - xCr, q);
         }
+
         return cMpq;
     }
 }

@@ -18,6 +18,7 @@ package com.cv4j.core.filters.effect;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * The oil paint filter.
@@ -101,9 +102,9 @@ public class OilPaintFilter extends BaseFilter {
             int ng = gavg[maxIndex] / maxCount;
             int nb = bavg[maxIndex] / maxCount;
             index = row * width + col;
-            output[0][index] = (byte) nr;
-            output[1][index] = (byte) ng;
-            output[2][index] = (byte) nb;
+            output[0][index] = SafeCasting.safeIntToByte(nr);
+            output[1][index] = SafeCasting.safeIntToByte(ng);
+            output[2][index] = SafeCasting.safeIntToByte(nb);
         }
     }
 

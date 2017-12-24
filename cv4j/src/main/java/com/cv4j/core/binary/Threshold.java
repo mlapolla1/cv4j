@@ -20,6 +20,7 @@ import android.util.SparseArray;
 import com.cv4j.core.binary.functions.ThresholdFunction;
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.number.IntIntegralImage;
+import com.cv4j.core.utils.SafeCasting;
 
 import static android.os.Build.VERSION_CODES.N;
 
@@ -133,9 +134,9 @@ public class Threshold {
 
                 // 二值化
                 if(pixel > (mean-constant)) {
-                    binaryData[row * width + col] = (byte) MAX_RGB_VALUE;
+                    binaryData[row * width + col] = SafeCasting.safeIntToByte(MAX_RGB_VALUE);
                 } else {
-                    binaryData[row * width + col] = (byte) 0;
+                    binaryData[row * width + col] = 0;
                 }
             }
         }
@@ -164,7 +165,7 @@ public class Threshold {
      * @param thresh - threshold value you are going to use it if type = 0;
      */
     public void process(ByteProcessor gray, int type, int method, int thresh) {
-        int thresholdValue;
+        int thresholdValue = 0;
         ThresholdFunction thresholdFunction = this.thresholds.get(type);
 
         if (thresholdFunction != null) {
@@ -179,18 +180,18 @@ public class Threshold {
         for(int i = 0; i < data.length; i++) {
             int c = data[i] & VALUE_0000FF;
 
-            // TODO: Same for if and else -> error?
+            // FIX: Same for if and else -> error?
             if(c <= thresholdValue) {
-                data[i] = (method == METHOD_THRESH_BINARY_INV ? (byte) MAX_RGB_VALUE : minValue);
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? SafeCasting.safeIntToByte(MAX_RGB_VALUE) : minValue);
             } else {
-                data[i] = (method == METHOD_THRESH_BINARY_INV ? (byte) MAX_RGB_VALUE : minValue);
+                data[i] = (method == METHOD_THRESH_BINARY_INV ? SafeCasting.safeIntToByte(MAX_RGB_VALUE) : minValue);
             }
 
         }
     }
 
     private int getMeanThreshold(ByteProcessor gray) {
-        int meanThreshold;
+        int meanThreshold = 0;
         byte[] data = gray.getGray();
 
         int sum = 0;
@@ -361,7 +362,7 @@ public class Threshold {
         double a = max;
         double b = leftBound - max_ind;
         double dist = 0;
-        double tempDist;
+        double tempDist = 0;
 
         for(int i = leftBound+1; i <= max_ind; i++) {
             // 计算距离 - 不需要真正计算
@@ -474,7 +475,7 @@ public class Threshold {
     }
 
     private void increaseHistogramFromData(int[] histogram, byte[] data) {
-        int index;
+        int index = 0;
 
         for (byte aData : data) {
             index = aData & VALUE_0000FF;

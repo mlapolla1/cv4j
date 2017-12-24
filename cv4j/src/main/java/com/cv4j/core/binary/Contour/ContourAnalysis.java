@@ -39,7 +39,7 @@ public class ContourAnalysis {
 
     private void assignLabels(Map<Integer, List<PixelNode>> aggregationMap, List<MeasureData> measureDataList) {
         Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
-        List<PixelNode> pixelList;
+        List<PixelNode> pixelList = null;
         GeoMoments moments = new GeoMoments();
 
         for(Integer key : keys) {
@@ -50,7 +50,7 @@ public class ContourAnalysis {
 
     private Map<Integer, List<PixelNode>> makeAggregationMap(int[] labels, int width, int height) {
         Map<Integer, List<PixelNode>> aggregationMap = new HashMap<>();
-        int offset;
+        int offset = 0;
 
         for (int i = 0; i < height; i++) {
             offset = i * width;

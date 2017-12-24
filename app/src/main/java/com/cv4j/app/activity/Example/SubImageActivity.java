@@ -73,9 +73,8 @@ public class SubImageActivity extends BaseActivity {
 
 
         Rect rect = new Rect();
-        rect.x = 300;
+        rect.x = rect.width = 300;
         rect.y = 200;
-        rect.width = 300;
         rect.height = 450;
 
         ImageProcessor resultImageProcessor = null;
@@ -83,6 +82,7 @@ public class SubImageActivity extends BaseActivity {
         try {
             resultImageProcessor = Operator.subImage(imageProcessor,rect);
         } catch (CV4JException e) {
+            System.error("Error, SubImageActivity");
         }
 
         if (resultImageProcessor!=null) {

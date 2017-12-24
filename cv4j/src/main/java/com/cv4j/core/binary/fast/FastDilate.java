@@ -17,6 +17,8 @@ package com.cv4j.core.binary.fast;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Size;
+import com.cv4j.core.utils.SafeCasting;
+
 /**
  * The FastDilate class
  */
@@ -46,7 +48,7 @@ public class FastDilate extends FastBase {
                 }
 
                 if(c == maxRgb){
-                    output[row*width+col] = (byte) maxRgb;
+                    output[row*width+col] = SafeCasting.safeIntToByte(maxRgb);
                 }
             }
         }

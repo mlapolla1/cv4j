@@ -284,7 +284,7 @@ public class ConnectedAreaLabel {
 
         Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
         Arrays.fill(labelMask, -1);
-        List<PixelNode> pixelList;
+        List<PixelNode> pixelList = null;
 
         for (Integer key : keys) {
             pixelList = aggregationMap.get(key);

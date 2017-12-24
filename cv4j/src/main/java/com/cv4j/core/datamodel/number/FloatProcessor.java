@@ -28,10 +28,10 @@ public class FloatProcessor implements ImageProcessor {
     private float[] GRAY;
     private ImageData image;
 
-    public FloatProcessor(float[] data, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.GRAY = data;
+    public FloatProcessor(float[] data, int w, int h) {
+        this.GRAY   = data;
+        this.width  = w;
+        this.height = h;
     }
 
     protected void setCallBack(ImageData data) {
@@ -63,23 +63,51 @@ public class FloatProcessor implements ImageProcessor {
         return new int[0];
     }
 
+    /**
+     * Returns the pixel from an RGB value, with a given
+     * row and a given column.
+     * @param row The row.
+     * @param col The column.
+     * @param rgb The RGB value.
+     */
     public void getPixel(int row, int col, float[] rgb) {
-        int index = row*width + col;
-        if(rgb != null && rgb.length == 1) {
-            rgb[0] = GRAY[index];
+        final int index = (row * this.width) + col;
+
+        assert rgb != null;
+
+        if(rgb.length == 1) {
+            rgb[0] = this.GRAY[index];
         }
     }
 
+    /**
+     * Returns the gray data.
+     * @return The data.
+     */
     public float[] getGray() {
         return GRAY;
     }
 
+    /**
+     * Puts the gray data.
+     * @param gray The gray data.
+     */
     public void putGray(float[] gray) {
         System.arraycopy(gray, 0, GRAY, 0, gray.length);
     }
 
-    public ImageData getImage() {
+    /**
+     * Add an array to the gray data.
+     * @param fa The array to add.
+     */
+    public void addArray(float[] fa) {
+        for(int i = 0; i < fa.length; i++) {
+            GRAY[i] += fa[i];
+        }
+    }
 
+    @Override
+    public ImageData getImage() {
         return this.image;
     }
 
@@ -100,12 +128,6 @@ public class FloatProcessor implements ImageProcessor {
     @Override
     public byte[] toByte(int index) {
         throw new IllegalStateException("Invalid data type, not support this type!!!");
-    }
-	
-	public void addArray(float[] fa) {
-    	for(int i=0; i<fa.length; i++) {
-    		GRAY[i] += fa[i];
-    	}
     }
 
 }

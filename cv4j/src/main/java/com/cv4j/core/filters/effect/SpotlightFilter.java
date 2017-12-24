@@ -17,6 +17,7 @@ package com.cv4j.core.filters.effect;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * The spotlight filter.
@@ -34,22 +35,23 @@ public class SpotlightFilter extends BaseFilter {
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
+        final int centerX     = this.width / 2;
+        final int centerY     = this.height / 2;
+        final int value0000FF = 0x0000ff;
 
-        int offset = 0;
-        int centerX = width/2;
-        int centerY = height/2;
-        double maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
-		int tr = 0;
-		int tg = 0;
-		int tb = 0;
+        final double maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
+
+
         for(int row=0; row<height; row++) {
-        	offset = row * width;
+        	int offset = row * width;
         	for(int col=0; col<width; col++) {
-                tr = R[offset] & 0xff;
-                tg = G[offset] & 0xff;
-                tb = B[offset] & 0xff;
-                double scale = 1.0 - getDistance(centerX, centerY, col, row)/maxDistance;
-                for(int i=0; i<factor; i++) {
+                int tr = R[offset] & value0000FF;
+                int tg = G[offset] & value0000FF;
+                int tb = B[offset] & value0000FF;
+
+                double scale = 1.0 - getDistance(centerX, centerY, col, row) / maxDistance;
+
+                for(int i=0; i < factor; i++) {
                 	scale = scale * scale;
                 }
 
@@ -57,23 +59,24 @@ public class SpotlightFilter extends BaseFilter {
 				offset++;
         	}
         }
+
         return src;
 	}
 
 	private void setRGB(int tr, int tg, int tb, double scale, int offset){
-    	tr = (int)(scale * tr);
-    	tg = (int)(scale * tg);
-    	tb = (int)(scale * tb);
+    	tr = SafeCasting.safeDoubleToInt(scale * tr);
+    	tg = SafeCasting.safeDoubleToInt(scale * tg);
+    	tb = SafeCasting.safeDoubleToInt(scale * tb);
 
-		R[offset] = (byte)tr;
-		G[offset] = (byte)tg;
-		B[offset] = (byte)tb;
+		R[offset] = SafeCasting.safeIntToByte(tr);
+		G[offset] = SafeCasting.safeIntToByte(tg);
+		B[offset] = SafeCasting.safeIntToByte(tb);
 	}
 	
 	private double getDistance(int centerX, int centerY, int px, int py) {
 		double xx = (centerX - px)*(centerX - px);
 		double yy = (centerY - py)*(centerY - py);
-		return (int)Math.sqrt(xx + yy);
+		return Math.sqrt(xx + yy);
 	}
 
 }

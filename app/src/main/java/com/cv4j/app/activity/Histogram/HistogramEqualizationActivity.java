@@ -107,8 +107,8 @@ public class HistogramEqualizationActivity extends BaseActivity {
     private void processForDrawHist(Paint paint, int channels, int[] colors, int bins,
                                     float step, int[][] hist, int histNumber, int maxRgb,
                                     Canvas canvas) {
-        int xoffset;
-        int yoffset;
+        int xoffset = 0;
+        int yoffset = 0;
 
         for (int i=0;i<channels;i++) {
 

@@ -75,7 +75,7 @@ public class TemplateMatchFragment extends BaseFragment {
 
         Point[] points = getPoints(targetImageProcessor, templateImageProcessor);
 
-        Point resultPoint;
+        Point resultPoint = new Point();
         if (points != null) {
             resultPoint = points[0];
 

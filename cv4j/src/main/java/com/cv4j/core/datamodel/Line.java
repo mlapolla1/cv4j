@@ -20,65 +20,72 @@ package com.cv4j.core.datamodel;
 public class Line {
     
     /**
-     * Coordinate x point one
+     * Coordinate x, point one.
      */
-    public int x1 = 0;
+    public int x1;
     
     /**
-     * Coordinate y point one
+     * Coordinate y, point one.
      */
-    public int y1 = 0;
+    public int y1;
     
     /**
-     * Coordinate x point two
+     * Coordinate x, point two.
      */
-    public int x2 = 0;
+    public int x2;
     
     /**
-     * Coordinate y point two
+     * Coordinate y, point two.
      */
-    public int y2 = 0;
+    public int y2;
 
     /**
      * Set line's coordinates.
-     * @param Coordinate x point one, Coordinate y point one, Coordinate x point two, Coordinate y point two
+     * @param xp1 Coordinate x, point one.
+     * @param yp1 Coordinate y, point two.
+     * @param xp2 Coordinate x, point two.
+     * @param yp2 Coordinate y, point two.
      */
-    public Line(int x1, int y1, int x2, int y2) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+    public Line(int xp1, int yp1, int xp2, int yp2) {
+        this.x1 = xp1;
+        this.y1 = yp1;
+        this.x2 = xp2;
+        this.y2 = yp2;
     }
 
     /**
      * Constructor without parameters.
      */
-    public Line() {}
-
-    /**
-     * Return the slope.
-     * @return the slople
-     */
-    public double getSlope() {
-        double dy = y2 - y1;
-        double dx = x2 - x1;
-        if(dx == 0) {
-            return Double.NaN;
-        }
-        return (dy/dx);
+    public Line() {
+        this(0, 0, 0, 0);
     }
 
     /**
-     * Return point one
-     * @return point one
+     * Return the slope.
+     * @return The slope.
+     */
+    public double getSlope() {
+        final double dx = x2 - x1;
+        final double dy = y2 - y1;
+
+        if(Double.compare(dx,0) == 0) {
+            return Double.NaN;
+        }
+
+        return dy / dx;
+    }
+
+    /**
+     * Return the point one.
+     * @return The point one.
      */
     public Point getPoint1() {
         return new Point(x1, y1);
     }
 
     /**
-     * Return point two
-     * @return point two
+     * Return the point two.
+     * @return The point two.
      */
     public Point getPoint2() {
         return new Point(x2, y2);

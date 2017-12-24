@@ -59,9 +59,9 @@ public class ConBriFilter extends BaseFilter {
 	}
 
 	private void setRGBArrays(int total, int[] rgbmeans) {
-		int r;
-		int g;
-		int b;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 
 		for(int i=0; i<total; i++) {
 			r = R[i] & 0xff;

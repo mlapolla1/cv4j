@@ -16,6 +16,8 @@
 package com.cv4j.core.binary;
 
 import com.cv4j.core.datamodel.ByteProcessor;
+import com.cv4j.core.utils.SafeCasting;
+
 import java.util.Arrays;
 
 /**
@@ -80,7 +82,7 @@ public class DistanceTransform extends DtBase {
 				int dis = distMap[offset+col];
 				if(dis > 0) {
 					int gray = (dis * step);
-					output[offset+col] = (byte) gray;
+					output[offset+col] = SafeCasting.safeIntToByte(gray);
 				}
 			}
 		}

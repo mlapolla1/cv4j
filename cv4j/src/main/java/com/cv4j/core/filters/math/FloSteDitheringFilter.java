@@ -34,91 +34,105 @@ import com.cv4j.image.util.Tools;
  * * 0        *      0.4375*
  * * 0.1875, 0.3125, 0.0625*
  * *************************
- *
- *
  */
 public class FloSteDitheringFilter implements CommonFilter {
-    
+
     /**
      * Constant kernel data
      */
-	public final static float[] kernelData = new float[]{0.1875f, 0.3125f, 0.0625f, 0.4375f};
-    
+    private final static float[] KERNEL_DATA = new float[]{0.1875f, 0.3125f, 0.0625f, 0.4375f};
+
     /**
      * Constant color palette
      */
-	public final static int[] COLOR_PALETTE = new int[] {0, 255};
+    private final static int[] COLOR_PALETTE = new int[]{0, 255};
 
-	private void algorithm(byte[] GRAY, int width, int height, int row, int col, int er) {
-        int k;
-        int err;
+    /**
+     * Returns the kernel data.
+     * @return The kernel data.
+     */
+    public static float[] getKernelData() {
+        return FloSteDitheringFilter.KERNEL_DATA;
+    }
 
-        if(row + 1 < height && col - 1 > 0) {
+    /**
+     * Returns the color palette.
+     * @return The color palette.
+     */
+    public  static int[] getColorPalette() {
+        return FloSteDitheringFilter.COLOR_PALETTE;
+    }
+
+    private void algorithm(byte[] GRAY, int width, int height, int row, int col, int er) {
+        int k = 0;
+        int err = 0;
+
+        if (row + 1 < height && col - 1 > 0) {
             rowSmallerHeight(row, col, GRAY, er, height, width);
         }
 
-        if(col + 1 < width) {
+        if (col + 1 < width) {
             colSmallerWidth(row, col, GRAY, er, width);
         }
 
-        if(row + 1 < height) {
+        if (row + 1 < height) {
             rowPlusOneSmallerHeight(row, col, GRAY, height, width, er);
         }
 
-        if(row + 1 < height && col + 1 < width) {
+        if (row + 1 < height && col + 1 < width) {
             rowAndColSmaller(row, col, GRAY, height, width, er);
         }
     }
 
-    private void rowAndColSmaller(int row, int col, byte[] GRAY, int height, int width, int er){
-        int k;
-        int err;
+    private void rowAndColSmaller(int row, int col, byte[] GRAY, int height, int width, int er) {
+        int k = 0;
+        int err = 0;
 
         k = (row + 1) * width + col + 1;
-        err = GRAY[k]&0xff;
-        err += (int)(er * kernelData[2]);
-        GRAY[k] = (byte)Tools.clamp(err);        
+        err = GRAY[k] & 0xff;
+        err += (int) (er * KERNEL_DATA[2]);
+        GRAY[k] = (byte) Tools.clamp(err);
     }
 
-    private void rowPlusOneSmallerHeight(int row, int col, byte[] GRAY, int height, int width, int er){
-        int k;
-        int err; 
+    private void rowPlusOneSmallerHeight(int row, int col, byte[] GRAY, int height, int width, int er) {
+        int k = 0;
+        int err = 0;
 
         k = (row + 1) * width + col;
-        err = GRAY[k]&0xff;
-        err += (int)(er * kernelData[1]);
-        GRAY[k] = (byte)Tools.clamp(err);
+        err = GRAY[k] & 0xff;
+        err += (int) (er * KERNEL_DATA[1]);
+        GRAY[k] = (byte) Tools.clamp(err);
     }
 
-    private void rowSmallerHeight(int row, int col, byte[] GRAY, int er, int height, int width){
-        int k;
-        int err;
+    private void rowSmallerHeight(int row, int col, byte[] GRAY, int er, int height, int width) {
+        int k = 0;
+        int err = 0;
 
         k = (row + 1) * width + col - 1;
         err = GRAY[k] & 0xff;
-        err += (int)(er * kernelData[0]);
-        GRAY[k] = (byte)Tools.clamp(err);
+        err += (int) (er * KERNEL_DATA[0]);
+        GRAY[k] = (byte) Tools.clamp(err);
     }
 
-    private void colSmallerWidth(int row, int col, byte[] GRAY, int er, int width){
-        int k;
-        int err;
+    private void colSmallerWidth(int row, int col, byte[] GRAY, int er, int width) {
+        int k = 0;
+        int err = 0;
 
         k = row * width + col + 1;
-        err = GRAY[k]&0xff;
-        err += (int)(er * kernelData[3]);
-        GRAY[k] = (byte)Tools.clamp(err);
+        err = GRAY[k] & 0xff;
+        err += (int) (er * KERNEL_DATA[3]);
+        GRAY[k] = (byte) Tools.clamp(err);
     }
 
-	@Override
-	public ImageProcessor filter(ImageProcessor src) {
+    @Override
+    public ImageProcessor filter(ImageProcessor src) {
 
-        if(src instanceof ColorProcessor) {
+        if (src instanceof ColorProcessor) {
             src.getImage().convert2Gray();
             src = src.getImage().getProcessor();
         }
 
-		int width = src.getWidth();
+        int width = src.getWidth();
         int height = src.getHeight();
 
         ByteProcessor byteSrc = (ByteProcessor) src;
@@ -126,11 +140,11 @@ public class FloSteDitheringFilter implements CommonFilter {
         byte[] GRAY = byteSrc.getGray();
         byte[] output = new byte[GRAY.length];
 
-        int gray;
+        int gray = 0;
 
-        for(int row = 0; row < height; row++) {
+        for (int row = 0; row < height; row++) {
             int offset = row * width;
-        	for(int col = 0; col < width; col++) {
+            for (int col = 0; col < width; col++) {
                 gray = GRAY[offset] & 0xff;
                 int cIndex = getCloseColor(gray);
                 output[offset] = (byte) COLOR_PALETTE[cIndex];
@@ -139,26 +153,28 @@ public class FloSteDitheringFilter implements CommonFilter {
                 algorithm(GRAY, width, height, row, col, er);
 
                 offset++;
-        	}
+            }
         }
 
         byteSrc.putGray(GRAY);
 
         return src;
-	}
-	
-	private int getCloseColor(int gray) {
-		int minDistanceSquared = 255*255 + 1;
-		int bestIndex = 0;
+    }
 
-		for(int i=0; i<COLOR_PALETTE.length; i++) {
-			int diff = Math.abs(gray - COLOR_PALETTE[i]);
-			if(ImageData.SQRT_LUT[diff] < minDistanceSquared) {
-				minDistanceSquared = ImageData.SQRT_LUT[diff];
-				bestIndex = i;
-			}
-		}
+    private int getCloseColor(int gray) {
+        int minDistanceSquared = 255 * 255 + 1;
+        int bestIndex = 0;
 
-		return bestIndex;
-	}
+        for (int i = 0; i < COLOR_PALETTE.length; i++) {
+            final int diff = Math.abs(gray - COLOR_PALETTE[i]);
+            final int sqrtLutValue = ImageData.SQRT_LUT.get(diff);
+
+            if (sqrtLutValue < minDistanceSquared) {
+                minDistanceSquared = sqrtLutValue;
+                bestIndex = i;
+            }
+        }
+
+        return bestIndex;
+    }
 }

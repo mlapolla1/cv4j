@@ -12,7 +12,11 @@ import com.cv4j.app.R;
 
 public class MenuManager {
 
-    private static MenuManager instance = null;
+    private static MenuManager instance;
+
+    static {
+        instance = null;
+    }
 
     private FragmentManager fragmentManager;
     private MenuType curType;

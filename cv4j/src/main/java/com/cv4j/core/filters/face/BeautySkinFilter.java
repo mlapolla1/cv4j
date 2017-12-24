@@ -23,6 +23,7 @@ import com.cv4j.core.datamodel.Size;
 import com.cv4j.core.filters.CommonFilter;
 import com.cv4j.core.filters.FastEPFilter;
 import com.cv4j.core.filters.gradients.GradientFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 import java.util.Arrays;
 
@@ -30,6 +31,16 @@ import java.util.Arrays;
  * The beauty skin filter.
  */
 public class BeautySkinFilter implements CommonFilter {
+
+    /**
+     * The max RGB value.
+     */
+    private static final int MAX_RGB_VALUE = 255;
+
+    /**
+     * The value of 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
 
     /**
      * The index zero.
@@ -102,37 +113,29 @@ public class BeautySkinFilter implements CommonFilter {
     }
 
     private void setMask(byte [] R, byte [] G, byte [] B, ISkinDetection skinDetector, byte[] mask){
-        int r;
-        int g;
-        int b;
-
-        byte maxRgb = (byte) 255;
-
-
         for (int i = 0; i < R.length; i++) {
-            r = R[i] & 0xff;
-            g = G[i] & 0xff;
-            b = B[i] & 0xff;
+            int r = R[i] & VALUE_0000FF;
+            int g = G[i] & VALUE_0000FF;
+            int b = B[i] & VALUE_0000FF;
 
             if (!skinDetector.isSkin(r, g, b)) {
-                mask[i] = maxRgb;
+                mask[i] = SafeCasting.safeIntToByte(MAX_RGB_VALUE);
             }
         }
     }
 
-    private void setMask(byte [] R, byte [] G, byte [] B, byte[] mask){
-        int r;
-        int g;
-        int b;
+    private void setMask(byte [] R, byte [] G, byte [] B, byte[] mask) {
+        final double redConst   = 0.299;
+        final double greenConst = 0.587;
+        final double blueConst  = 0.115;
 
-        int c;
         for (int i = 0; i < R.length; i++) {
-            r = R[i] & 0xff;
-            g = G[i] & 0xff;
-            b = B[i] & 0xff;
+            int r = R[i] & VALUE_0000FF;
+            int g = G[i] & VALUE_0000FF;
+            int b = B[i] & VALUE_0000FF;
 
-            c = (int) (0.299 * r + 0.587 * g + 0.114 * b);
-            mask[i] = (byte) c;
+            int c = SafeCasting.safeDoubleToInt(redConst * r + greenConst * g + blueConst * b);
+            mask[i] = SafeCasting.safeIntToByte(c);
         }
     }
 
@@ -142,7 +145,7 @@ public class BeautySkinFilter implements CommonFilter {
         Arrays.fill(mask, (byte) 0);
         for (int i = 0; i < length; i++) {
             if (gradient[i] > 35) {
-                mask[i] = (byte) 255;
+                mask[i] = SafeCasting.safeIntToByte(MAX_RGB_VALUE);
             }
         }
     }
@@ -152,7 +155,7 @@ public class BeautySkinFilter implements CommonFilter {
         ii.setImage(mask);
         ii.process(width, height);
         byte[] blurmask = new byte[mask.length];
-        int offset;
+        int offset = 0;
         int swx = 5;
         int swy = 5;
         for (int row = 1; row < height - 1; row++) {
@@ -160,7 +163,7 @@ public class BeautySkinFilter implements CommonFilter {
             for (int col = 1; col < width - 1; col++) {
                 int sr = ii.getBlockSum(col, row, swx, swy);
                 int srdiv25 = sr / 25;
-                blurmask[offset + col] = (byte) (srdiv25);
+                blurmask[offset + col] = SafeCasting.safeIntToByte(srdiv25);
             }
         }
 
@@ -169,19 +172,19 @@ public class BeautySkinFilter implements CommonFilter {
 
 
     private void alphaBlend(ImageProcessor src, byte[] blurMask, byte[] R, byte[] G, byte[] B) {
-        float w;
-        int wc;
+        float w = 0;
+        int wc = 0;
         for (int i = 0; i < blurMask.length; i++) {
             wc = blurMask[i] & 0xff;
             w = wc / 255.0f;
 
-            int r = (int) ((R[i] & 0xff) * w + (src.toByte(INDEX0)[i] & 0xff) * (1.0f - w));
-            int g = (int) ((G[i] & 0xff) * w + (src.toByte(INDEX1)[i] & 0xff) * (1.0f - w));
-            int b = (int) ((B[i] & 0xff) * w + (src.toByte(INDEX2)[i] & 0xff) * (1.0f - w));
+            int r = SafeCasting.safeFloatToInt((R[i] & VALUE_0000FF) * w + (src.toByte(INDEX0)[i] & VALUE_0000FF) * (1.0f - w));
+            int g = SafeCasting.safeFloatToInt((G[i] & VALUE_0000FF) * w + (src.toByte(INDEX1)[i] & VALUE_0000FF) * (1.0f - w));
+            int b = SafeCasting.safeFloatToInt((B[i] & VALUE_0000FF) * w + (src.toByte(INDEX2)[i] & VALUE_0000FF) * (1.0f - w));
 
-            src.toByte(INDEX0)[i] = (byte) r;
-            src.toByte(INDEX1)[i] = (byte) g;
-            src.toByte(INDEX2)[i] = (byte) b;
+            src.toByte(INDEX0)[i] = SafeCasting.safeIntToByte(r);
+            src.toByte(INDEX1)[i] = SafeCasting.safeIntToByte(g);
+            src.toByte(INDEX2)[i] = SafeCasting.safeIntToByte(b);
         }
     }
 }

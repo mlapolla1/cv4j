@@ -208,7 +208,7 @@ public class ChainCode extends CourtEdge {
 	}
 
 	private int getRelationship(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
-		int result;
+		int result = 0;
 
 		result = checkCol0Col1(pixels1, codeMap, row, col, width, height);
 		if (result != INVALID_COL_VALUE) {

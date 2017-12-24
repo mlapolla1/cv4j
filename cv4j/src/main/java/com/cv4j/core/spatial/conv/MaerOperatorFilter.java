@@ -146,9 +146,12 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
 			arrayColor = B;
 			shiftValue = 0;
 			break;
+		default:
+			;
+			break;
 		}
 
-		int[] constants;
+		int[] constants = new int[1];
 		if (_4direction) {
 			constants = FOUR;
 		} else {

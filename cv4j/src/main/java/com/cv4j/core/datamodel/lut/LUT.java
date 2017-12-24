@@ -37,41 +37,36 @@ import static com.cv4j.core.filters.image.ColorFilter.WINTER_STYLE;
  * The LUT class
  */
 public class LUT {
-    /**
-     * Initialization of the class.
-     */
-    private static boolean initialized = false;
 
+    /**
+     * The LUTs list.
+     */
     private static SparseArray<int[][]> luts;
 
-    /**
-     * Initialization of the class LUT.
-     */
-    private static void init() {
+    static {
         final int dimLut = 12;
-        luts = new SparseArray<>(dimLut);
+        LUT.luts = new SparseArray<>(dimLut);
 
-        luts.put(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
-        luts.put(BONE_STYLE, BoneLUT.BONE_LUT);
-        luts.put(COOL_STYLE, CoolLUT.COOL_LUT);
-        luts.put(HOT_STYLE, HotLUT.HOT_LUT);
-        luts.put(HSV_STYLE, HsvLUT.HSV_LUT);
-        luts.put(JET_STYLE, JetLUT.JET_LUT);
-        luts.put(OCEAN_STYLE, OceanLUT.OCEAN_LUT);
-        luts.put(PINK_STYLE, PinkLUT.PINK_LUT);
-        luts.put(RAINBOW_STYLE, RainbowLUT.RAINBOW_LUT);
-        luts.put(SPRING_STYLE, SpringLUT.SPRING_LUT);
-        luts.put(SUMMER_STYLE, SummerLUT.SUMMER_LUT);
-        luts.put(WINTER_STYLE, WinterLUT.WINTER_LUT);
-
-        initialized = true;
+        LUT.luts.put(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
+        LUT.luts.put(BONE_STYLE, BoneLUT.BONE_LUT);
+        LUT.luts.put(COOL_STYLE, CoolLUT.COOL_LUT);
+        LUT.luts.put(HOT_STYLE, HotLUT.HOT_LUT);
+        LUT.luts.put(HSV_STYLE, HsvLUT.HSV_LUT);
+        LUT.luts.put(JET_STYLE, JetLUT.JET_LUT);
+        LUT.luts.put(OCEAN_STYLE, OceanLUT.OCEAN_LUT);
+        LUT.luts.put(PINK_STYLE, PinkLUT.PINK_LUT);
+        LUT.luts.put(RAINBOW_STYLE, RainbowLUT.RAINBOW_LUT);
+        LUT.luts.put(SPRING_STYLE, SpringLUT.SPRING_LUT);
+        LUT.luts.put(SUMMER_STYLE, SummerLUT.SUMMER_LUT);
+        LUT.luts.put(WINTER_STYLE, WinterLUT.WINTER_LUT);
     }
 
+    /**
+     * Return the color filter LUT.
+     * @param style The style of the filter.
+     * @return      The LUT.
+     */
     public static int[][] getColorFilterLUT(int style) {
-        if (!LUT.initialized) {
-            LUT.init();
-        }
-
         int[][] lutStyle = luts.get(style);
 
         if (lutStyle == null) {
@@ -79,9 +74,5 @@ public class LUT {
         }
 
         return lutStyle;
-    }
-
-    public static boolean isInitialized() {
-        return initialized;
     }
 }

@@ -19,6 +19,7 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.datamodel.number.IntIntegralImage;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 
 /**
  * The mosaic filter.
@@ -63,12 +64,13 @@ public class MosaicFilter extends BaseFilter {
 			offset = row*width;
 			setOutputs(width, row, rii, gii, bii, tr, tg, tb, size, offset, output);
 		}
+
 		((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
-		output = null;
+
 		return src;
 	}
 
-	private int setOutputs(int width, int row, IntIntegralImage rii, IntIntegralImage gii, IntIntegralImage bii, int tr, int tg, int tb, int size, int offset, byte[][] output){
+	private void setOutputs(int width, int row, IntIntegralImage rii, IntIntegralImage gii, IntIntegralImage bii, int tr, int tg, int tb, int size, int offset, byte[][] output){
 		for (int col = 0; col < width; col++) {
 			int dy = (row / size);
 			int dx = (col / size);
@@ -80,9 +82,9 @@ public class MosaicFilter extends BaseFilter {
 			tr = sr / size;
 			tg = sg / size;
 			tb = sb / size;
-			output[0][offset] = (byte)tr;
-			output[1][offset] = (byte)tg;
-			output[2][offset] = (byte)tb;
+			output[0][offset] = SafeCasting.safeIntToByte(tr);
+			output[1][offset] = SafeCasting.safeIntToByte(tg);
+			output[2][offset] = SafeCasting.safeIntToByte(tb);
 			offset++;
 		}
 	}

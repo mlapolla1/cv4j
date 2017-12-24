@@ -182,7 +182,7 @@ public class IntIntegralImage {
 
 		int p1 = image[offset] & VALUE_0000FF;                           // p(x, y)
 
-		// TODO: these values are unused.
+		// FIX: these values are unused.
 		//int p2 = (leftCol < 0 ? 0 : sum[offset-1]);                      // p(x-1, y)
 		//int p3 = (upRow < 0 ? 0 : sum[offset-width]);                    // p(x, y-1);
 		//int p4 = ((upRow < 0 || leftCol < 0) ? 0 : sum[offset-width-1]); // p(x-1, y-1);

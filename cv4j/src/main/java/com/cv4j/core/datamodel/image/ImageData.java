@@ -19,15 +19,20 @@ import android.graphics.Bitmap;
 
 import com.cv4j.core.datamodel.CV4JImage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * The ImageData class of DataModel
  */
 public interface ImageData {
-    
+
     /**
      * Square root lookup table
      */
-    int[] SQRT_LUT = new int[] {
+    List<Integer> SQRT_LUT = Collections.unmodifiableList(Arrays.asList(
             0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324,
             361, 400, 441, 484, 529, 576, 625, 676, 729, 784, 841, 900, 961, 1024, 1089, 1156,
             1225, 1296, 1369, 1444, 1521, 1600, 1681, 1764, 1849, 1936, 2025, 2116, 2209, 2304,
@@ -47,8 +52,8 @@ public interface ImageData {
             44944, 45369, 45796, 46225, 46656, 47089, 47524, 47961, 48400, 48841, 49284, 49729,
             50176, 50625, 51076, 51529, 51984, 52441, 52900, 53361, 53824, 54289, 54756, 55225,
             55696, 56169, 56644, 57121, 57600, 58081, 58564, 59049, 59536, 60025, 60516, 61009,
-            61504, 62001, 62500, 63001, 63504, 64009, 64516, 65025,
-    };
+            61504, 62001, 62500, 63001, 63504, 64009, 64516, 65025
+    ));
 
     /**
      * CV4J image type RGB

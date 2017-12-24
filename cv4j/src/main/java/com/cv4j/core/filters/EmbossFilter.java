@@ -17,6 +17,7 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 /**
  * The EmbossFilter class.
@@ -84,9 +85,9 @@ public class EmbossFilter extends BaseFilter {
 				g = Tools.clamp(g+COLORCONSTANTS);
 				b = Tools.clamp(b+COLORCONSTANTS);
 
-				output[0][offset] = (byte)r;
-				output[1][offset] = (byte)g;
-				output[2][offset] = (byte)b;
+				output[0][offset] = SafeCasting.safeIntToByte(r);
+				output[1][offset] = SafeCasting.safeIntToByte(g);
+				output[2][offset] = SafeCasting.safeIntToByte(b);
 				offset++;
 			}
 	}
