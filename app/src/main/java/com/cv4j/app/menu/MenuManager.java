@@ -15,7 +15,7 @@ public class MenuManager {
     private static MenuManager instance;
 
     static {
-        instance = null;
+        instance = new MenuManager(null);
     }
 
     private FragmentManager fragmentManager;
@@ -49,8 +49,9 @@ public class MenuManager {
 		/**
 	     * Set menu's title
 	     *
-	     * @param menu's title, removed or not
-	     * @return the title
+         * @param class_name The class name.
+	     * @param title      Menu's title.
+         * @param removed    If removed or not.
 	     */
         MenuType(String class_name, String title, boolean removed) {
             className = class_name;
@@ -93,8 +94,8 @@ public class MenuManager {
      * @return MenuManager
      */
     public static MenuManager getInstance(FragmentManager managerFragment) {
-        if (instance == null) {
-            instance = new MenuManager(managerFragment);
+        if (instance.fragmentManager == null) {
+            instance.fragmentManager = managerFragment;
         }
 
         return instance;
