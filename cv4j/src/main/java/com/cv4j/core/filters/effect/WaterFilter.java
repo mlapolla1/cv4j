@@ -18,6 +18,7 @@ package com.cv4j.core.filters.effect;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.FloatingPointsUtils;
 import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
@@ -92,7 +93,7 @@ public class WaterFilter extends BaseFilter {
 
 		this.iCentreX = this.width * centreX;
 		this.iCentreY = this.height * centreY;
-		if (Float.compare(radius, 0) == 0) {
+		if (FloatingPointsUtils.nearlyEqauls(radius, 0)) {
 			radius = Math.min(iCentreX, iCentreY);
 		}
 		this.radius2 = this.radius * this.radius;
@@ -119,21 +120,22 @@ public class WaterFilter extends BaseFilter {
 				int srcY = (int)Math.floor( out[1] );
 				float xWeight = out[0]-srcX;
 				float yWeight = out[1]-srcY;
-				int nw = 0;
-				int ne = 0;
-				int sw = 0;
-				int se = 0;
 
 				// 获取周围四个像素，插值用，
-				setOuts(output, index, xWeight, yWeight, nw, ne, sw, se, srcX, srcY, inPixels);
+				setOuts(output, index, xWeight, yWeight,srcX, srcY, inPixels);
         	}
         }
 	}
 
-	private void setOuts(byte[][] output, int index, float xWeight, float yWeight, int nw, int ne, int sw, int se, int srcX, int srcY, int[] inPixels){
+	private void setOuts(byte[][] output, int index, float xWeight, float yWeight, int srcX, int srcY, int[] inPixels){
 		final int value0000FF = 0xff;
 		final int value16     = 16;
 		final int value8      = 8;
+
+		int nw = 0;
+		int ne = 0;
+		int sw = 0;
+		int se = 0;
 
 		if ( srcX >= 0 && srcX < width-1 && srcY >= 0 && srcY < height-1) {
 			// Easy case, all corners are in the image
@@ -185,7 +187,7 @@ public class WaterFilter extends BaseFilter {
 			float amount = amplitude * (float)Math.sin(distance / wavelength * Tools.TWO_PI - phase);
 			// 计算能量损失，
 			amount *= (radius-distance)/radius; // 计算能量损失，
-			if (Float.compare(distance, 0) != 0) {
+			if (!FloatingPointsUtils.nearlyEqauls(distance, 0)) {
 				amount *= wavelength / distance;
 			}
 
