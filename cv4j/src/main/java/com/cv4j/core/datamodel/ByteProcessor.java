@@ -23,10 +23,30 @@ import com.cv4j.core.datamodel.image.ImageProcessor;
  */
 public class ByteProcessor implements ImageProcessor {
 
+    /**
+     * The value of 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
+    /**
+     * The width.
+     */
     private int width;
+
+    /**
+     * The height.
+     */
     private int height;
+
+    /**
+     * The data.
+     */
     private byte[] GRAY;
-    private ImageData image;
+
+    /**
+     * The image data.
+     */
+    private ImageData image = null;
 
     public ByteProcessor(int width, int height) {
         this.width = width;
@@ -35,14 +55,15 @@ public class ByteProcessor implements ImageProcessor {
     }
     
     public ByteProcessor(byte[] data, int width, int height) {
-        int[] hist;
         this.width = width;
         this.height = height;
         this.GRAY = data;
+
         // setup hist
-        hist = new int[256];
-        for(int i=0; i<data.length; i++) {
-            hist[data[i]&0xff]++;
+        final int histSize = 256;
+        int[] hist = new int[histSize];
+        for (byte aData : data) {
+            hist[aData & VALUE_0000FF]++;
         }
     }
 
@@ -85,23 +106,30 @@ public class ByteProcessor implements ImageProcessor {
     }
 
     public int[] getPixels() {
-        int size = width * height;
+        final int size = this.width * this.height;
+        final int valueFF000000 = 0xff000000;
+        final int value16 = 16;
+        final int value8  = 8;
+
         int[] pixels = new int[size];
-        for (int i=0; i < size; i++){
-            pixels[i] = 0xff000000 | ((GRAY[i]&0xff)<<16) | ((GRAY[i]&0xff)<<8) | GRAY[i]&0xff;
+
+        for (int i = 0; i < size; i++){
+            pixels[i] = valueFF000000 | ((GRAY[i] & VALUE_0000FF) << value16)
+                                      | ((GRAY[i] & VALUE_0000FF) << value8)
+                                      | (GRAY[i] & VALUE_0000FF);
         }
+
         return pixels;
     }
     public ImageData getImage() {
-
         return this.image;
     }
 
     @Override
     public float[] toFloat(int index) {
         float[] data = new float[GRAY.length];
-        for(int i=0; i<data.length; i++){
-            data[i] = GRAY[i]&0xff;
+        for(int i = 0; i < data.length; i++){
+            data[i] = GRAY[i] & VALUE_0000FF;
         }
         return data;
     }
@@ -110,7 +138,7 @@ public class ByteProcessor implements ImageProcessor {
     public int[] toInt(int index) {
         int[] data = new int[GRAY.length];
         for(int i=0; i<data.length; i++){
-            data[i] = GRAY[i]&0xff;
+            data[i] = GRAY[i] & VALUE_0000FF;
         }
         return data;
     }

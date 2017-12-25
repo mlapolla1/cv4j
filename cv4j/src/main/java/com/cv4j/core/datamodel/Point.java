@@ -22,23 +22,24 @@ public class Point {
 	/**
 	 * Coordinate x.
 	 */
-    public int x;
+    public int x = 0;
 
 	/**
 	 * Coordinate y.
 	 */    
-    public int y;
+    public int y = 0;
 
 	/**
 	 * Constructor without parameters.
 	 */    
     public Point() {
+    	this(0, 0);
     }
 
 	/**
 	 * Constructor with inizialization of the coordinates.
-	 * @param int x The x coordinate.
-	 * @param int y The y coordinate.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
 	 */    
     public Point(int x, int y) {
         this.x = x;

@@ -25,16 +25,45 @@ import com.cv4j.image.util.Tools;
  */
 public class FastEPFilter implements CommonFilter {
 
-	private int xr;
-	private int yr;
-	private float sigma;
+	/**
+	 * The swx index.
+	 */
 	private static final int INDEX_SWX = 0;
+
+	/**
+	 * The swy index.
+	 */
 	private static final int INDEX_SWY = 1;
+
+	/**
+	 * The nex index.
+	 */
 	private static final int INDEX_NEX = 2;
+
+	/**
+	 * The ney index.
+	 */
 	private static final int INDEX_NEY = 3;
 
+	/**
+	 * The x radius.
+	 */
+	private int xr;
+
+	/**
+	 * The y radius.
+	 */
+	private int yr;
+
+	/**
+	 * The sigma.
+	 */
+	private float sigma;
+
 	public FastEPFilter() {
-		sigma = 10.0f; // by default
+		this.sigma = 10.0f;
+		this.xr    = 0;
+		this.xr    = 0;
 	}
 	
 	public void setWinsize(int radius) {

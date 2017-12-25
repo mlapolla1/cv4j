@@ -57,9 +57,9 @@ public class ConvolutionHVFilter extends BaseFilter {
 
                 for(int j=-1; j<=1; j++) {
                     int coffset = j+col;
-                    sr += R[offset+coffset]&0xff;
-                    sg += G[offset+coffset]&0xff;
-                    sb += B[offset+coffset]&0xff;
+                    sr += R[offset+coffset] & VALUE_0000FF;
+                    sg += G[offset+coffset] & VALUE_0000FF;
+                    sb += B[offset+coffset] & VALUE_0000FF;
                 }
 
                 int r = sr / 3;
@@ -74,27 +74,30 @@ public class ConvolutionHVFilter extends BaseFilter {
     }
 
     private void secondPhaseFilter(byte[][] output) {
-        for(int col=0; col<width; col++) {
-            int colOffset = col;
-            for(int row=1; row<height-1; row++) {
-                int sr=0;
-                int sg=0;
-                int sb=0;
+        for(int col = 0; col < this.width; col++) {
 
-                for(int j=-1; j<=1; j++) {
-                    int rowOffset = j+row;
-                    sr += output[0][rowOffset*width+colOffset] & 0xff;
-                    sg += output[1][rowOffset*width+colOffset] & 0xff;
-                    sb += output[2][rowOffset*width+colOffset] & 0xff;
+            for(int row = 1; row < this.height-1; row++) {
+                int sr = 0;
+                int sg = 0;
+                int sb = 0;
+
+                for(int j = -1; j <= 1; j++) {
+                    final int rowOffset = j + row;
+                    final int outputOffset = (rowOffset * width) + col;
+
+                    sr += output[0][outputOffset] & VALUE_0000FF;
+                    sg += output[1][outputOffset] & VALUE_0000FF;
+                    sb += output[2][outputOffset] & VALUE_0000FF;
                 }
 
                 int r = sr / 3;
                 int g = sg / 3;
                 int b = sb / 3;
 
-                this.R[row*width+col] = SafeCasting.safeIntToByte(r);
-                this.G[row*width+col] = SafeCasting.safeIntToByte(g);
-                this.B[row*width+col] = SafeCasting.safeIntToByte(b);
+                final int offset = (row * width) + col;
+                this.R[offset] = SafeCasting.safeIntToByte(r);
+                this.G[offset] = SafeCasting.safeIntToByte(g);
+                this.B[offset] = SafeCasting.safeIntToByte(b);
             }
         }
     }

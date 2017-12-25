@@ -34,17 +34,17 @@ public class MenuManager {
         /**
          * Class name without 'Fragment' word
          */
-        public final String className;
+        private String className = null;
 
 		/**
   		 * Menu's title
    		 */
-        public final String title;
+        private String title = null;
         
 		/**
   		 * True if menu is removed, false otherwise
    		 */
-        public final boolean removed;
+        private boolean removed = false;
 
 		/**
 	     * Set menu's title
@@ -54,37 +54,39 @@ public class MenuManager {
          * @param removed    If removed or not.
 	     */
         MenuType(String class_name, String title, boolean removed) {
-            className = class_name;
-            this.title = title;
-            this.removed = removed;
-        }
-
-        public String getClassName() {
-            return className;
+            this.className = class_name;
+            this.title     = title;
+            this.removed   = removed;
         }
 
         /**
-	     * Return menu's title
-	     *
-	     * @return the title
+         * Returns menu's class name.
+         * @return The class name.
+         */
+        public String getClassName() {
+            return this.className;
+        }
+
+        /**
+	     * Returns menu's title.
+	     * @return The title.
 	     */
         public String getTitle() {
-            return title;
+            return this.title;
         }
 
 	    /**
-	     * It is removed?
-	     *
-	     * @return 
+	     * Return true if it's removed, fase otherwise.
+	     * @return If it's removed or not.
 	     */
         public boolean isRemoved() {
-            return removed;
+            return this.removed;
         }
     }
 
     private MenuManager(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
-        curType = MenuType.HOME;
+        this.curType         = MenuType.HOME;
     }
 
     /**
@@ -126,7 +128,7 @@ public class MenuManager {
             hide(curType);
         }
 
-        Fragment fragment = (Fragment) fragmentManager.findFragmentByTag(type.getTitle());
+        Fragment fragment = fragmentManager.findFragmentByTag(type.getTitle());
         if (fragment == null) {
             fragment = create(type);
             if (fragment == null) {
@@ -141,14 +143,14 @@ public class MenuManager {
 
     private Fragment create(MenuType type) {
         Fragment fragment = null;
-        String fragmentClassName = type.className + "Fragment";
+        String fragmentClassName = type.getClassName() + "Fragment";
         try {
             Class classFragment = Class.forName("com.cv4j.app.fragment." + fragmentClassName);
             fragment = (Fragment) classFragment.newInstance();
         } catch (InstantiationException e) {
-           System.out.println("Instantiation error of " + type.className + "Fragment on MenuManager class.");
+           System.out.println("Instantiation error of " + fragmentClassName + " on MenuManager class.");
         } catch (IllegalAccessException e) {
-            System.out.println("Illegal access to " + type.className + "Fragment class");
+            System.out.println("Illegal access to " + fragmentClassName + " class");
         } catch (ClassNotFoundException e) {
             System.out.println("Class not found: " + fragmentClassName);
         }
@@ -162,7 +164,7 @@ public class MenuManager {
     }
 
     private void hide(MenuType type) {
-        Fragment fragment = (Fragment) fragmentManager.findFragmentByTag(type.getTitle());
+        Fragment fragment = fragmentManager.findFragmentByTag(type.getTitle());
         if (fragment != null) {
             if (type.isRemoved()) {
                 fragmentManager.beginTransaction().remove(fragment).commit();
@@ -182,7 +184,7 @@ public class MenuManager {
      * @return
      */
     public boolean isFragmentExist(MenuType type) {
-        Fragment fragment = (Fragment) fragmentManager.findFragmentByTag(type.getTitle());
+        Fragment fragment = fragmentManager.findFragmentByTag(type.getTitle());
         return fragment != null;
     }
 
