@@ -32,7 +32,7 @@ public final class JetLUT {
     /**
      * List of jet lut
      */
-    public static final int[][] JET_LUT = new int[][]{
+    private static final int[][] JET_LUT = new int[][]{
             {0, 1, 128}, {0, 0, 130}, {0, 0, 132}, {1, 0, 136}, {0, 0, 142},
             {0, 0, 145}, {0, 0, 150}, {1, 0, 154}, {0, 0, 158}, {1, 0, 163},
             {0, 0, 166}, {0, 0, 170}, {0, 0, 175}, {0, 0, 179}, {0, 0, 182},
@@ -87,4 +87,7 @@ public final class JetLUT {
             {129, 0, 0}
     };
 
+    public static int[][] getJetLut() {
+        return JET_LUT;
+    }
 }

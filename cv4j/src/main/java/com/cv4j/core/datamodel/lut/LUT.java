@@ -47,18 +47,18 @@ public class LUT {
         final int dimLut = 12;
         LUT.luts = new SparseArray<>(dimLut);
 
-        LUT.luts.put(AUTUMN_STYLE, AutumnLUT.AUTUMN_LUT);
-        LUT.luts.put(BONE_STYLE, BoneLUT.BONE_LUT);
-        LUT.luts.put(COOL_STYLE, CoolLUT.COOL_LUT);
-        LUT.luts.put(HOT_STYLE, HotLUT.HOT_LUT);
-        LUT.luts.put(HSV_STYLE, HsvLUT.HSV_LUT);
-        LUT.luts.put(JET_STYLE, JetLUT.JET_LUT);
-        LUT.luts.put(OCEAN_STYLE, OceanLUT.OCEAN_LUT);
-        LUT.luts.put(PINK_STYLE, PinkLUT.PINK_LUT);
-        LUT.luts.put(RAINBOW_STYLE, RainbowLUT.RAINBOW_LUT);
-        LUT.luts.put(SPRING_STYLE, SpringLUT.SPRING_LUT);
-        LUT.luts.put(SUMMER_STYLE, SummerLUT.SUMMER_LUT);
-        LUT.luts.put(WINTER_STYLE, WinterLUT.WINTER_LUT);
+        LUT.luts.put(AUTUMN_STYLE, AutumnLUT.getAutumnLut());
+        LUT.luts.put(BONE_STYLE, BoneLUT.getBoneLut());
+        LUT.luts.put(COOL_STYLE, CoolLUT.getCoolLut());
+        LUT.luts.put(HOT_STYLE, HotLUT.getHotLut());
+        LUT.luts.put(HSV_STYLE, HsvLUT.getHsvLut());
+        LUT.luts.put(JET_STYLE, JetLUT.getJetLut());
+        LUT.luts.put(OCEAN_STYLE, OceanLUT.getOceanLut());
+        LUT.luts.put(PINK_STYLE, PinkLUT.getPinkLut());
+        LUT.luts.put(RAINBOW_STYLE, RainbowLUT.getRaimbowLut());
+        LUT.luts.put(SPRING_STYLE, SpringLUT.getSpringLut());
+        LUT.luts.put(SUMMER_STYLE, SummerLUT.getSummerLut());
+        LUT.luts.put(WINTER_STYLE, WinterLUT.getWinterLut());
     }
 
     /**

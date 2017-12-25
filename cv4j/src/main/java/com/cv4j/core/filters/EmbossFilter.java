@@ -66,9 +66,9 @@ public class EmbossFilter extends BaseFilter {
 			int g2 = G[offset + width] & value0000FF;
 			int b2 = B[offset + width] & value0000FF;
 
-			int r;
-			int g;
-			int b;
+			int r = 0;
+			int g = 0;
+			int b = 0;
 			if(isOut) {
 					r = r1 - r2;
 					g = g1 - g2;

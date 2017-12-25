@@ -29,7 +29,7 @@ public final class WinterLUT {
     /**
      * List of winter lut
      */
-    public static final int[][] WINTER_LUT = new int[][]{
+    private static final int[][] WINTER_LUT = new int[][]{
             {0, 0, 254}, {1, 1, 255}, {0, 2, 253}, {0, 4, 253}, {0, 4, 253},
             {1, 5, 252}, {0, 6, 250}, {1, 7, 251}, {0, 8, 251}, {0, 9, 252},
             {0, 10, 250}, {0, 11, 249}, {0, 12, 249}, {0, 13, 249}, {0, 14, 247},
@@ -84,4 +84,7 @@ public final class WinterLUT {
             {0, 254, 129}
     };
 
+    public static int[][] getWinterLut() {
+        return WINTER_LUT;
+    }
 }

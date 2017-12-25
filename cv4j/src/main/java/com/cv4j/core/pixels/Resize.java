@@ -108,7 +108,7 @@ public class Resize {
             srcRow = height - 1;
         }
         for (int col = 0; col < w; col++) {
-            int srcCol = Math.round((col*xrate);
+            int srcCol = Math.round((col*xrate));
             if(srcCol >= width) {
                 srcCol = width - 1;
             }

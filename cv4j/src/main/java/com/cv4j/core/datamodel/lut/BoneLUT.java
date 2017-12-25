@@ -30,7 +30,7 @@ public final class BoneLUT {
 	/**
 	 * List of bone lut
 	 */
-	public static final int[][] BONE_LUT = new int[][]{
+	private static final int[][] BONE_LUT = new int[][]{
 			{0, 0, 0}, {1, 1, 1}, {2, 2, 2}, {3, 3, 3}, {4, 4, 4}, {4, 4, 4},
 			{5, 5, 7}, {6, 6, 8}, {7, 7, 9}, {8, 8, 10}, {9, 8, 13}, {10, 9, 14},
 			{11, 10, 15}, {12, 11, 16}, {13, 12, 17}, {14, 13, 18}, {15, 14, 19},
@@ -83,4 +83,8 @@ public final class BoneLUT {
 			{244, 248, 249}, {245, 249, 250}, {246, 250, 251}, {249, 250, 252}, {250, 251, 253},
 			{251, 253, 252}, {252, 254, 253}, {254, 254, 254}, {255, 255, 255}
 	};
+
+	public static int[][] getBoneLut() {
+		return BONE_LUT;
+	}
 }

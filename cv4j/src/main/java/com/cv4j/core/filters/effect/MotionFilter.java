@@ -98,22 +98,26 @@ public class MotionFilter extends BaseFilter {
 		return results;
 	}
 
-	private int[] setResults(int tr, int rg, int tb, int count){
+	private int[] setResults(int tr, int tg, int tb, int count){
 		final int numResults = 4;
+
 		int[] results = new int[numResults];
+
 		results[COUNT_POS] = count;
 		results[TR_POS] = tr;
 		results[TG_POS] = tg;
 		results[TB_POS] = tb;
+
+		return results;
 	}
 
 	private int getIdx(int newX, int newY, int width, int height, int cx, int cy, float zoom, int i, int iteration){
 		float f = (float) (i / iteration);
 		if (newX < 0 || newX >= width) {
-			break;
+			//break;
 		}
 		if (newY < 0 || newY >= height) {
-			break;
+			//break;
 		}
 
 		// scale the pixels
@@ -144,24 +148,24 @@ public class MotionFilter extends BaseFilter {
         // calculate the distance, same as box blur
         float imageRadius = (float) Math.sqrt(cx*cx + cy*cy);
         float maxDistance = distance + imageRadius * zoom;
-    	int tr = 0;
-    	int tg = 0;
-    	int tb = 0;
-        setOuts(width, height, cx, cy, output, index, onePI, zoom, degree180, sinAngle, cosAngle, imageRadius, maxDistance);
+
+    	setOuts(width, height, cx, cy, output, index, sinAngle, cosAngle, maxDistance);
 
 		((ColorProcessor) src).putRGB(R, G, B);
 
 		return src;
 	}
 
-	private void setOuts(int tr, int tg, int tb, int int width, int height, int cx, int cy, byte[][] output, int index, float onePI, float zoom, float degree180, float sinAngle, float cosAngle, float imageRadius, float maxDistance){
-        for(int row = 0; row < height; row++) {
+	private void setOuts(int width, int height, int cx, int cy, byte[][] output, int index, float sinAngle, float cosAngle, float maxDistance){
+		int tr = 0;
+		int tg = 0;
+		int tb = 0;
+
+		for(int row = 0; row < height; row++) {
         	for(int col = 0; col < width; col++) {
         		int count = 0;
-				int newX;
-        		int newY;
-        		
-        		int[] mbip = motionBlurIterationPixels((int) maxDistance, row, col, cx, cy, sinAngle, cosAngle);
+
+				int[] mbip = motionBlurIterationPixels((int) maxDistance, row, col, cx, cy, sinAngle, cosAngle);
         		count += mbip[COUNT_POS];
 				tr += mbip[TR_POS];
 				tg += mbip[TG_POS];

@@ -82,7 +82,7 @@ public class SubImageActivity extends BaseActivity {
         try {
             resultImageProcessor = Operator.subImage(imageProcessor,rect);
         } catch (CV4JException e) {
-            System.error("Error, SubImageActivity");
+            System.err.println("Error, SubImageActivity");
         }
 
         if (resultImageProcessor!=null) {

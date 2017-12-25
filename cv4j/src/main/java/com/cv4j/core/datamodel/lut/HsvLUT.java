@@ -32,7 +32,7 @@ public final class HsvLUT {
     /**
      * List of hsv lut
      */
-    public static  final int[][] HSV_LUT = new int[][]{
+    private static  final int[][] HSV_LUT = new int[][]{
             {253, 1, 0}, {255, 6, 0}, {255, 11, 1}, {254, 17, 1}, {255, 24, 1},
             {255, 30, 0}, {254, 36, 0}, {255, 42, 0}, {254, 48, 0}, {255, 54, 0},
             {254, 60, 0}, {254, 67, 0}, {255, 73, 0}, {254, 79, 0}, {254, 84, 0},
@@ -87,4 +87,7 @@ public final class HsvLUT {
             {254, 0, 3}
     };
 
+    public static int[][] getHsvLut() {
+        return HSV_LUT;
+    }
 }
