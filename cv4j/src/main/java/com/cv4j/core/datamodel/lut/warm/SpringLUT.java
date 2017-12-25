@@ -25,11 +25,11 @@ package com.cv4j.core.datamodel.lut.warm;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class SpringLUT {
+public final class SpringLUT {
     /**
      * List of spring lut
      */
-    public static int[][] SPRING_LUT = new int[][]{
+    public static final int[][] SPRING_LUT = new int[][]{
             {254, 0, 255}, {255, 1, 255}, {255, 1, 255}, {255, 3, 252}, {255, 3, 251},
             {255, 5, 248}, {255, 6, 248}, {255, 7, 247}, {255, 8, 245}, {255, 9, 246},
             {254, 10, 245}, {255, 12, 244}, {254, 12, 244}, {254, 13, 242}, {255, 14, 241},

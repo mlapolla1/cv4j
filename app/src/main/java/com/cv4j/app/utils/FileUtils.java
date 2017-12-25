@@ -32,7 +32,7 @@ public class FileUtils {
         rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(@NonNull Boolean aBoolean) throws Exception {
+                    public void accept(@NonNull Boolean aBoolean)  {
                         if (aBoolean) {
 
                             File filedir = new File(path);

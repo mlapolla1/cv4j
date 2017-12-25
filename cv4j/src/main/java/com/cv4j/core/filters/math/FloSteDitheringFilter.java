@@ -64,8 +64,6 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void algorithm(byte[] GRAY, int width, int height, int row, int col, int er) {
-        int k = 0;
-        int err = 0;
 
         if (row + 1 < height && col - 1 > 0) {
             rowSmallerHeight(row, col, GRAY, er, height, width);

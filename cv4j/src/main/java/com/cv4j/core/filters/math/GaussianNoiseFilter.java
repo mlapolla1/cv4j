@@ -42,7 +42,6 @@ public class GaussianNoiseFilter extends BaseFilter {
 		int r=0;
 		int g=0;
 		int b=0;
-		int offset = 0;
 		int total = width * height;
 		java.util.Random random = new java.util.Random();
 		for(int i=0; i<total; i++) {

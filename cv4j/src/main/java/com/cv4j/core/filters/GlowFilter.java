@@ -17,6 +17,7 @@ package com.cv4j.core.filters;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.math.GaussianBlurFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -25,7 +26,7 @@ import com.cv4j.image.util.Tools;
 public class GlowFilter extends GaussianBlurFilter {
 
 	private float amount = 0.2f;
-	private int radius;
+	//private int radius;
 	
 	public void setAmount( float amount ) {
 		this.amount = amount;
@@ -49,30 +50,32 @@ public class GlowFilter extends GaussianBlurFilter {
 		// 高斯模糊
 		super.doFilter(src);
 
-		float a = 4*amount;
+		setRGB(R, G, B, R1, G1, B1);
 
-		int index = 0;
-		for ( int y = 0; y < height; y++ ) {
-			index = setRGB(R, G, B, index, a, width);
-		}
 		return src;
     }
 
-    private int setRGB(byte[] R, byte[] G, byte[] B, int index, float a, int width){
-		for ( int x = 0; x < width; x++ ) {
-			int r1 = R[index] & 0xff;
-			int g1 = G[index] & 0xff;
-			int b1 = B[index] & 0xff;
+    private void setRGB(byte[] R, byte[] G, byte[] B, byte[] R1, byte[] G1, byte[] B1){
+		final float a = 4 * this.amount;
+		final int value0000FF = 0x0000ff;
 
-			int r2 = R1[index] & 0xff;
-			int g2 = G1[index] & 0xff;
-			int b2 = B1[index] & 0xff;
+		int index = 0;
+		for ( int y = 0; y < height; y++ ) {
+			for (int x = 0; x < this.width; x++) {
+				int r1 = R[index] & value0000FF;
+				int g1 = G[index] & value0000FF;
+				int b1 = B[index] & value0000FF;
 
-			R[index] = (byte)Tools.clamp( (int)(r1 + a * r2) );
-			G[index] = (byte)Tools.clamp( (int)(g1 + a * g2) );
-			B[index] = (byte)Tools.clamp( (int)(b1 + a * b2) );
-			index++;
+				int r2 = R1[index] & value0000FF;
+				int g2 = G1[index] & value0000FF;
+				int b2 = B1[index] & value0000FF;
+
+				R[index] = SafeCasting.safeIntToByte(Tools.clamp(SafeCasting.safeFloatToInt(r1 + a * r2)));
+				G[index] = SafeCasting.safeIntToByte(Tools.clamp(SafeCasting.safeFloatToInt(g1 + a * g2)));
+				B[index] = SafeCasting.safeIntToByte(Tools.clamp(SafeCasting.safeFloatToInt(b1 + a * b2)));
+
+				index++;
+			}
 		}
-		return index;
     }
 }

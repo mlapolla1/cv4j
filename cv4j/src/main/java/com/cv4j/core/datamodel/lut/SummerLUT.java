@@ -25,11 +25,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class SummerLUT {
+public final class SummerLUT {
     /**
      * List of summer lut
      */
-    public static int[][] SUMMER_LUT = new int[][]{
+    public static final int[][] SUMMER_LUT = new int[][]{
             {0, 129, 101}, {0, 129, 101}, {1, 128, 101}, {2, 129, 102}, {3, 130, 103},
             {3, 130, 103}, {6, 130, 102}, {7, 131, 103}, {8, 131, 102}, {9, 132, 103},
             {11, 132, 101}, {12, 133, 102}, {12, 133, 100}, {13, 134, 101}, {14, 133, 101},

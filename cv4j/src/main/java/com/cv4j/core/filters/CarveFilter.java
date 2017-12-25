@@ -42,7 +42,6 @@ public class CarveFilter extends BaseFilter{
 		int halfRGB = 129;
         int index = 0;
         for(int row=1; row<height-1; row++) {
-        	int ta = 0;
         	int tr = 0;
         	int tg = 0;
         	int tb = 0;

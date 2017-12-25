@@ -25,11 +25,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class WinterLUT {
+public final class WinterLUT {
     /**
      * List of winter lut
      */
-    public static int[][] WINTER_LUT = new int[][]{
+    public static final int[][] WINTER_LUT = new int[][]{
             {0, 0, 254}, {1, 1, 255}, {0, 2, 253}, {0, 4, 253}, {0, 4, 253},
             {1, 5, 252}, {0, 6, 250}, {1, 7, 251}, {0, 8, 251}, {0, 9, 252},
             {0, 10, 250}, {0, 11, 249}, {0, 12, 249}, {0, 13, 249}, {0, 14, 247},

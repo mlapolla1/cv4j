@@ -72,7 +72,7 @@ public class PrincipalColorExtractor {
         createClusterPoints(R, G, B, width, height);
 
         // initialize the clusters for each point
-        double[] clusterDisValues = initializeCluster();
+        //double[] clusterDisValues = initializeCluster();
 
         //calculate the old summary
         calculateOldSummary();

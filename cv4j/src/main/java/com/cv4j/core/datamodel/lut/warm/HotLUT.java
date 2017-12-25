@@ -25,11 +25,11 @@ package com.cv4j.core.datamodel.lut.warm;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class HotLUT {
+public final class HotLUT {
     /**
      * List of hot lut
      */ 
-    public static  int[][] HOT_LUT = new int[][]{
+    public static  final int[][] HOT_LUT = new int[][]{
             {0, 0, 0}, {1, 1, 0}, {4, 0, 0}, {6, 0, 0}, {9, 1, 0},
             {12, 0, 0}, {14, 0, 0}, {16, 0, 0}, {20, 0, 0}, {22, 1, 0},
             {24, 0, 0}, {28, 0, 0}, {30, 0, 0}, {32, 0, 1}, {35, 0, 0},

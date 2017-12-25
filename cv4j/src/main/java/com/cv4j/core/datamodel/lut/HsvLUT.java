@@ -28,11 +28,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class HsvLUT {
+public final class HsvLUT {
     /**
      * List of hsv lut
      */
-    public static  int[][] HSV_LUT = new int[][]{
+    public static  final int[][] HSV_LUT = new int[][]{
             {253, 1, 0}, {255, 6, 0}, {255, 11, 1}, {254, 17, 1}, {255, 24, 1},
             {255, 30, 0}, {254, 36, 0}, {255, 42, 0}, {254, 48, 0}, {255, 54, 0},
             {254, 60, 0}, {254, 67, 0}, {255, 73, 0}, {254, 79, 0}, {254, 84, 0},

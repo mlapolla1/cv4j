@@ -28,12 +28,12 @@ public class MaerOperatorFilter extends GaussianBlurFilter {
     /**
      * Constant of four
      */
-	public static int[] FOUR = new int[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
+	public static final int[] FOUR = new int[] { 0, -1, 0, -1, 4, -1, 0, -1, 0 };
     
     /**
      * Constant of eight
      */
-	public static int[] EIGHT = new int[] { -1, -1, -1, -1, 8, -1, -1, -1, -1};
+	public static final int[] EIGHT = new int[] { -1, -1, -1, -1, 8, -1, -1, -1, -1};
 	
 	private boolean _4direction;
 

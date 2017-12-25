@@ -102,7 +102,6 @@ public class StrokeAreaFilter extends BaseFilter {
         final double sizeSqaured = this.size * this.size;
 
         for(int row=0; row<height; row++) {
-            int ta = 0;
             for(int col=0; col<width; col++) {
                 index = row * width + col;
                 rgb[INDEX0] = R[index] & VALUE_0000FF;

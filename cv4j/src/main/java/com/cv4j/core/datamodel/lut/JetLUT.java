@@ -28,11 +28,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class JetLUT {
+public final class JetLUT {
     /**
      * List of jet lut
      */
-    public static int[][] JET_LUT = new int[][]{
+    public static final int[][] JET_LUT = new int[][]{
             {0, 1, 128}, {0, 0, 130}, {0, 0, 132}, {1, 0, 136}, {0, 0, 142},
             {0, 0, 145}, {0, 0, 150}, {1, 0, 154}, {0, 0, 158}, {1, 0, 163},
             {0, 0, 166}, {0, 0, 170}, {0, 0, 175}, {0, 0, 179}, {0, 0, 182},
