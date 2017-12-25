@@ -24,10 +24,26 @@ import java.text.NumberFormat;
  */
 public class MeasureData {
 
-    private Point cp; // center x of the contour and center y of the contour
-    private double angle; // angle of the contour rotated
-    private double area; // measure the area of contour
-    private double roundness; // measure the possible circle of the contour
+    /**
+     * Center x of the contour and center y of the contour.
+     */
+    private Point cp = null;
+
+    /**
+     * Angle of the contour rotated.
+     */
+    private double angle = 0;
+
+    /**
+     * Measure the area of contour.
+     */
+    private double area = 0;
+
+    /**
+     * Measure the possible circle of the contour.
+     */
+    private double roundness = 0;
+
     public MeasureData() {
         super();
     }

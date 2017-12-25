@@ -42,27 +42,27 @@ public class HoughLinesP {
 	/**
 	 * The cosine LUT.
 	 */
-	private double[] cosLut;
+	private double[] cosLut = null;
 
 	/**
 	 * The sine LUT.
 	 */
-	private double[] sinLut;
+	private double[] sinLut = null;
 
 	/**
 	 * The acc size.
 	 */
-	private int accSize;
+	private int accSize = 0;
 
 	/**
 	 * The width.
 	 */
-	private int width;
+	private int width = 0;
 
 	/**
 	 * The height.
 	 */
-	private int height;
+	private int height = 0;
 
 	public HoughLinesP() {
 		setupCosLUT();

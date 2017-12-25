@@ -31,10 +31,25 @@ import java.util.concurrent.ExecutorService;
  */
 public class GaussianBlurFilter extends BaseFilter {
 
+    /**
+     * The kernel.
+     */
     private float[] kernel;
+
+    /**
+     * The sigma.
+     */
     private double sigma = 2;
-    ExecutorService mExecutor;
-    CompletionService<Void> service;
+
+    /**
+     * The executor service.
+     */
+    private ExecutorService mExecutor = null;
+
+    /**
+     * The completions service.
+     */
+    private CompletionService<Void> service = null;
 
     public GaussianBlurFilter() {
         kernel = new float[0];

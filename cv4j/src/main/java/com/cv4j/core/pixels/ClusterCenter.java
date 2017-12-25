@@ -28,11 +28,12 @@ public class ClusterCenter {
 	protected int cIndex;
 	protected int numOfPoints;
 
-	public ClusterCenter(int x, int y, int red, int green, int blue)
-	{
+	public ClusterCenter(int x, int y, int red, int green, int blue) {
 		this.x = x;
 		this.y = y;
 		this.color = new Scalar(red, green, blue);
+		this.cIndex = 0;
+		this.numOfPoints = 0;
 	}
 	
 	public double getX() {

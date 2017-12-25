@@ -53,7 +53,7 @@ public class StrokeAreaFilter extends BaseFilter {
     private static final int SIZE_DEFAULT = 15;
 
     // default value, optional value 30, 15, 10, 5, 2
-    private double size;
+    private double size = 0;
 
     public StrokeAreaFilter() {
         this(SIZE_DEFAULT);

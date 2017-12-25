@@ -23,10 +23,25 @@ import com.cv4j.core.datamodel.image.ImageProcessor;
  */
 public class FloatProcessor implements ImageProcessor {
 
+    /**
+     * The image width.
+     */
     private int width;
+
+    /**
+     * The image height.
+     */
     private int height;
+
+    /**
+     * The data.
+     */
     private float[] GRAY;
-    private ImageData image;
+
+    /**
+     * The image data.
+     */
+    private ImageData image = null;
 
     public FloatProcessor(float[] data, int w, int h) {
         this.GRAY   = data;

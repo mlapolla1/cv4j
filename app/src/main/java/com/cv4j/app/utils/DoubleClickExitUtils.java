@@ -19,10 +19,10 @@ import com.cv4j.app.R;
 public class DoubleClickExitUtils {
 
 	private final Activity mActivity;
-	
-	private boolean isOnKeyBacking;
+
 	private Handler mHandler;
-	private Toast mBackToast;
+	private boolean isOnKeyBacking = false;
+	private Toast mBackToast = null;
 
 	public DoubleClickExitUtils(Activity activity) {
 		mActivity = activity;

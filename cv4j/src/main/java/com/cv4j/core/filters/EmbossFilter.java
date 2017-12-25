@@ -25,54 +25,51 @@ import com.cv4j.image.util.Tools;
  * but more flexible, allowing more pixel value correction
  */
 public class EmbossFilter extends BaseFilter {
-	private int COLORCONSTANTS;
+
+	private int colorConstants;
 	private boolean out;
 
 	public EmbossFilter() {
-		this.COLORCONSTANTS = 100;
+		this.out = false;
+		this.colorConstants = 100;
 	}
 
 	public EmbossFilter(boolean out) {
 		this.out = out;
-		this.COLORCONSTANTS = 100;
+		this.colorConstants = 100;
 	}
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
-
 		int offset = 0;
-		int r1=0;
-		int g1=0;
-		int b1=0;
-		int r2=0;
-		int g2=0;
-		int b2=0;
-		int r=0;
-		int g=0;
-		int b=0;
 
 		byte[][] output = new byte[3][R.length];
 		for ( int y = 1; y < height-1; y++ ) {
 			offset = y*width;
-			setOutput(r, g, b, r1, g1, b1, r2, g2, b2, out, output, offset);
+			setOutput(out, output, offset);
 		}
 		((ColorProcessor)src).putRGB(output[0], output[1], output[2]);
-		output = null;
+
 		return src;
 	}
 
 
-	private void setOutput(int r, int g, int b, int r1, int g1, int b1, int r2, int g2, int b2, boolean isOut, byte [][] output, int offset){
+	private void setOutput(boolean isOut, byte[][] output, int offset){
+		final int value0000FF = 0x0000ff;
+
 		for ( int x = 1; x < width-1; x++ ) {
-				r1 = R[offset] & 0xff;
-				g1 = G[offset] & 0xff;
-				b1 = B[offset] & 0xff;
+			int r1 = R[offset] & value0000FF;
+			int g1 = G[offset] & value0000FF;
+			int b1 = B[offset] & value0000FF;
 
-				r2 = R[offset+width] & 0xff;
-				g2 = G[offset+width] & 0xff;
-				b2 = B[offset+width] & 0xff;
+			int r2 = R[offset + width] & value0000FF;
+			int g2 = G[offset + width] & value0000FF;
+			int b2 = B[offset + width] & value0000FF;
 
-				if(isOut) {
+			int r;
+			int g;
+			int b;
+			if(isOut) {
 					r = r1 - r2;
 					g = g1 - g2;
 					b = b1 - b2;
@@ -81,9 +78,9 @@ public class EmbossFilter extends BaseFilter {
 					g = g2 - g1;
 					b = b2 - b1;
 				}
-				r = Tools.clamp(r+COLORCONSTANTS);
-				g = Tools.clamp(g+COLORCONSTANTS);
-				b = Tools.clamp(b+COLORCONSTANTS);
+				r = Tools.clamp(r + colorConstants);
+				g = Tools.clamp(g + colorConstants);
+				b = Tools.clamp(b + colorConstants);
 
 				output[0][offset] = SafeCasting.safeIntToByte(r);
 				output[1][offset] = SafeCasting.safeIntToByte(g);

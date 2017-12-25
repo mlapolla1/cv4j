@@ -25,15 +25,15 @@ public class PixelNode implements Comparable<PixelNode>, Serializable {
     /**
 	 * Index number
 	 */	
-	public int index;
+	public int index = 0;
 	/**
 	 * Row number
 	 */	
-	public int row;
+	public int row = 0;
 	/**
 	 * Column number
 	 */	
-	public int col;
+	public int col = 0;
 
 	/**
 	 * Default constructor.

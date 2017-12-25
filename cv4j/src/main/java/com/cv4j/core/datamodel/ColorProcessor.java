@@ -69,32 +69,32 @@ public class ColorProcessor implements ImageProcessor {
     /**
      * The R values from RGB.
      */
-    private byte[] R;
+    private byte[] R = null;
 
     /**
      * The G values from RGB.
      */
-    private byte[] G;
+    private byte[] G = null;
 
     /**
      * The B values from RGB.
      */
-    private byte[] B;
-
-    /**
-     * The image data.
-     */
-    private ImageData image;
+    private byte[] B = null;
 
     /**
      * The image's width.
      */
-    private int width;
+    private int width = 0;
 
     /**
      * The image's height.
      */
-    private int height;
+    private int height = 0;
+
+    /**
+     * The image data.
+     */
+    private ImageData image = null;
 
     /**
      * The ColorProcessor constructor.
@@ -211,7 +211,7 @@ public class ColorProcessor implements ImageProcessor {
         int[] pixels = new int[width * height];
         for (int i=0; i < pixels.length; i++){
             pixels[i] = valueFF000000 | ((R[i] & VALUE_0000FF) << VALUE_16)
-                                      | ((G[i] & VALUE_0000FF)<< VALUE_8)
+                                      | ((G[i] & VALUE_0000FF) << VALUE_8)
                                       |   B[i] & VALUE_0000FF;
         }
 
@@ -259,7 +259,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public int[] toInt(int index) {
-        int[] data = new int[0];
+        int[] data;
 
         switch (index) {
             case RED_CHANNEL_INDEX:
@@ -283,7 +283,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public byte[] toByte(int index) {
-        byte[] data = new byte[0];
+        byte[] data;
 
         switch (index) {
             case RED_CHANNEL_INDEX:

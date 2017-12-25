@@ -37,22 +37,40 @@ import java.io.InputStream;
 public class CV4JImage implements ImageData {
 
     //private static final long serialVersionUID = -8832812623741546452L;
+
+    /**
+     * The image's width.
+     */
     private int width;
+
+    /**
+     * The image's height.
+     */
     private int height;
+
+    /**
+     * The image processor of the image.
+     */
     private ImageProcessor processor;
-    private Bitmap bitmap;
+
+    /**
+     * The bitmap.
+     */
+    private Bitmap bitmap = null;
 
     public CV4JImage(Bitmap bitmap) {
         if (bitmap == null) {
             throw new CV4JException("bitmap is null");
         }
-        width = bitmap.getWidth();
-        height = bitmap.getHeight();
+
+        this.width = bitmap.getWidth();
+        this.height = bitmap.getHeight();
+
         int[] input = new int[width * height];
         bitmap.getPixels(input, 0, width, 0, 0, width, height);
-        processor = new ColorProcessor(input,width, height);
+
+        this.processor = new ColorProcessor(input,width, height);
         ((ColorProcessor)processor).setCallBack(this);
-        input = null;
     }
 
     public CV4JImage(InputStream inputStream) {
@@ -67,13 +85,15 @@ public class CV4JImage implements ImageData {
             System.out.println("Error: Exception handle by OutOfMemoryError");
         }
 
-        width = bitmap.getWidth();
-        height = bitmap.getHeight();
+        this.width  = bitmap.getWidth();
+        this.height = bitmap.getHeight();
+
         int[] input = new int[width * height];
         bitmap.getPixels(input, 0, width, 0, 0, width, height);
-        processor = new ColorProcessor(input,width, height);
-        ((ColorProcessor)processor).setCallBack(this);
-        input = null;
+
+        this.processor = new ColorProcessor(input,width, height);
+        ((ColorProcessor) processor).setCallBack(this);
+
         IOUtils.closeQuietly(inputStream);
     }
 
@@ -89,31 +109,29 @@ public class CV4JImage implements ImageData {
             System.out.println("Error: Exception handle by OutOfMemoryError");
         }
 
-        width = bitmap.getWidth();
-        height = bitmap.getHeight();
+        this.width = bitmap.getWidth();
+        this.height = bitmap.getHeight();
+
         int[] input = new int[width * height];
         bitmap.getPixels(input, 0, width, 0, 0, width, height);
-        processor = new ColorProcessor(input,width, height);
-        ((ColorProcessor)processor).setCallBack(this);
-        input = null;
+
+        this.processor = new ColorProcessor(input,width, height);
+        ((ColorProcessor) processor).setCallBack(this);
     }
 
     public CV4JImage(int width,int height) {
-
         this.width = width;
         this.height = height;
-        processor = new ByteProcessor(new byte[width*height],width,height);
-        ((ByteProcessor)processor).setCallBack(this);
+        this.processor = new ByteProcessor(new byte[width*height],width,height);
+        ((ByteProcessor) processor).setCallBack(this);
     }
 
     public CV4JImage(int width, int height, int[] pixels) {
-
         this.width = width;
         this.height = height;
 
-        processor = new ColorProcessor(pixels,width, height);
-        ((ColorProcessor)processor).setCallBack(this);
-        pixels = null;
+        this.processor = new ColorProcessor(pixels,width, height);
+        ((ColorProcessor) processor).setCallBack(this);
     }
 
     public ImageProcessor getProcessor() {

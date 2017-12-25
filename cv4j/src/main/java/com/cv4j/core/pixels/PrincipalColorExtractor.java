@@ -37,10 +37,20 @@ public class PrincipalColorExtractor {
 	 */
 	private static final int NUM_CLUSTERS_DEFAULT = 5;
 
-	private List<ClusterCenter> clusterCenterList;
-	private List<ClusterPoint> pointList;
-	
-	private int numOfCluster;
+	/**
+	 * The list of cluster center.
+	 */
+	private List<ClusterCenter> clusterCenterList = null;
+
+	/**
+	 * The list of cluster points.
+	 */
+	private List<ClusterPoint> pointList = null;
+
+	/**
+	 * The number of clusters.
+	 */
+	private int numOfCluster = 0;
 	
 	public PrincipalColorExtractor(int clusters) {
 		this.numOfCluster = clusters;
