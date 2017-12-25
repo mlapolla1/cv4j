@@ -22,22 +22,22 @@ public class Line {
     /**
      * Coordinate x, point one.
      */
-    public int x1;
+    public int x1 = 0;
     
     /**
      * Coordinate y, point one.
      */
-    public int y1;
+    public int y1 = 0;
     
     /**
      * Coordinate x, point two.
      */
-    public int x2;
+    public int x2 = 0;
     
     /**
      * Coordinate y, point two.
      */
-    public int y2;
+    public int y2 = 0;
 
     /**
      * Set line's coordinates.

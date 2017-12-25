@@ -28,7 +28,7 @@ public class SharpFilter extends BaseFilter {
     /**
      * The kernel
      */
-	public static int[] kernel = new int[] {
+	private static int[] kernel = new int[] {
 		-1, -1, -1, -1, 12, -1, -1, -1, -1
 	};
 
@@ -118,6 +118,8 @@ public class SharpFilter extends BaseFilter {
 			break;
 		case TYPE_COLOR_BLUE:
 			arrayColor = B;
+			break;
+		default: // empty default.
 			break;
 		}
 

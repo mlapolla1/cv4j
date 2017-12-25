@@ -63,7 +63,7 @@ public class FastEPFilter implements CommonFilter {
 	public FastEPFilter() {
 		this.sigma = 10.0f;
 		this.xr    = 0;
-		this.xr    = 0;
+		this.yr    = 0;
 	}
 	
 	public void setWinsize(int radius) {
@@ -127,7 +127,7 @@ public class FastEPFilter implements CommonFilter {
 		}
 	}
 
-	private void setOutput(byte[] output, int col, int r, int sr, int size, int a, float sigma2, int offset){
+	private void setOutput(byte[] output, int col, int r, int sr, int size, float a, float sigma2, int offset){
 		float b = sr / size;
 		float c = (a - (sr*sr)/size)/size;
 		float d = c / (c+sigma2);
