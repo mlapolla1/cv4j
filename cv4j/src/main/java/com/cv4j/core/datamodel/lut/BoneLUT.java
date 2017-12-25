@@ -26,11 +26,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class BoneLUT {
+public final class BoneLUT {
 	/**
 	 * List of bone lut
 	 */
-	public static  int[][] BONE_LUT = new int[][]{
+	public static final int[][] BONE_LUT = new int[][]{
 			{0, 0, 0}, {1, 1, 1}, {2, 2, 2}, {3, 3, 3}, {4, 4, 4}, {4, 4, 4},
 			{5, 5, 7}, {6, 6, 8}, {7, 7, 9}, {8, 8, 10}, {9, 8, 13}, {10, 9, 14},
 			{11, 10, 15}, {12, 11, 16}, {13, 12, 17}, {14, 13, 18}, {15, 14, 19},

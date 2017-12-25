@@ -116,7 +116,6 @@ public class CompareHist {
      */
     public double ncc(int[] source, int[] target) {
         int len = source.length;
-        double[] mixedData = new double[len];
         double sum1=0, sum2=0, sum3=0;
         if(source.length != target.length) {
             throw new CV4JException("number of histogram bins is not same...");

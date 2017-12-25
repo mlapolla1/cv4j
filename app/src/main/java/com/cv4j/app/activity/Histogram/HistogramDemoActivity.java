@@ -36,7 +36,7 @@ public class HistogramDemoActivity extends BaseActivity {
 
     @InjectExtra(key = "Title")
     String title;
-    private int[] colors;
+    //private int[] colors;
 
     /**
      * Creation of the app.

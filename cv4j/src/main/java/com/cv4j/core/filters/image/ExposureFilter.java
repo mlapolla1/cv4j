@@ -26,9 +26,6 @@ public class ExposureFilter extends BaseFilter {
     @Override
     public ImageProcessor doFilter(ImageProcessor src) {
 
-        int tr=0;
-        int tg=0;
-        int tb=0;
         int size = R.length;
         for(int i=0; i<size; i++) {
             R[i] = (byte)~R[i];

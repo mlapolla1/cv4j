@@ -79,11 +79,7 @@ public class OilPaintFilter extends BaseFilter {
 
 
         for(int row=0; row<height; row++) {
-            int ta = 0;
-            int tr = 0;
-            int tg = 0;
-            int tb = 0;
-            setOutputs(intensityCount, ravg, gavg, bavg, output, row, width, index);
+            setOutputs(intensityCount, ravg, gavg, bavg, output, row, width, index, subradius);
         }
 
         ((ColorProcessor) src).putRGB(output[0], output[1], output[2]);
@@ -91,8 +87,13 @@ public class OilPaintFilter extends BaseFilter {
         return src;
     }
 
-    private void setOutputs(int[] intensityCount, int[] ravg, int[] gavg, int[] bavg, byte[][] output, int row, int width, int index){
+    private void setOutputs(int[] intensityCount, int[] ravg, int[] gavg, int[] bavg,
+                            byte[][] output, int row, int width, int index, int subradius){
         for(int col=0; col<width; col++) {
+            int tr = 0;
+            int tg = 0;
+            int tb = 0;
+            setAvg(row, col, subradius, index, tr, tg, tb, intensityCount, ravg, gavg, bavg);
             // find the max number of same gray level pixel
             int maxIndex = findMaxNumberIndex(intensityCount);
             int maxCount = intensityCount[maxIndex];

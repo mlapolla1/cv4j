@@ -111,7 +111,7 @@ public class LineDetectionActivity extends BaseActivity {
 
         CV4JImage cv4JImage = new CV4JImage(bitmap);
         ByteProcessor grayByteProcessor = (ByteProcessor) cv4JImage.convert2Gray().getProcessor();
-        ImageProcessor imageProcessor = cv4JImage.getProcessor();
+
 
         Threshold threshold = new Threshold();
         threshold.process(grayByteProcessor, Threshold.THRESH_OTSU, Threshold.METHOD_THRESH_BINARY, maxRgb);

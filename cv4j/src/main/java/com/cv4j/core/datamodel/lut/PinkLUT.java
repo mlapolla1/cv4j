@@ -26,11 +26,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class PinkLUT {
+public final class PinkLUT {
     /**
      * List of pink lut
      */
-    public static int[][] PINK_LUT = new int[][]{
+    public static final int[][] PINK_LUT = new int[][]{
             {1, 0, 0}, {10, 6, 5}, {19, 14, 11}, {29, 19, 18}, {38, 26, 26},
             {44, 30, 30}, {49, 31, 31}, {52, 34, 34}, {57, 37, 36}, {59, 39, 38},
             {63, 42, 41}, {65, 44, 43}, {69, 45, 45}, {71, 47, 47}, {74, 48, 49},

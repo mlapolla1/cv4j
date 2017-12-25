@@ -26,11 +26,11 @@ package com.cv4j.core.datamodel.lut;
  * <a target="_blank" href="http://matlab.izmiran.ru/help/techdoc/ref/colormap.html">MATLAB Function Reference - colormap</a>
  *
  */
-public class CoolLUT {
+public final class CoolLUT {
     /**
      * List of cool lut
      */
-    public static  int[][] COOL_LUT = new int[][]{
+    public static  final int[][] COOL_LUT = new int[][]{
             {0, 255, 255}, {0, 254, 255}, {1, 253, 255}, {3, 252, 255}, {4, 251, 255},
             {5, 250, 255}, {7, 248, 255}, {7, 248, 255}, {8, 247, 254}, {8, 247, 254},
             {11, 245, 255}, {11, 245, 255}, {12, 242, 255}, {12, 242, 255}, {15, 241, 255},

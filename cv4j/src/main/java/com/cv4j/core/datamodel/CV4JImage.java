@@ -36,7 +36,7 @@ import java.io.InputStream;
  */
 public class CV4JImage implements ImageData {
 
-    private static final long serialVersionUID = -8832812623741546452L;
+    //private static final long serialVersionUID = -8832812623741546452L;
     private int width;
     private int height;
     private ImageProcessor processor;
@@ -64,7 +64,7 @@ public class CV4JImage implements ImageData {
         try {
             bitmap = BitmapFactory.decodeStream(inputStream);
         } catch (OutOfMemoryError e) {
-            return;
+            System.out.println("Error: Exception handle by OutOfMemoryError");
         }
 
         width = bitmap.getWidth();
@@ -86,7 +86,7 @@ public class CV4JImage implements ImageData {
         try {
             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         } catch (OutOfMemoryError e) {
-            return;
+            System.out.println("Error: Exception handle by OutOfMemoryError");
         }
 
         width = bitmap.getWidth();

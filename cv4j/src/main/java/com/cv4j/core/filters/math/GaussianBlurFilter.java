@@ -60,7 +60,7 @@ public class GaussianBlurFilter extends BaseFilter {
 
             final int temp = i;
             service.submit(new Callable<Void>() {
-                public Void call() throws Exception {
+                public Void call()  {
                     byte[] inPixels = src.toByte(temp);
                     byte[] temp = new byte[size];
                     blur(inPixels, temp, width, height); // H Gaussian
