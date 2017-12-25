@@ -29,7 +29,7 @@ public final class SummerLUT {
     /**
      * List of summer lut
      */
-    public static final int[][] SUMMER_LUT = new int[][]{
+    private static final int[][] SUMMER_LUT = new int[][]{
             {0, 129, 101}, {0, 129, 101}, {1, 128, 101}, {2, 129, 102}, {3, 130, 103},
             {3, 130, 103}, {6, 130, 102}, {7, 131, 103}, {8, 131, 102}, {9, 132, 103},
             {11, 132, 101}, {12, 133, 102}, {12, 133, 100}, {13, 134, 101}, {14, 133, 101},
@@ -84,4 +84,7 @@ public final class SummerLUT {
             {255, 255, 103}
     };
 
+    public static int[][] getSummerLut() {
+        return SUMMER_LUT;
+    }
 }

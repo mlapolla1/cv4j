@@ -30,7 +30,7 @@ public final class PinkLUT {
     /**
      * List of pink lut
      */
-    public static final int[][] PINK_LUT = new int[][]{
+    private static final int[][] PINK_LUT = new int[][]{
             {1, 0, 0}, {10, 6, 5}, {19, 14, 11}, {29, 19, 18}, {38, 26, 26},
             {44, 30, 30}, {49, 31, 31}, {52, 34, 34}, {57, 37, 36}, {59, 39, 38},
             {63, 42, 41}, {65, 44, 43}, {69, 45, 45}, {71, 47, 47}, {74, 48, 49},
@@ -84,4 +84,8 @@ public final class PinkLUT {
             {253, 254, 249}, {254, 255, 250}, {254, 254, 252}, {254, 254, 252}, {255, 255, 255},
             {255, 255, 255}
     };
+
+    public static int[][] getPinkLut() {
+        return PINK_LUT;
+    }
 }

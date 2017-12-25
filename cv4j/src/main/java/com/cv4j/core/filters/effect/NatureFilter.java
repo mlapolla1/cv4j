@@ -241,7 +241,7 @@ public class NatureFilter extends BaseFilter {
 		float r = Math.abs(tr - metalFactor);
 		float g = Math.abs(r - metalFactor);
 		float b = Math.abs(g - metalFactor);	
-		float grayFloat = setGrayFloat(float r, float g, float b);
+		float grayFloat = setGrayFloat(r, g, b);
 		int r1 = 70;
 		int r2 = 128;
 		int rgbFactor = 100;

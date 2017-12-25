@@ -29,7 +29,7 @@ public final class HotLUT {
     /**
      * List of hot lut
      */ 
-    public static  final int[][] HOT_LUT = new int[][]{
+    private static  final int[][] HOT_LUT = new int[][]{
             {0, 0, 0}, {1, 1, 0}, {4, 0, 0}, {6, 0, 0}, {9, 1, 0},
             {12, 0, 0}, {14, 0, 0}, {16, 0, 0}, {20, 0, 0}, {22, 1, 0},
             {24, 0, 0}, {28, 0, 0}, {30, 0, 0}, {32, 0, 1}, {35, 0, 0},
@@ -84,4 +84,7 @@ public final class HotLUT {
             {255, 255, 251}
     };
 
+    public static int[][] getHotLut() {
+        return HOT_LUT;
+    }
 }

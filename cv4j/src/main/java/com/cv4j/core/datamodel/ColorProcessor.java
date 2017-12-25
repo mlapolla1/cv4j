@@ -259,7 +259,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public int[] toInt(int index) {
-        int[] data;
+        int[] data = null;
 
         switch (index) {
             case RED_CHANNEL_INDEX:
@@ -283,7 +283,7 @@ public class ColorProcessor implements ImageProcessor {
 
     @Override
     public byte[] toByte(int index) {
-        byte[] data;
+        byte[] data = null;
 
         switch (index) {
             case RED_CHANNEL_INDEX:

@@ -30,7 +30,7 @@ public final class AutumnLUT {
     /**
      * List of autumn lut
      */
-    public static final int[][] AUTUMN_LUT = new int[][]{
+    private static final int[][] AUTUMN_LUT = new int[][]{
             {254, 0, 0}, {255, 1, 1}, {255, 1, 0}, {255, 2, 0}, {255, 5, 0}, {255, 5, 0},
             {255, 7, 0}, {255, 7, 0}, {255, 8, 1}, {255, 9, 2}, {254, 10, 0}, {255, 11, 1},
             {254, 12, 0}, {255, 13, 1}, {255, 13, 0}, {255, 15, 0}, {255, 16, 0}, {254, 17, 0},
@@ -75,4 +75,8 @@ public final class AutumnLUT {
             {255, 246, 0}, {255, 247, 0}, {255, 248, 0}, {254, 249, 0}, {254, 251, 0}, {255, 252, 0},
             {255, 253, 0}, {255, 253, 0}, {254, 254, 0}, {255, 255, 1}
     };
+
+    public static int[][] getAutumnLut() {
+        return AUTUMN_LUT;
+    }
 }
