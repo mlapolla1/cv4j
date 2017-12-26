@@ -124,7 +124,7 @@ public class QRFragment extends BaseFragment {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         float width = 10f;
-        paint.setStrokeWidth((float) width);
+        paint.setStrokeWidth(width);
         paint.setStyle(Paint.Style.STROKE);
 
         int diff = 20;

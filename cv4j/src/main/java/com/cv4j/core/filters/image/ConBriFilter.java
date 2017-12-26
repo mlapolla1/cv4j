@@ -17,6 +17,7 @@ package com.cv4j.core.filters.image;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -26,47 +27,53 @@ import com.cv4j.image.util.Tools;
  */
 public class ConBriFilter extends BaseFilter {
 
-	private float contrast = 1.2f; // default value;
-	private float brightness = 0.7f; // default value;
+	/**
+	 * The value of 0000FF.
+	 */
+	private static final int VALUE_0000FF = 0x0000ff;
+
+	/**
+	 * The contrast.
+	 */
+	private float contrast = 1.2f;
+
+	/**
+	 * The brightness.
+	 */
+	private float brightness = 0.7f;
 
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src) {
         
         // calculate RED, GREEN, BLUE means of pixel
-		int[] rgbmeans = new int[3];
+		int[] rgbMeans = new int[3];
+
 		double redSum = 0;
 		double greenSum = 0;
 		double blueSum = 0;
+
 		int total = height * width;
-		int r=0;
-		int g=0;
-		int b=0;
+
         for(int i=0; i<total; i++) {
-			r = R[i] & 0xff;
-			g = G[i] & 0xff;
-			b = B[i] & 0xff;
-			redSum += r;
-			greenSum += g;
-			blueSum +=b;
+			redSum   += R[i] & VALUE_0000FF;
+			greenSum += G[i] & VALUE_0000FF;
+			blueSum  += B[i] & VALUE_0000FF;
         }
-        rgbmeans[0] = (int)(redSum / total);
-        rgbmeans[1] = (int)(greenSum / total);
-        rgbmeans[2] = (int)(blueSum / total);
+
+        rgbMeans[0] = (int)(redSum / total);
+        rgbMeans[1] = (int)(greenSum / total);
+        rgbMeans[2] = (int)(blueSum / total);
         
         // adjust contrast and brightness algorithm, here
-        setRGBArrays(total, rgbmeans);
+        setRGBArrays(total, rgbMeans);
         return src;
 	}
 
 	private void setRGBArrays(int total, int[] rgbmeans) {
-		int r = 0;
-		int g = 0;
-		int b = 0;
-
 		for(int i=0; i<total; i++) {
-			r = R[i] & 0xff;
-			g = G[i] & 0xff;
-			b = B[i] & 0xff;
+			int r = R[i] & VALUE_0000FF;
+			int g = G[i] & VALUE_0000FF;
+			int b = B[i] & VALUE_0000FF;
 
 			// remove means
 			r -=rgbmeans[0];
@@ -74,18 +81,18 @@ public class ConBriFilter extends BaseFilter {
 			b -=rgbmeans[2];
 
 			// adjust contrast now !!!
-			r = (int)(r * getContrast());
-			g = (int)(g * getContrast());
-			b = (int)(b * getContrast());
+			r *= this.contrast;
+			g *= this.contrast;
+			b *= this.contrast;
 
 			// adjust brightness
-			r += (int)(rgbmeans[0] * getBrightness());
-			g += (int)(rgbmeans[1] * getBrightness());
-			b += (int)(rgbmeans[2] * getBrightness());
+			r += rgbmeans[0] * this.contrast;
+			g += rgbmeans[1] * this.contrast;
+			b += rgbmeans[2] * this.contrast;
 
-			R[i] = (byte)Tools.clamp(r);
-			G[i] = (byte)Tools.clamp(g);
-			B[i] = (byte)Tools.clamp(b);
+			R[i] = SafeCasting.safeIntToByte(Tools.clamp(r));
+			G[i] = SafeCasting.safeIntToByte(Tools.clamp(g));
+			B[i] = SafeCasting.safeIntToByte(Tools.clamp(b));
         }
 	}
 

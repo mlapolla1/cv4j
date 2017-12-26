@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 
 import com.cv4j.core.datamodel.ByteProcessor;
 import com.cv4j.core.datamodel.Line;
+import com.cv4j.core.utils.SafeCasting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,13 +90,11 @@ public class HoughLinesP {
 		int[] acc = new int[rMax * DEGREE_180]; // 0 ~ 180角度范围
 		byte[] input = binary.getGray();
 
-		int r = 0;
-
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if ((input[y * width + x] & andValue) == MAX_RGB) {
 					for (int theta = 0; theta < DEGREE_180; theta++) {
-						r = (int) (x * cosLut[theta] + y * sinLut[theta]); // 计算出极坐标
+						int r = SafeCasting.safeDoubleToInt(x * cosLut[theta] + y * sinLut[theta]); // 计算出极坐标
 						if ((r > 0) && (r <= rMax)) {
 							acc[r * DEGREE_180 + theta] = acc[r * DEGREE_180 + theta] + 1; // 在斜率范围内的点，极坐标相同
 						}
@@ -308,7 +307,8 @@ public class HoughLinesP {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				int temp = (int) (x * cosLut[theta] + y * sinLut[theta]);
+				int temp = SafeCasting.safeDoubleToInt(x * cosLut[theta] + y * sinLut[theta]);
+
 				if ((temp - r) == 0) {// 变换坐标并绘制
 					if(x > x2) {
 						x2 = x;
