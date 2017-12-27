@@ -237,6 +237,7 @@ public class NatureFilter extends BaseFilter {
 	}
 
 	private void calculateMetalStyle(int[] pixel, int tr, int tg, int tb) {
+		System.out.println(tg+" "+tb);
 		int metalFactor = 64;
 		float r = Math.abs(tr - metalFactor);
 		float g = Math.abs(r - metalFactor);

@@ -13,9 +13,9 @@ public abstract class FastBase {
      * The process
      * @param binary           The byte processor.
      * @param structureElement The structure element.
-     * @param iteration        The number of times.
+     * param iteration        The number of times.
      */
-    public void process(ByteProcessor binary, Size structureElement, int iteration) {
+    public void process(ByteProcessor binary, Size structureElement) {
         final int width = binary.getWidth();
         final int height = binary.getHeight();
 

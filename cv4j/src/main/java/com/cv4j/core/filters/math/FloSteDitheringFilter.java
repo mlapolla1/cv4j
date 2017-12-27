@@ -88,6 +88,7 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void rowAndColSmaller(int row, int col, byte[] GRAY, int height, int width, int er) {
+        System.out.println(height);
         int k = (row + 1) * width + col + 1;
         float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[2]);
 
@@ -95,6 +96,7 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void rowPlusOneSmallerHeight(int row, int col, byte[] GRAY, int height, int width, int er) {
+        System.out.println(height);
         int k = (row + 1) * width + col;
         float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[1]);
 
@@ -102,6 +104,7 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void rowSmallerHeight(int row, int col, byte[] GRAY, int er, int height, int width) {
+        System.out.println(height);
         int k = (row + 1) * width + col - 1;
         float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[0]);
 

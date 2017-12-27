@@ -80,7 +80,7 @@ public class CompositeFilersActivity extends BaseActivity {
 
         codeView.setTheme(CodeViewTheme.ANDROIDSTUDIO).fillColor();
 
-        StringBuilder code = new StringBuilder();
+        StringBuilder code = new StringBuilder(16);
         code.append("CompositeFilters compositeFilters = new CompositeFilters();")
                 .append(newLine)
                 .append("Bitmap newBitmap = compositeFilters")

@@ -211,11 +211,11 @@ public class CV4JImage implements ImageData {
 
     /**
      * 保存图片到指定路径
-     * @param image
+     * param image
      * @param format 支持jpg、png、webp
      * @param path
      */
-    public void savePic(Bitmap image, Bitmap.CompressFormat format, String path) {
+    public void savePic(Bitmap.CompressFormat format, String path) {
         File file = new File(path);
         FileOutputStream out = null;
 

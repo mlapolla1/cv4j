@@ -201,6 +201,7 @@ public class CalcHistogram {
     }
 
     private void setWh(int obin, double currbin, double prebin,  int[] wh, int bins, int k, int[] hist, double w1, double w2){
+        System.out.println(bins);
         int nbin = (int)Math.floor(currbin);
 
         for(int j=obin; j<=nbin; j++) {
@@ -210,10 +211,11 @@ public class CalcHistogram {
         w1 = prebin - obin;
         w2 = currbin - nbin;
         if(w1 > 0 && w1 < 1) {
-            wh[k] = (int)(wh[k] - hist[obin]*w1);
+            wh[k] -= hist[obin] * w1;
         }
+
         if(w2 > 0 && w2 < 1) {
-            wh[k] = (int)(wh[k] + hist[nbin+1]*w2);
+            wh[k] += hist[nbin+1] * w2;
         }
     }
 
