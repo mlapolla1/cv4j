@@ -211,6 +211,7 @@ public class IntIntegralImage {
 
 	public void process(int distance, int elevation, boolean includeSqrt) {
 		final int size = (this.width * this.height);
+		System.out.println(includeSqrt);
 
 		this.width     = distance;
 		this.height    = elevation;

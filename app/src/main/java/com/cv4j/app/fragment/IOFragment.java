@@ -62,7 +62,7 @@ public class IOFragment extends BaseFragment {
 
         codeView1.setTheme(CodeViewTheme.ANDROIDSTUDIO).fillColor();
 
-        StringBuilder code = new StringBuilder();
+        StringBuilder code = new StringBuilder(16);
         code.append("CV4JImage cv4JImage = new CV4JImage(bitmap);")
                 .append("\r\n")
                 .append("image2.setImageBitmap(cv4JImage.toBitmap());");
@@ -71,7 +71,7 @@ public class IOFragment extends BaseFragment {
 
         codeView2.setTheme(CodeViewTheme.ANDROIDSTUDIO).fillColor();
 
-        code = new StringBuilder();
+        code = new StringBuilder(16);
         code.append("RxImageData.bitmap(bitmap).into(image2);");
 
         codeView2.showCode(code.toString());

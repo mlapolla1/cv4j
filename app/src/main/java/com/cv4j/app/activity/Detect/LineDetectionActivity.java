@@ -100,7 +100,8 @@ public class LineDetectionActivity extends BaseActivity {
         ByteProcessor byteProcessor = (ByteProcessor) cv4JImage.getProcessor();
 
         HoughLinesP houghLinesP = new HoughLinesP();
-        houghLinesP.process(byteProcessor, accSize, minGap, minAcc, lines);
+        //houghLinesP.process(byteProcessor, accSize, minGap, minAcc, lines);
+        houghLinesP.process(byteProcessor, accSize, lines);
     }
 
     private CV4JImage initImage1() {

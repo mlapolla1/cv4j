@@ -159,7 +159,7 @@ public class ChainCode extends CourtEdge {
 		return INVALID_COL_VALUE;
 	}
 
-	private int checkCol4Col5(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+	private int checkCol4Col5(byte[] pixels1, int[] codeMap, int row, int col, int width) {
 		int offset = row * width;
 
 		if((col-1) >= 0) {
@@ -183,7 +183,7 @@ public class ChainCode extends CourtEdge {
 		return INVALID_COL_VALUE;
 	}
 
-	private int checkCol6Col7(byte[] pixels1, int[] codeMap, int row, int col, int width, int height) {
+	private int checkCol6Col7(byte[] pixels1, int[] codeMap, int row, int col, int width) {
 		int offset = row * width;
 
 		if((row-1) >= 0) {
@@ -220,12 +220,12 @@ public class ChainCode extends CourtEdge {
 			return result;
 		}
 
-		result = checkCol4Col5(pixels1, codeMap, row, col, width, height);
+		result = checkCol4Col5(pixels1, codeMap, row, col, width);
 		if (result != INVALID_COL_VALUE) {
 			return result;
 		}
 
-		result = checkCol6Col7(pixels1, codeMap, row, col, width, height);
+		result = checkCol6Col7(pixels1, codeMap, row, col, width);
 
 
 

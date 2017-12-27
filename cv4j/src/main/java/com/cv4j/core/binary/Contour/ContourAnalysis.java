@@ -38,7 +38,7 @@ public class ContourAnalysis {
     }
 
     private void assignLabels(Map<Integer, List<PixelNode>> aggregationMap, List<MeasureData> measureDataList) {
-        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
+        Integer[] keys = (Integer[])  aggregationMap.keySet().toArray();
         List<PixelNode> pixelList = null;
         GeoMoments moments = new GeoMoments();
 

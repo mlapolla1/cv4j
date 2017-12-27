@@ -49,14 +49,12 @@ public class ProjectionHist {
         int width = src.getWidth();
         int height = src.getHeight();
         byte[] data = src.getGray();
-        float xstep = width / 4.0f;
-        float ystep = height / 5.0f;
         int index = 0;
         if(direction == X_DIRECTION) {
-            calculateProjectionXDirection(width, height, bins, index, xstep, data, output);
+            calculateProjectionXDirection(width, height, bins, index, data, output);
         } else {
             // calculate X Projection
-            calculateProjectionYDirection(width, height, bins, index, ystep, data, output);
+            calculateProjectionYDirection(width, height, bins, index, data, output);
         }
     }
 
@@ -66,13 +64,12 @@ public class ProjectionHist {
      * @param height
      * @param bins
      * @param index
-     * @param xstep
      * @param data
      * @param output projection of X direction
      */
-    private void calculateProjectionXDirection(int width, int height, int bins, int index, float xstep, byte[] data, double[] output) {
-        xstep = width / bins;
-        for (float x = 0; x < width; x += xstep) {
+    private void calculateProjectionXDirection(int width, int height, int bins, int index, byte[] data, double[] output) {
+        int xstep = width / bins;
+        for (int x = 0; x < width; x += xstep) {
             if ((xstep + x) - width > 1)
                 continue;
             output[index] = getWeightBlackNumber(data, width, height, x, 0, xstep, height);
@@ -86,13 +83,12 @@ public class ProjectionHist {
      * @param height
      * @param bins
      * @param index
-     * @param ystep
      * @param data
      * @param output projection of Y direction
      */
-    private void calculateProjectionYDirection(int width, int height, int bins, int index, float ystep, byte[] data, double[] output) {
-        ystep = height / bins;
-        for (float y = 0; y < height; y += ystep) {
+    private void calculateProjectionYDirection(int width, int height, int bins, int index, byte[] data, double[] output) {
+        int ystep = height / bins;
+        for (int y = 0; y < height; y += ystep) {
             if ((y + ystep) - height > 1) continue;
             output[index] = getWeightBlackNumber(data, width, height, 0, y, width, ystep);
             index++;

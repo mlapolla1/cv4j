@@ -72,7 +72,7 @@ public class CompareHist3Fragment extends BaseFragment {
      */
     private StringBuilder compareHistograms(int[][] source, int[][] target) {
         CompareHist compareHist = new CompareHist();
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(16);
 
         double sum1 = 0;
         double sum2 = 0;

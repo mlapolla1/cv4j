@@ -116,6 +116,7 @@ public class GaussianBackProjection {
      * @return the sum
      */
     private float sumRgbValues(ImageProcessor src, int row, int col, int index, float[] rmdev, float[] gmdev) {
+        System.out.println(col+" "+row);
         int r = 0, g = 0, b = 0;
         float pr = 0, pg = 0, sum = 0;
 

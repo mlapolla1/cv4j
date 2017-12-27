@@ -282,7 +282,7 @@ public class ConnectedAreaLabel {
     private int assignLabels(Map<Integer, List<PixelNode>> aggregationMap, int[] labelMask, boolean drawBounding, List<Rect> rectangles) {
         int number = 0;
 
-        Integer[] keys = aggregationMap.keySet().toArray(new Integer[0]);
+        Integer[] keys = (Integer[])  aggregationMap.keySet().toArray();
         Arrays.fill(labelMask, -1);
         List<PixelNode> pixelList = null;
 

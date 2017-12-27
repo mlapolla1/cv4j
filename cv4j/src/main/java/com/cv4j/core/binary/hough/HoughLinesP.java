@@ -79,7 +79,7 @@ public class HoughLinesP {
 	 *
 	 * @return
 	 */
-	public void process(ByteProcessor binary, int sizeAcc, int minGap, int minAcc, List<Line> rows) {
+	public void process(ByteProcessor binary, int sizeAcc, List<Line> rows) {
 		final int rMax  = (int) Math.sqrt(width * width + height * height);
 		final int andValue = 0xff;
 
@@ -164,7 +164,8 @@ public class HoughLinesP {
 		List<Line> lines = new ArrayList<>();
 
 		for (int i = sizeAcc-1; i >= 0; i--) {
-			Line line = drawPolarLine(results[i * dim], results[i * dim + 1], results[i * dim + add]);
+			//Line line = drawPolarLine(results[i * dim], results[i * dim + 1], results[i * dim + add]);
+			Line line = drawPolarLine(results[i * dim + 1], results[i * dim + add]);
 			lines.add(line);
 		}
 
@@ -294,12 +295,12 @@ public class HoughLinesP {
 
 	/**
 	 * Convert polar coordinates to plane coordinates, and draw.
-	 * @param value The value.
+	 * param value The value.
 	 * @param r     The radius.
 	 * @param theta The angle.
 	 * @return      The line.
 	 */
-	private Line drawPolarLine(int value, int r, int theta) {
+	private Line drawPolarLine(int r, int theta) {
 		int x1 = 100000;
 		int y1 = 0;
 		int x2 = 0;

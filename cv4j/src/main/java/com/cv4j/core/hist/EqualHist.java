@@ -27,29 +27,40 @@ import java.util.Arrays;
  */
 public class EqualHist {
 
+    /**
+     * The value of the hex 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
     public void equalize(ByteProcessor src) {
+        if (src == null) {
+            return;
+        }
 
-        if (src == null) return;
-
-        int rgb = 256, index = 0;
+        final int rgb = 256;
         int[] inputBins = new int[rgb]; // RGB
         int[] outputBins = new int[rgb]; // after HE
+
         Arrays.fill(inputBins, 0);
         Arrays.fill(outputBins, 0);
 
         byte[] data = src.getGray();
         if (Preconditions.isNotBlank(data)) {
-            for (byte d:data) {
-                inputBins[d & 0xff]++;
+            for (byte d : data) {
+                inputBins[d & VALUE_0000FF]++;
             }
         }
 
         // generate original source image RGB histogram
         generateHEData(inputBins, outputBins, data.length, rgb);
-        for(int row=0, pv=0; row<src.getHeight(); row++) {
-            for(int col=0; col<src.getWidth(); col++) {
-                index = row * src.getWidth() + col;
-                pv = data[index]&0xff;
+
+        final int height = src.getHeight();
+        final int width  = src.getWidth();
+
+        for(int row = 0; row < height; row++) {
+            for(int col = 0; col < width; col++) {
+                int index = row * width + col;
+                int pv = data[index] & VALUE_0000FF;
                 data[index] = (byte)outputBins[pv];
             }
         }

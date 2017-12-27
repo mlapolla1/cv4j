@@ -71,14 +71,15 @@ public class ZhangSuenThin {
 
 		for(int row=1; row<height-1; row++) {
 			for(int col=1; col<width-1; col++) {
-				stop = something(flagmap, input, row, col, width, height, stop);
+				//stop = something(flagmap, input, row, col, width, height, stop);
+				stop = something(flagmap, input, row, col, width, stop);
 			}
 		}
 
 		return stop;
 	}
 
-	private boolean something(int[] flagmap, byte[] input, int row, int col, int width, int height, boolean stop) {
+	private boolean something(int[] flagmap, byte[] input, int row, int col, int width, boolean stop) {
 		int offset = row * width;
 
 		int p1 = calculateP1(input, row, col, width);
@@ -138,7 +139,7 @@ public class ZhangSuenThin {
         String one = "01";
         result[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7] + p[8]; //con1
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(16);
         stringBuilder
                 .append(String.valueOf(p[1]))
                 .append(String.valueOf(p[2]))
@@ -162,7 +163,7 @@ public class ZhangSuenThin {
 
 		for(int row=1; row<height-1; row++) {
 			for(int col=1; col<width-1; col++) {
-				stop = something(flagmap, input, row, col, width, height, stop);
+				stop = something(flagmap, input, row, col, width, stop);
 			}
 		}
 		return stop;

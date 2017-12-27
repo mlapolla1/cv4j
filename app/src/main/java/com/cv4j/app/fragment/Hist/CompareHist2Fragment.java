@@ -61,7 +61,7 @@ public class CompareHist2Fragment extends BaseFragment {
         calcHistogram.calcHSVHist(imageProcessor,bins,source,true);
 
         CompareHist compareHist = new CompareHist();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(16);
         sb.append("巴氏距离:").append(compareHist.bhattacharyya(source[0],source[0])).append("\r\n")
                 .append("协方差:").append(compareHist.covariance(source[0],source[0])).append("\r\n")
                 .append("相关性因子:").append(compareHist.ncc(source[0],source[0]));

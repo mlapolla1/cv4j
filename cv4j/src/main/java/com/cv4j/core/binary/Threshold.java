@@ -108,7 +108,7 @@ public class Threshold {
         process(gray, type, METHOD_THRESH_BINARY, 0);
     }
 
-    public void adaptiveThresh(ByteProcessor gray, int type, int blockSize, int constant, int method) {
+    public void adaptiveThresh(ByteProcessor gray, int blockSize, int constant, int method) {
         final int width = gray.getWidth();
         final int height = gray.getHeight();
 

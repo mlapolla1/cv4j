@@ -33,8 +33,9 @@ public class DoubleClickExitUtils {
 	 * Activity onKeyDown事件
 	 */
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    System.out.println(event.toString());
 		final Runnable onBackTimeRunnable = new Runnable() {
-		
+
 			@Override
 			public void run() {
 				isOnKeyBacking = false;

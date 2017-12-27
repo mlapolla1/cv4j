@@ -33,7 +33,7 @@ public class MorphOpen {
     public void process(ByteProcessor binary, Size structureElement) {
         FastErode erode = new FastErode();
         FastDilate dilate = new FastDilate();
-        erode.process(binary, structureElement, 1);
-        dilate.process(binary, structureElement, 1);
+        erode.process(binary, structureElement);
+        dilate.process(binary, structureElement);
     }
 }
