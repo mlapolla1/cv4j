@@ -17,6 +17,7 @@ package com.cv4j.core.hist;
 
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -35,6 +36,11 @@ public class CalcHistogram {
      * Constant of color in hsv
      */
     public final static int COLOR_HSV = 2;
+
+    /**
+     * The value of the hex 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
 
     /**
      * Calculates the norm histogram.
@@ -56,9 +62,9 @@ public class CalcHistogram {
         int b=0;
         int index = 0;
         for(int i=0; i<len; i++) {
-            r = R[i]&0xff;
-            g = G[i]&0xff;
-            b = B[i]&0xff;
+            r = R[i] & VALUE_0000FF;
+            g = G[i] & VALUE_0000FF;
+            b = B[i] & VALUE_0000FF;
             index = (r / level) +  (g / level)*bins + (b / level)*bins*bins;
             hist[index]++;
         }
@@ -94,7 +100,7 @@ public class CalcHistogram {
             }
             delta = max -min;
             for(int j=0; j<bins; j++) {
-                hist[i][j] = (int)(((hist[i][j] - min)/delta)*255);
+                hist[i][j] = SafeCasting.safeFloatToInt(((hist[i][j] - min)/delta) * 255);
             }
         }      
     }
@@ -119,8 +125,9 @@ public class CalcHistogram {
      * @param ranges The ranges
      */
     public void calcHSVHist(ImageProcessor src, int bins, int[][] hist, boolean norm, int[][] ranges) {
-
-        if (src == null) return;
+        if (src == null) {
+            return;
+        }
 
         if(src.getChannels() == 1) {
             calcRGBHist(src,bins,hist,norm);
@@ -212,7 +219,7 @@ public class CalcHistogram {
 
     private void increaseHistogramFromData(int[] hist, byte[] data) {
         for (byte aData : data) {
-            hist[aData & 0xff]++;
+            hist[aData & VALUE_0000FF]++;
         }
     }
 

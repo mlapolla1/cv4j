@@ -20,6 +20,7 @@ import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageData;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.CommonFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -48,6 +49,11 @@ public class FloSteDitheringFilter implements CommonFilter {
     private final static int[] COLOR_PALETTE = new int[]{0, 255};
 
     /**
+     * The value of the hex value 0000FF.
+     */
+    private static final int VALUE_0000FF = 0x0000ff;
+
+    /**
      * Returns the kernel data.
      * @return The kernel data.
      */
@@ -64,7 +70,6 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void algorithm(byte[] GRAY, int width, int height, int row, int col, int er) {
-
         if (row + 1 < height && col - 1 > 0) {
             rowSmallerHeight(row, col, GRAY, er, height, width);
         }
@@ -83,48 +88,35 @@ public class FloSteDitheringFilter implements CommonFilter {
     }
 
     private void rowAndColSmaller(int row, int col, byte[] GRAY, int height, int width, int er) {
-        int k = 0;
-        int err = 0;
+        int k = (row + 1) * width + col + 1;
+        float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[2]);
 
-        k = (row + 1) * width + col + 1;
-        err = GRAY[k] & 0xff;
-        err += (int) (er * KERNEL_DATA[2]);
-        GRAY[k] = (byte) Tools.clamp(err);
+        GRAY[k] = SafeCasting.safeIntToByte(Tools.clamp(err));
     }
 
     private void rowPlusOneSmallerHeight(int row, int col, byte[] GRAY, int height, int width, int er) {
-        int k = 0;
-        int err = 0;
+        int k = (row + 1) * width + col;
+        float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[1]);
 
-        k = (row + 1) * width + col;
-        err = GRAY[k] & 0xff;
-        err += (int) (er * KERNEL_DATA[1]);
-        GRAY[k] = (byte) Tools.clamp(err);
+        GRAY[k] = SafeCasting.safeIntToByte(Tools.clamp(err));
     }
 
     private void rowSmallerHeight(int row, int col, byte[] GRAY, int er, int height, int width) {
-        int k = 0;
-        int err = 0;
+        int k = (row + 1) * width + col - 1;
+        float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[0]);
 
-        k = (row + 1) * width + col - 1;
-        err = GRAY[k] & 0xff;
-        err += (int) (er * KERNEL_DATA[0]);
-        GRAY[k] = (byte) Tools.clamp(err);
+        GRAY[k] = SafeCasting.safeIntToByte(Tools.clamp(err));
     }
 
     private void colSmallerWidth(int row, int col, byte[] GRAY, int er, int width) {
-        int k = 0;
-        int err = 0;
+        int k = row * width + col + 1;
+        float err = (GRAY[k] & VALUE_0000FF) + (er * KERNEL_DATA[3]);
 
-        k = row * width + col + 1;
-        err = GRAY[k] & 0xff;
-        err += (int) (er * KERNEL_DATA[3]);
-        GRAY[k] = (byte) Tools.clamp(err);
+        GRAY[k] = SafeCasting.safeIntToByte(Tools.clamp(err));
     }
 
     @Override
     public ImageProcessor filter(ImageProcessor src) {
-
         if (src instanceof ColorProcessor) {
             src.getImage().convert2Gray();
             src = src.getImage().getProcessor();
@@ -143,7 +135,7 @@ public class FloSteDitheringFilter implements CommonFilter {
         for (int row = 0; row < height; row++) {
             int offset = row * width;
             for (int col = 0; col < width; col++) {
-                gray = GRAY[offset] & 0xff;
+                gray = GRAY[offset] & VALUE_0000FF;
                 int cIndex = getCloseColor(gray);
                 output[offset] = (byte) COLOR_PALETTE[cIndex];
                 int er = (gray - COLOR_PALETTE[cIndex]);

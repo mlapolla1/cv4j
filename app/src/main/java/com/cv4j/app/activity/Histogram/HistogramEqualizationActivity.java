@@ -107,24 +107,20 @@ public class HistogramEqualizationActivity extends BaseActivity {
     private void processForDrawHist(Paint paint, int channels, int[] colors, int bins,
                                     float step, int[][] hist, int histNumber, int maxRgb,
                                     Canvas canvas) {
-        int xoffset = 0;
-        int yoffset = 0;
-
         for (int i=0;i<channels;i++) {
-
             paint.setColor(colors[i]);
-            for (int j=0;j<bins;j++) {
 
-                xoffset = (int)(j*step);
-                yoffset = hist[i][j]*histNumber/maxRgb;
-                canvas.drawRect(xoffset,histNumber-yoffset,xoffset+step,histNumber,paint);
+            for (int j=0;j<bins;j++) {
+                final float xOffset = j * step;
+                final float yOffset = hist[i][j] * histNumber / maxRgb;
+
+                canvas.drawRect(xOffset,histNumber-yOffset,xOffset+step,histNumber,paint);
             }
         }
     }
 
     @OnClick(id= R.id.toolbar)
     void clickToolbar() {
-
         //finish();
     }
 }

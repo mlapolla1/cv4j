@@ -102,8 +102,9 @@ public class HistogramDemoActivity extends BaseActivity {
             paint.setColor(colorsData[i]);
 
             for (int j = 0; j < bins; j++) {
-                int xOffset = (int) (j * step);
-                int yOffset = hist[i][j] * height / maxRgb;
+                final float xOffset = j * step;
+                final float yOffset = hist[i][j] * height / maxRgb;
+
                 canvas.drawRect(xOffset, height - yOffset, xOffset + step, height, paint);
             }
         }

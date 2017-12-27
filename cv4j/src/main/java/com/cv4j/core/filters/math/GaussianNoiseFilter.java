@@ -17,48 +17,69 @@ package com.cv4j.core.filters.math;
 
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
+
+import java.util.Random;
 
 /**
  * 随机噪声滤镜
  */
 public class GaussianNoiseFilter extends BaseFilter {
+
+	private static final int SIGMA_DEFAULT_VALUE = 25;
+
+	/**
+	 * The sigma value.
+	 */
 	private int sigma;
-	
+
+	/**
+	 * The constructor.
+	 */
 	public GaussianNoiseFilter() {
-		sigma = 25;
+		sigma = SIGMA_DEFAULT_VALUE;
 	}
 
+	@Override
+	public ImageProcessor doFilter(ImageProcessor src) {
+		final int value0000FF = 0x0000ff;
+		final int total = width * height;
+
+		final Random random = new Random();
+
+		for(int i = 0; i < total; i++) {
+			int r= R[i] & value0000FF;
+			int g= G[i] & value0000FF;
+			int b= B[i] & value0000FF;
+
+			// add Gaussian noise
+			r += this.sigma * random.nextGaussian();
+			g += this.sigma * random.nextGaussian();
+			b += this.sigma * random.nextGaussian();
+
+			this.R[i] = SafeCasting.safeIntToByte(Tools.clamp(r));
+			this.G[i] = SafeCasting.safeIntToByte(Tools.clamp(g));
+			this.B[i] = SafeCasting.safeIntToByte(Tools.clamp(b));
+		}
+
+		return src;
+	}
+
+	/**
+	 * Return the sigma.
+	 * @return The sigma.
+	 */
 	public int getSigma() {
 		return sigma;
 	}
 
+	/**
+	 * Sets the sigma.
+	 * @param sigma The new sigma to set.
+	 */
 	public void setSigma(int sigma) {
 		this.sigma = sigma;
-	}
-
-	public ImageProcessor doFilter(ImageProcessor src) {
-
-		int r=0;
-		int g=0;
-		int b=0;
-		int total = width * height;
-		java.util.Random random = new java.util.Random();
-		for(int i=0; i<total; i++) {
-			r= R[i]&0xff;
-			g= G[i]&0xff;
-			b= B[i]&0xff;
-
-			// add Gaussian noise
-			r = (int)(r + sigma*random.nextGaussian());
-			g = (int)(g + sigma*random.nextGaussian());
-			b = (int)(b + sigma*random.nextGaussian());
-
-			R[i] = (byte) Tools.clamp(r);
-			G[i] = (byte) Tools.clamp(g);
-			B[i] = (byte) Tools.clamp(b);
-		}
-		return src;
 	}
 
 }

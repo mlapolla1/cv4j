@@ -18,6 +18,7 @@ package com.cv4j.core.filters.effect;
 import com.cv4j.core.datamodel.ColorProcessor;
 import com.cv4j.core.datamodel.image.ImageProcessor;
 import com.cv4j.core.filters.BaseFilter;
+import com.cv4j.core.utils.SafeCasting;
 import com.cv4j.image.util.Tools;
 
 /**
@@ -83,6 +84,10 @@ public class MotionFilter extends BaseFilter {
 				newX = (int) Math.floor(newX + (i * cosAngle));
 			}
 
+			if (isOutOfBounds(newX, 0, width) || isOutOfBounds(newY, 0, height)) {
+				break;
+			}
+
 			int idx = getIdx(newX, newY, width, height, cx, cy, zoom, i, iteration);
 
 			// blur the pixels, here
@@ -96,6 +101,10 @@ public class MotionFilter extends BaseFilter {
 		int[] results = setResults(tr, tg, tb, count);
 
 		return results;
+	}
+
+	private boolean isOutOfBounds(int value, int boundStart, int boundEnd) {
+		return (value < boundStart || value > boundEnd);
 	}
 
 	private int[] setResults(int tr, int tg, int tb, int count){
@@ -112,26 +121,23 @@ public class MotionFilter extends BaseFilter {
 	}
 
 	private int getIdx(int newX, int newY, int width, int height, int cx, int cy, float zoom, int i, int iteration){
-		float f = (float) (i / iteration);
-		if (newX < 0 || newX >= width) {
-			//break;
-		}
-		if (newY < 0 || newY >= height) {
-			//break;
-		}
+		float f = i / iteration;
 
 		// scale the pixels
-		float scale = 1-zoom*f;
+		float scale = 1 - (zoom * f);
+
 		float m11 = cx - (cx * scale);
 		float m22 = cy - (cy * scale);
-		newY = (int)(newY * scale + m22);
-		newX = (int)(newX * scale + m11);
-		return (newY * width) + newX;
+
+		float newNewY = (newY * scale) + m22;
+		float newNewX = (newX * scale) + m11;
+
+		return SafeCasting.safeFloatToInt((newNewY * width) + newNewX);
 	}
 	
 	@Override
 	public ImageProcessor doFilter(ImageProcessor src){
-		final float onePI = (float)Math.PI;
+		final float onePI = (float) Math.PI;
 		final float zoom = 0.4f;
 		int total = width * height;
 		byte[][] output = new byte[3][total];
