@@ -162,7 +162,7 @@ public class CalcHistogram {
             delta = max - min;
             int dr = ranges[i][1] - ranges[i][0];
             for(int j=0; j<bins; j++) {
-                hist[i][j] = (int)(((hist[i][j] - min)/delta)*dr);
+                hist[i][j] = SafeCasting.safeFloatToInt(((hist[i][j] - min)/delta)*dr);
             }
         }
     }
